@@ -1,14 +1,12 @@
-import { Container, Header, BodyContainer } from "../components/StandardStyles";
+import { Container, BodyContainer } from "../components/StandardStyles";
+import Header from "../components/Header";
 
 const Home = () => {
-
-    return (
-        <Container>
-            <Header />
-            <BodyContainer>
-
-            </BodyContainer>
-        </Container>
-    )
-}
+  return (
+    <Container>
+      <Header />
+      <BodyContainer>AA</BodyContainer>
+    </Container>
+  );
+};
 export default Home;

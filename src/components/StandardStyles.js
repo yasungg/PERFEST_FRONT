@@ -4,6 +4,8 @@ export const Container = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: ${(props) => props.justifyContent};
+  align-items: ${(props) => props.alignItems};
 `;
 export const BodyContainer = styled.div`
   width: 1280px;
