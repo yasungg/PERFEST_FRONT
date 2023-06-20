@@ -1,15 +1,13 @@
 import React from "react";
-import styled from "styled-components";
-import StandardStyles from "../components/StandardStyles"
-
-
-
+import SideBar from "./Sidebar";
 
 const MyPage = () => {
-    return(
-        <></>
 
-    )
-};
+  return(
+    <div>
+      <SideBar />
+    </div>
+  )
+}
 
 export default MyPage;
