@@ -1,7 +1,17 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 import Profile from "../images/47802_35328_56.jpg";
+import MySetting from "./MySetting";
+import MyReview from "./MyReview";
+import MyReserveList from "./MyReserveList";
+import MyPayList from "./MyPayList";
+import MyWrite from "./MyWrite";
+import MyRanking from "./MyRanking";
+
+const Container = styled.div`
+  display: flex;
+`;
 
 const SideBarWrapper = styled.div`
   display: flex;
@@ -16,8 +26,6 @@ const ProfileImage = styled.img`
   height: 80px;
   border-radius: 50%;
   margin-bottom: 10px;
-
-  
 `;
 
 const Nickname = styled.span`
@@ -51,33 +59,52 @@ const SideBar = () => {
   const memberNickname = "잼뮈"; // 회원닉 가져올 예정
 
   const menus = [
-    { name: "내정보 관리", path: "/MySetting" },
-    { name: "내 리뷰 보기", path: "/MyReview" },
-    { name: "예약 목록", path: "/myPayList" },
-    { name: "주문 내역", path: "/Mylikedlist" },
-    { name: "게시글 관리", path: "/Mywrite" },
-    { name: "나의 랭킹", path: "/Myranking" }
+    { name: "내정보 관리", path: "/MySetting", component: MySetting },
+    { name: "내 리뷰 보기", path: "/MyReview", component: MyReview },
+    { name: "예약 목록", path: "/MyReserveList", component: MyReserveList },
+    { name: "주문 내역", path: "/MyPaylist", component: MyPayList },
+    { name: "게시글 관리", path: "/MyWrite", component: MyWrite },
+    { name: "나의 랭킹", path: "/MyRanking", component: MyRanking }
   ];
 
+  const [selectedMenu, setSelectedMenu] = useState("");
+
+  const handleMenuClick = (path) => {
+    setSelectedMenu(path);
+  };
+
   return (
-    <SideBarWrapper>
-      <ProfileImage src={Profile} alt="Profile" />
-      <Nickname>{memberNickname} 님</Nickname>
-      <Menu>
-        {menus.map((menu, index) => (
-          <MenuItem key={index}>
-            <MenuLink
-              exact
-              to={menu.path}
-              activeClassName="active"
-            >
-              {menu.name}
-            </MenuLink>
-          </MenuItem>
-        ))}
-      </Menu>
-    </SideBarWrapper>
+    <Container>
+      <SideBarWrapper>
+        <ProfileImage src={Profile} alt="Profile" />
+        <Nickname>{memberNickname} 님</Nickname>
+        <Menu>
+          {menus.map((menu, index) => (
+            <MenuItem key={index}>
+              <MenuLink
+                exact
+                to={menu.path}
+                activeClassName="active"
+                onClick={() => handleMenuClick(menu.path)}
+              >
+                {menu.name}
+              </MenuLink>
+            </MenuItem>
+          ))}
+        </Menu>
+      </SideBarWrapper>
+
+      <div>
+        {selectedMenu === "/MySetting" && <MySetting />}
+        {selectedMenu === "/MyReview" && <MyReview />}
+        {selectedMenu === "/MyReserveList" && <MyReserveList />}
+        {selectedMenu === "/MyPayList" && <MyPayList/>}
+        {selectedMenu === "/MyWrite" && <MyWrite/>}
+        {selectedMenu === "/MyRanking" && <MyRanking/>}
+        </div>
+        </Container>
   );
 };
 
 export default SideBar;
+

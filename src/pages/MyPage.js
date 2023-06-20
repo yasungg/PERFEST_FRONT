@@ -1,13 +1,25 @@
 import React from "react";
+import styled from "styled-components";
 import SideBar from "./Sidebar";
+import MyPage from "./MyPage";
 
-const MyPage = () => {
+const Container = styled.div`
+  display: flex;
+`;
 
-  return(
-    <div>
+const MainContent = styled.div`
+  flex: 1;
+`;
+
+const MainPage = () => {
+  return (
+    <Container>
       <SideBar />
-    </div>
-  )
-}
+      <MainContent>
+        <MyPage />
+      </MainContent>
+    </Container>
+  );
+};
 
-export default MyPage;
+export default MainPage;
