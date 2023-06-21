@@ -7,6 +7,7 @@ import MyPage from "./pages/MyPage";
 import SideBar from "./pages/Sidebar";
 import Board from "./pages/Board";
 import WriteBoard from "./pages/WriteBoard";
+import PayResultFalse from "./pages/PayResultFalse"
 import Ranking from "./pages/Ranking";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/MyPage" element={<MyPage />} />
         <Route path="/Sidebar" element={<SideBar />} />
         <Route path="/Payment" element={<Payment />} />
+        <Route path="/resultfalse" element={<PayResultFalse />} />
         <Route path="/Board" element={<Board />} />
         <Route path="/WriteBoard" element={<WriteBoard />} />
         <Route path="/Ranking" element={<Ranking />} />
