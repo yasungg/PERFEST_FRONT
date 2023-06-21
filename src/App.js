@@ -19,7 +19,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/MyPage" element={<MyPage />} />
-        <Route path="/Sidebar" element={<SideBar />} />
+        <Route path="/MyRanking" element={<MyRanking />} />
+        <Route path="/Setting" element={<MySetting />} />
+        <Route path="/MyReview" element={<MyReview />} />
+        <Route path="/ReserveList" element={<MyReserveList />} />
+        <Route path="/PayList" element={<MyPayList />} />
+        <Route path="/MyWrite" element={<MyWrite />} />
         <Route path="/Payment" element={<Payment />} />
       </Routes>
     </Router>
