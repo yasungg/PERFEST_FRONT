@@ -11,6 +11,10 @@ import MyReview from "./pages/MyReview";
 import MyReserveList from "./pages/MyReserveList";
 import MyPayList from "./pages/MyPayList";
 import MyWrite from "./pages/MyWrite";
+import Board from "./pages/Board";
+import WriteBoard from "./pages/WriteBoard";
+import PayResultFalse from "./pages/PayResultFalse"
+import Ranking from "./pages/Ranking";
 
 function App() {
   return (
@@ -26,6 +30,10 @@ function App() {
         <Route path="/PayList" element={<MyPayList />} />
         <Route path="/MyWrite" element={<MyWrite />} />
         <Route path="/Payment" element={<Payment />} />
+        <Route path="/resultfalse" element={<PayResultFalse />} />
+        <Route path="/Board" element={<Board />} />
+        <Route path="/WriteBoard" element={<WriteBoard />} />
+        <Route path="/Ranking" element={<Ranking />} />
       </Routes>
     </Router>
   );
