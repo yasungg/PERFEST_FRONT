@@ -15,6 +15,12 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/MyPage" element={<MyPage />} />
+        <Route path="/Sidebar" element={<SideBar />} />
+        <Route path="/Payment" element={<Payment />} />
+        <Route path="/Board" element={<Board />} />
+        <Route path="/WriteBoard" element={<WriteBoard />} />
+        <Route path="/Ranking" element={<Ranking />} />
       </Routes>
     </Router>
   );
