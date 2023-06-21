@@ -5,6 +5,12 @@ import Login from "./pages/Login";
 import Payment from "./pages/Payments";
 import MyPage from "./pages/MyPage";
 import SideBar from "./pages/Sidebar";
+import MyRanking from "./pages/MyRanking";
+import MySetting from "./pages/MySetting";
+import MyReview from "./pages/MyReview";
+import MyReserveList from "./pages/MyReserveList";
+import MyPayList from "./pages/MyPayList";
+import MyWrite from "./pages/MyWrite";
 
 function App() {
   return (
