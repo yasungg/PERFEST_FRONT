@@ -27,18 +27,18 @@ const Payment = () => {
         // 상품 비과세
         tax_free_amount: 0,
         // 결제 성공 URL
-        approval_url: "http://localhost:3000/payresult",
+        approval_url: "https://developers.kakao.com/success",
         // 결제 실패 URL
-        fail_url: "http://localhost:3000/resultfalse",
+        fail_url: "https://developers.kakao.com/fail",
         // 결제 취소 URL
-        cancel_url: "http://localhost:3000/resultfalse"
+        cancel_url: "https://developers.kakao.com/cancel"
     }
   });
 
   // 결제 준비 API를 통해 상세 정보를 카카오페이 서버에 전달하고 결제 고유 번호(TID)를 받는 단계. 
   // 어드민 키를 헤더에 담아 파라미터 값들과 함께 POST로 요청.
   useEffect(() => {
-    const { ...params } = data;
+    const { params } = data;
     axios({
         url: "https://kapi.kakao.com/v1/payment/ready",
         method: "POST",
@@ -46,7 +46,7 @@ const Payment = () => {
             Authorization: `KakaoAK ${process.env.REACT_APP_ADMIN_KEY}`,
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
             },
-        params,
+        bodys: params,
     }).then(response => {
       // 요청이 성공하면 응답 본문에 JSON 객체로 다음 단계 진행을 위한 값들을 받습니다. 
       // 서버(Server)는 tid를 저장하고, 클라이언트는 사용자 환경에 맞는 URL로 리다이렉트
