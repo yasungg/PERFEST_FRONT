@@ -8,6 +8,8 @@ import SideBar from "./pages/Sidebar";
 import Board from "./pages/Board";
 import WriteBoard from "./pages/WriteBoard";
 import Ranking from "./pages/Ranking";
+import UpdateBoard from "./pages/UpdateBoard";
+import BoardArticle from "./pages/BoardArticle";
 
 function App() {
   return (
@@ -20,7 +22,9 @@ function App() {
         <Route path="/Payment" element={<Payment />} />
         <Route path="/Board" element={<Board />} />
         <Route path="/WriteBoard" element={<WriteBoard />} />
+        <Route path="/UpdateBoard" element={<UpdateBoard />} />
         <Route path="/Ranking" element={<Ranking />} />
+        <Route path="/BoardArticle" element={<BoardArticle />} />
       </Routes>
     </Router>
   );
