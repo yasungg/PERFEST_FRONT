@@ -3,9 +3,9 @@ import Header from "../components/Header";
 
 const Home = () => {
   return (
-    <Container>
+    <Container alignItems="center">
       <Header />
-      <BodyContainer>AA</BodyContainer>
+      <BodyContainer>aa</BodyContainer>
     </Container>
   );
 };
