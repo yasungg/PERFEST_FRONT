@@ -10,6 +10,10 @@ const BoardAPI = {
     BoardGetByCategory: async(selectCategory) => {
         return await axios.get(localHost + `/community/getselectboard?communityCategory=${selectCategory}`)
     },
+    // 게시판 최신순 조회
+    BoardGetByNewest: async() => {
+        return await axios.get(localHost + `/community/getnewestboard`)
+    },
     // 게시판 작성
     BoardWrite : async(title, category, text ) => {
         const writeBoard = {

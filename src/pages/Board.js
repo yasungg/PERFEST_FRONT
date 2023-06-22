@@ -97,13 +97,12 @@ const Board = () => {
       }, []);
   
     useEffect(() => {
-      const onClickCategory = async () => {
+      const onClickCategory = async() => {
         if (selectCategory) {
           const rsp = await BoardAPI.BoardGetByCategory(selectCategory);
           if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
         }
       };
-  
       onClickCategory();
     }, [selectCategory]);
   
@@ -123,7 +122,11 @@ const Board = () => {
     const handleCategoryClick = (category) => {
       setSelectCategory(category);
     };
-  
+    const onClickNewestBoard = async() => {
+        const rsp = await BoardAPI.BoardGetByNewest();
+        setSelectedBoardInfo(rsp.data);
+
+    }
     return (
       <Container justifyContent="center" alignItems="center">
         <BodyContainer>
@@ -135,8 +138,8 @@ const Board = () => {
             <CatButton onClick={() => handleCategoryClick("FIND_PARTY")}>파티원 찾기</CatButton>
           </Category>
           <Arrange>
-                <ArrButton>
-                <input type="radio" name="arrange" id="newest" />
+                <ArrButton >
+                <input type="radio" name="arrange" id="newest" onClick={onClickNewestBoard}/>
                 <label for="newest">최신순</label>
                 </ArrButton>
                 <ArrButton>
