@@ -83,39 +83,58 @@ background-color: yellow;
 width: 50%;
 `;
 const Board = () => {
-    const [BoardInfo, setBoardInfo] = useState("");
-    useEffect(() => {
-    const BoardGetAll = async() =>{
-        const rsp = await BoardAPI.BoardGet();
-        if(rsp.status === 200) setBoardInfo(rsp.data);
-        console.log(rsp.data);
-    };
-    BoardGetAll();
-},[]);
-const getCategoryText = (category) => {
-    switch (category) {
-      case 'FIND_PARTY':
-        return '파티원 찾기';
-      case 'FREE_BOARD':
-        return '자유게시판';
-      case 'Q_A':
-        return 'Q&A';
-      default:
-        return '';
-    }
-  };
+    const [selectedBoardInfo, setSelectedBoardInfo] = useState([]);
+    const [selectCategory, setSelectCategory] = useState("");
   
-    return(
-        <Container justifyContent="center" alignItems="center">
+    const BoardGetAll = async () => {
+        const rsp = await BoardAPI.BoardGet();
+        if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
+        console.log(rsp.data);
+      };
+    
+      useEffect(() => {
+        BoardGetAll();
+      }, []);
+  
+    useEffect(() => {
+      const onClickCategory = async () => {
+        if (selectCategory) {
+          const rsp = await BoardAPI.BoardGetByCategory(selectCategory);
+          if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
+        }
+      };
+  
+      onClickCategory();
+    }, [selectCategory]);
+  
+    const getCategoryText = (category) => {
+      switch (category) {
+        case 'FIND_PARTY':
+          return '파티원 찾기';
+        case 'FREE_BOARD':
+          return '자유게시판';
+        case 'Q_A':
+          return 'Q&A';
+        default:
+          return '';
+      }
+    };
+  
+    const handleCategoryClick = (category) => {
+      setSelectCategory(category);
+    };
+  
+    return (
+      <Container justifyContent="center" alignItems="center">
         <BodyContainer>
-            <Title><h1>커뮤니티</h1></Title>
-            <Category>
-                <CatButton>전체</CatButton>
-                <CatButton>자유게시판</CatButton>
-                <CatButton>Q&A</CatButton>
-                <CatButton>파티원 찾기</CatButton>
-            </Category>
-            <Arrange>
+          <Title><h1>커뮤니티</h1></Title>
+          <Category>
+            <CatButton onClick={BoardGetAll}>전체</CatButton>
+            <CatButton onClick={() => handleCategoryClick("FREE_BOARD")}>자유게시판</CatButton>
+            <CatButton onClick={() => handleCategoryClick("Q_A")}>Q&A</CatButton>
+            <CatButton onClick={() => handleCategoryClick("FIND_PARTY")}>파티원 찾기</CatButton>
+          </Category>
+          <Arrange>
                 <ArrButton>
                 <input type="radio" name="arrange" id="newest" />
                 <label for="newest">최신순</label>
@@ -125,18 +144,19 @@ const getCategoryText = (category) => {
                 <label for="likest">인기순</label>
                 </ArrButton>
             </Arrange>
-            {BoardInfo&&BoardInfo.map((community) => (
+          {selectedBoardInfo.map((community) => (
             <BoardText key={community.communityTitle}>
-                <BoardContents>
-                    <BCategory>{getCategoryText(community.communityCategory)}</BCategory> 
-                    <BTitle>{community.communityTitle}</BTitle>
-                    <BTime>{community.writtenTime}</BTime>
-                    </BoardContents>
+              <BoardContents>
+                <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
+                <BTitle>{community.communityTitle}</BTitle>
+                <BTime>{community.writtenTime}</BTime>
+              </BoardContents>
             </BoardText>
-            ))}
-            <WriteButton>글쓰기</WriteButton>
+          ))}
+          <WriteButton>글쓰기</WriteButton>
         </BodyContainer>
-        </Container>
+      </Container>
     );
-};
-export default Board;
+  };
+  
+  export default Board;

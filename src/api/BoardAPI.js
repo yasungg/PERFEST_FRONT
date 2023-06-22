@@ -6,6 +6,10 @@ const BoardAPI = {
     BoardGet: async() => {
         return await axios.get(localHost + `/community/getallboard`);
     },
+    // 게시판 카테고리별 조회
+    BoardGetByCategory: async(selectCategory) => {
+        return await axios.get(localHost + `/community/getselectboard?communityCategory=${selectCategory}`)
+    },
     // 게시판 작성
     BoardWrite : async(title, category, text ) => {
         const writeBoard = {
