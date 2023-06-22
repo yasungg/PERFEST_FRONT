@@ -8,7 +8,7 @@ const KakaoBtn = styled.button`
 `;
 const Login = () => {
   const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-  const REDIRECT_URI = "http://localhost:3000/koauth";
+  const REDIRECT_URI = "http://localhost:8111/koauth/login/kakao";
   const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
   return (
     <Container justifyContent="center" alignItems="center">
