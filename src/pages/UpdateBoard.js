@@ -60,7 +60,7 @@ background-color: white;
     cursor: pointer;
 }
 `;
-const WriteBoard = () => {
+const UpdateBoard = () => {
     const [inputBoardTitle, setInputBoardTitle] = useState("");
     const [inputBoardText, setInputBoardText] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
@@ -74,8 +74,8 @@ const WriteBoard = () => {
     const onChangeCategory = (e) => {
         setSelectedCategory(e.target.value);
     };
-    const onClickWriteBoard = async() => {
-        const response = await BoardAPI.BoardWrite(inputBoardTitle,selectedCategory,inputBoardText);
+    const onClickUpdateBoard = async() => {
+        const response = await BoardAPI.BoardUpdate(inputBoardTitle,selectedCategory,inputBoardText);
         console.log(response.data);
         if(response.data === true) {
             console.log(response.data);
@@ -87,7 +87,7 @@ const WriteBoard = () => {
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
-                <Title><h1>게시글 작성</h1></Title>
+                <Title><h1>게시글 수정</h1></Title>
                 <WriteTitle>
                     <label for="boardTitle">글 제목</label>
                     <input type="text" className="writeTitle" id="boardTitle" value={inputBoardTitle} onChange={onChangeBoardTitle}/>
@@ -114,11 +114,11 @@ const WriteBoard = () => {
                     <textarea name="writeText" className="writeText" cols="120" rows="30" value={inputBoardText} onChange={onChangeBoardText}></textarea>
                 </WriteText>
                 <WriteButton>
-                    <Button onClick={onClickWriteBoard}>작성</Button>
+                    <Button onClick={onClickUpdateBoard}>수정</Button>
                     <Button>취소</Button>
                 </WriteButton>
             </BodyContainer>
         </Container>
     );
 }
-export default WriteBoard;
+export default UpdateBoard;
