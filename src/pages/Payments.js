@@ -27,7 +27,7 @@ const Payment = () => {
         // 상품 비과세
         tax_free_amount: 0,
         // 결제 성공 URL
-        approval_url: "https://developers.kakao.com/success",
+        approval_url: "http://developers.kakao.com/success",
         // 결제 실패 URL
         fail_url: "https://developers.kakao.com/fail",
         // 결제 취소 URL
@@ -43,10 +43,10 @@ const Payment = () => {
         url: "https://kapi.kakao.com/v1/payment/ready",
         method: "POST",
         headers: {
-            Authorization: `KakaoAK ${process.env.REACT_APP_ADMIN_KEY}`,
+            Authorization: `KakaoAK 632fb98346e85fd6ea660b71beaf9b70`,
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
             },
-        bodys: params,
+        params,
     }).then(response => {
       // 요청이 성공하면 응답 본문에 JSON 객체로 다음 단계 진행을 위한 값들을 받습니다. 
       // 서버(Server)는 tid를 저장하고, 클라이언트는 사용자 환경에 맞는 URL로 리다이렉트
