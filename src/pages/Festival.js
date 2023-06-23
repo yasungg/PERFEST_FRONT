@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Container } from "../components/StandardStyles";
 import Header from "../components/Header";
@@ -31,7 +31,6 @@ const BodyContainer = styled.div`
 		width: 100%;
 		height: 8vh;
 		min-height: 74.95px;
-		background-color: b;
 		align-items: center;
 		justify-content: center;
 	}
@@ -125,21 +124,22 @@ const BodyContainer = styled.div`
 	/* mapContainer 영역 */
 	.category_container {
 		position: absolute;
-		margin: 40px 10px;
+		display: block;
+		margin: 0 10px;
 		width: 510px;
-		height: 50px;
+		height: 74.95px;
 		z-index: 2;
-		
 	}
 
 	/* ul */
 	.bubble_filter_list {
+		position: relative;
 		display: inline-block;
 		width: 100%;
 		align-items: center;
 		justify-content: center;
 		padding: 5px;
-		margin: 0;
+		margin: 7px 0;
 	}
 
 	/* li */
@@ -149,7 +149,7 @@ const BodyContainer = styled.div`
 		float: left;
 	}
 
-	.bubble_filter_button {
+	.bubble_filter_button_location, .bubble_filter_button_period, .bubble_filter_button_theme {
 		width: 120px;
 		height: 50px;
 		font-size: 15px;
@@ -157,9 +157,68 @@ const BodyContainer = styled.div`
 		color: #242424;
 		border: none;
 		border-radius: 5px;
-		background-color: #FFE3F1;
+		background-color: #fff;
 		margin-right: 20px;
 		cursor: pointer;
+	}
+
+	.checkbox_area {
+		width: 550px;
+		height: 220px;
+		background-color: #FFF;
+		margin: -10px 0 0 5px;
+		border-radius: 5px;
+	}
+
+	.checkbox_area div {
+		display: flex;
+		flex-wrap: wrap;
+		width: 100%;
+		height: 180px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.checkbox_area p {
+		margin: 0 10px 10px 0;
+  	flex-basis: calc(20% - 20px);
+  	box-sizing: border-box;
+	}
+
+	.location_search {
+		width: 50px;
+		height: 30px;
+		background-color: #FFF;
+		border: 0.5px solid lightgray;
+		border-radius: 5px;
+		float: right;
+		margin: 0 10px;
+	}
+
+	.date_area {
+		display: flex;
+		width: 300px;
+		height: 250px;
+		margin: -4px 0 0 145px;
+		background-color: #FFF;
+		border-radius: 5px;
+		z-index: 2;
+		justify-content: center;
+		/* align-items: center; */
+	}
+
+	.date_area div {
+		display: flex;
+		width: 85%;
+		height: 40px;
+		justify-content: center;
+		align-items: center;
+		border: 0.5px solid lightgray;
+		margin-top: 15px;
+	}
+
+	.date_area input {
+		margin: 10px;
 	}
 
 	.map_control {
@@ -183,6 +242,7 @@ const BodyContainer = styled.div`
 		border: 0.5px solid gray;
 		border-radius: 2px;
 		cursor: pointer;
+		font-size: 18px;
 	}
 
 	.my_location {
@@ -198,24 +258,74 @@ const BodyContainer = styled.div`
 
 
 const Festival = () => {
+
+	// bubble filrer 버튼 hover 기능
+	const [isLocationHovered, setLocationIsHovered] = useState(false);
+	const [isPeriodHovered, setIsPeriodHovered] = useState(false);
+	const [isThemeHovered, setIsThemeHovered] = useState(false);
+
+	const handleLocationButtonHover = () => {
+		setLocationIsHovered(true);
+	};
+	const handleLocationButtonLeave = () => {
+		setLocationIsHovered(false);
+	}
+
+	const handlePeriodButtonHover = () => {
+		setIsPeriodHovered(true);
+	}
+	const handlePeriodButtonLeave = () => {
+		setIsPeriodHovered(false);
+	}
+
+	const handleThemeButtonHover = () => {
+		setIsThemeHovered(true);
+	}
+	const handleThemeButtonLeave = () => {
+		setIsThemeHovered(false);
+	}
+
+	// bubble filter 버튼 펼치기 / 닫기 기능
+	const [isOpenLocation, setIsOpenLocation] = useState(false);
+	// const [isOpenPeriod, setIsOpenPeriod] = useState(false);
+	// const [isOpenTheme, setIsOpenTheme] = useState(false);
+	const formRef = useRef(null);
+
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if(formRef.current && !formRef.current.contains(event.target)) {
+				setIsOpenLocation(false);
+			}
+		};
+
+		const hanldeEscapeKey = (event) => {
+			if(event.key === 'Escape') {
+				setIsOpenLocation(false);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+		document.addEventListener('keydown', hanldeEscapeKey);
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+			document.removeEventListener('keydown', hanldeEscapeKey);
+		};
+
+	}, []);
+
+	function handleButtonClick() {
+		setIsOpenLocation(!isOpenLocation);
+	}
+
 	
-	// const { kakao } = window;
-	// const{map, setMap} = useState(null);
-
-	// useEffect(() => {
-	// 	const container = document.getElementById('map');
-	// 	const option = { center : new kakao.maps.Lating(33.450701, 126.570667) };
-	// 	const kakaoMap = new kakao.maps.Map(container, option);
-	// 	setMap(kakaoMap);
-	// }, []);
-
 	return(
 		<Container justifyContent="center">
     	<Header />
         <BodyContainer>
 
 					{/* 검색창 / 결과창 */}
-          <div className="searchContainer">
+          <div className="searchContainer" onClick={() => {setIsOpenLocation(false)}}>
 						<div className="input_box">
 							<input className="search" type="text" placeholder="찾을 지역이나 축제 이름을 입력하세요."></input>
 							<button className="search_button">돋보기</button>
@@ -271,18 +381,64 @@ const Festival = () => {
 						<div className="category_container">
 							<ul className="bubble_filter_list">
 								<li className="bubble_filter_item">
-									<button className="bubble_filter_button">@ 지역별 검색</button>
+									<button
+										className="bubble_filter_button_location"
+										onClick={handleButtonClick}
+										onMouseEnter={handleLocationButtonHover}
+										onMouseLeave={handleLocationButtonLeave}
+										style={{color: isOpenLocation || isLocationHovered ? '#0475F4' : 'black'}}
+										>@ 지역별 검색</button>
 									{/* 서울 대전 인천 부산 대구 광주 울산 */}
 									{/* 경기도 강원도 충청북도 충청남도 경상북도 경상남도 전라북도 전라남도 제주도 */}
 								</li>
+
 								<li className="bubble_filter_item">
-									<button className="bubble_filter_button">@ 기간별 검색</button>
+									<button className="bubble_filter_button_period"
+									onMouseEnter={handlePeriodButtonHover}
+									onMouseLeave={handlePeriodButtonLeave}
+									style={{color: isPeriodHovered ? '#0475F4' : 'black'}}
+									>@ 기간별 검색</button>
 								</li>
+
 								<li className="bubble_filter_item">
-									<button className="bubble_filter_button">@ 테마별 검색</button>
+									<button
+										className="bubble_filter_button_theme"
+										onMouseEnter={handleThemeButtonHover}
+										onMouseLeave={handleThemeButtonLeave}
+										style={{color: isThemeHovered ? '#0475F4' : 'black'}}>@ 테마별 검색</button>
 								</li>
 							</ul>
+
+							{/* 지역별 검색 */}
+							{isOpenLocation && (
+								<form className="checkbox_area">
+									<div>
+										<p><input type="checkbox"></input> 서울</p>
+										<p><input type="checkbox"></input> 경기도</p>
+										<p><input type="checkbox"></input> 강원도</p>
+										<p><input type="checkbox"></input> 충청북도</p>
+										<p><input type="checkbox"></input> 충청남도</p>
+										<p><input type="checkbox"></input> 경상북도</p>
+										<p><input type="checkbox"></input> 경상남도</p>
+										<p><input type="checkbox"></input> 전라북도</p>
+										<p><input type="checkbox"></input> 전라남도</p>
+										<p><input type="checkbox"></input> 제주도</p>
+									</div>
+									<button className="location_search">검색</button>
+								</form>
+							)}
+
+							
+							<form className="date_area">
+								<div>
+									<input type="date"></input>
+									<p>~</p>
+									<input type="date"></input>
+									<button>검색</button>
+								</div>
+							</form>
 						</div>
+						
 						<div className="map_control">
 							<div className="zoom_control">
 								<button className="zoom_in">+</button>
