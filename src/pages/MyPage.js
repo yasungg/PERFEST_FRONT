@@ -39,7 +39,7 @@ const Menu = styled.div`
 `;
 
 const MenuItem = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 
 const MenuLink = styled.div`
@@ -53,6 +53,11 @@ const MenuLink = styled.div`
   }
 `;
 
+const ContentWrapper = styled.div`
+  flex: 1;
+  padding: 20px;
+`;
+
 const MyPage = () => {
   const memberNickname = "잼뮈"; // 회원닉 가져올 예정
 
@@ -60,7 +65,7 @@ const MyPage = () => {
     { name: "내 정보", path: "/MySetting" },
     { name: "내 리뷰", path: "/MyReview" },
     { name: "예약 목록", path: "/MyReserveList" },
-    { name: "주문 내역", path: "/MyPaylist" },
+    { name: "주문 내역", path: "/MyPayList" },
     { name: "내 게시글", path: "/MyWrite" },
     { name: "내 랭킹", path: "/MyRanking" }
   ];
@@ -89,17 +94,16 @@ const MyPage = () => {
           ))}
         </Menu>
       </SideBarWrapper>
-      <div>
+      <ContentWrapper>
         {selectedMenu === "/MySetting" && <MySetting />}
         {selectedMenu === "/MyReview" && <MyReview />}
         {selectedMenu === "/MyReserveList" && <MyReserveList />}
         {selectedMenu === "/MyPayList" && <MyPayList />}
         {selectedMenu === "/MyWrite" && <MyWrite />}
         {selectedMenu === "/MyRanking" && <MyRanking />}
-      </div>
+      </ContentWrapper>
     </Container>
   );
 };
 
 export default MyPage;
-
