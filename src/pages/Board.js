@@ -3,6 +3,7 @@ import { BodyContainer, Container } from "../components/StandardStyles";
 import BoardAPI from "../api/BoardAPI";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -21,6 +22,7 @@ height: 70px;
 const CatButton = styled.button`
 border: none;
 font-size: 24px;
+height: 100%;
 background-color: ${({ isActive }) => (isActive ? "red" : "#D9D9D9")};
 &:hover{
     cursor: pointer;
@@ -66,27 +68,26 @@ display:flex;
 justify-content: center;
 align-items: center;
 width: 10%;
-background-color: red;
 `;
 const BTitle = styled.div`
 display: flex;
 justify-content: flex-start;
 align-items: center;
 width: 40%;
-background-color: blue;
 `;
 const BTime = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
-background-color: yellow;
 width: 50%;
 `;
 const Board = () => {
+    const navigate = useNavigate();
     const [selectedBoardInfo, setSelectedBoardInfo] = useState([]);
     const [selectCategory, setSelectCategory] = useState("");
     const [activeButton, setActiveButton] = useState(""); // 버튼의 활성화 여부를 저장하는 상태
   
+
     const BoardGetAll = async () => {
         const rsp = await BoardAPI.BoardGet();
         if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
@@ -181,7 +182,7 @@ const Board = () => {
               </BoardContents>
             </BoardText>
           ))}
-          <WriteButton>글쓰기</WriteButton>
+          <WriteButton onClick={()=> navigate("/WriteBoard")}>글쓰기</WriteButton>
         </BodyContainer>
       </Container>
     );

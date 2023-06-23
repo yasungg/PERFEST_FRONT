@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { BodyContainer, Container } from "../components/StandardStyles";
+import { useState } from "react";
+import CommentAPI from "../api/CommentAPI";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -16,23 +18,54 @@ const BoardInfo = styled.div`
 display: flex;
 justify-content: space-between;
 align-items: center;
+margin-top: 20px;
+background-color:  #D9D9D9;
+width: 100%;
 `;
 const BoardNickname = styled.div`
 `;
 const BoardDate = styled.div`
 `;
 const BoardDesc = styled.div`
+display: flex;
+margin-top: 50px;
+height: 200px;
+width: 100%;
+background-color:  #D9D9D9;
 `;
 const CommentInfo = styled.div`
 display: flex;
 justify-content: space-between;
 align-items: center;
+width: 100%;
 `;
 const CommentCount = styled.div`
 `;
-const CommentWrite = styled.button`
+const CommentWrite = styled.div`
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 100%;
+.commentwrite{
+    width: 90%;
+}
+`;
+const CommentWriteButton = styled.button`
+width:7%;
+&:hover{
+    cursor: pointer;
+}
 `;
 const BoardArticle = () => {
+    const [inputComment, setInputComment] = useState("");
+
+    const onChangeComment = (e) => {
+        setInputComment(e.target.value);
+    }
+    const onClickWriteComment = async() => {
+        const response = await CommentAPI.CommentWrite(inputComment);
+        console.log(response.data);
+    }
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
@@ -45,8 +78,11 @@ const BoardArticle = () => {
                 <BoardDesc>게시판 내용+사진</BoardDesc>
                 <CommentInfo>
                 <CommentCount>댓글 9999</CommentCount>
-                <CommentWrite>댓글 작성하기</CommentWrite>
                 </CommentInfo>
+                <CommentWrite>
+                    <textarea className="commentwrite"  cols="160" rows="3" value={inputComment} onChange={onChangeComment}></textarea>
+                    <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
+                </CommentWrite>
             </BodyContainer>
         </Container>
     );
