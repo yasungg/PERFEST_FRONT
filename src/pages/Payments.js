@@ -72,7 +72,7 @@ const PayReady = () => {
       window.localStorage.setItem("paymentResult", "success");
     }).catch(error => {
       console.log(error);
-      navigate("/fail-page");
+      // navigate("/fail-page");
       // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
 
     });
