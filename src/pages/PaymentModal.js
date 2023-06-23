@@ -89,7 +89,8 @@ const ModalStyle = styled.div`
     }
 `;
 
-function FindModal (props) {
+function PayModal (props) {
+    const link = window.localStorage.getItem('url');
     // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
     const { open, close, type, deleteCancel, footer, header, body } = props;
     return (
@@ -102,7 +103,7 @@ function FindModal (props) {
                 {header}
             </header>
             <main>
-              <div><iframe src="https://www.naver.com" style={{ width: '100%', height: '400px' }} />
+              <div><iframe src={link} style={{ width: '100%', height: '500px' }} />
               </div>
             </main>
             <footer className='modal-footer'>
@@ -119,4 +120,4 @@ function FindModal (props) {
     );
 }
 
-export default FindModal;
+export default PayModal;
