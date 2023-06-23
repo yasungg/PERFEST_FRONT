@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import MemberAPI from "../api/MemberAPI";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%; 
-  justify-content: center; 
+  height: 100%;
+  justify-content: center;
 `;
 
 const Form = styled.form`
@@ -38,37 +39,45 @@ const Button = styled.button`
 `;
 
 const MySetting = () => {
-  const [email, setEmail] = useState("qhwkal1@naver.com");
-  const [password, setPassword] = useState("******");
-  const [name, setName] = useState("김정민");
-  const [address, setAddress] = useState("천안시 불당동 불당아이파크 xxx동 yyyy호");
-  const [nickname, setNickname] = useState("잼뮈");
-  const [passwordCheck, setPasswordCheck] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await MemberAPI.MemberInfo(email);
+        const data = response.data;
+        setName(data.name);
+        setAddress(data.address);
+        setNickname(data.nickname);
+      } catch (error) {
+        console.error("에러", error);
+      }
+    };
+    fetchData();
+  }, [email]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // 정보업데이트 할 예정
+    // 정보 업데이트 및 백엔드로 업데이트된 정보 전송하는 로직 구현예정> or 바뀔수도.... 고민중
+    
   };
 
   return (
     <Container>
-      <h2>내 정보 수정</h2>
+      <h2>내 정보</h2>
       <Form onSubmit={handleFormSubmit}>
         <Label>이메일</Label>
         <Input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          disabled // 이메일은 수정 불가능
         />
 
-        <Label>비밀번호</Label>
-        <Input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <Label>Name</Label>
+        <Label>이름</Label>
         <Input
           type="text"
           value={name}
