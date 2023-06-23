@@ -16,6 +16,8 @@ import Ranking from "./pages/Ranking";
 import UpdateBoard from "./pages/UpdateBoard";
 import BoardArticle from "./pages/BoardArticle";
 import { PayReady, PayResult } from "./pages/Payments";
+import ResultFalse from "./pages/PayResultFalse";
+import ResultSuccess from "./pages/PaySuccess";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
         <Route path="/MyWrite" element={<MyWrite />} />
         <Route path="/payment" element={<PayReady />} />
         <Route path="/success" element={<PayResult />} />
+        <Route path="/resultFail" element={<ResultFalse />} />
+        <Route path="/resultSuccess" element={<ResultSuccess />} />
         <Route path="/Board" element={<Board />} />
         <Route path="/WriteBoard" element={<WriteBoard />} />
         <Route path="/UpdateBoard" element={<UpdateBoard />} />
