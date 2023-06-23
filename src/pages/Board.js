@@ -21,7 +21,7 @@ height: 70px;
 const CatButton = styled.button`
 border: none;
 font-size: 24px;
-background-color: #D9D9D9;
+background-color: ${({ isActive }) => (isActive ? "red" : "#D9D9D9")};
 &:hover{
     cursor: pointer;
 }
@@ -85,6 +85,7 @@ width: 50%;
 const Board = () => {
     const [selectedBoardInfo, setSelectedBoardInfo] = useState([]);
     const [selectCategory, setSelectCategory] = useState("");
+    const [activeButton, setActiveButton] = useState(""); // 버튼의 활성화 여부를 저장하는 상태
   
     const BoardGetAll = async () => {
         const rsp = await BoardAPI.BoardGet();
@@ -121,6 +122,7 @@ const Board = () => {
   
     const handleCategoryClick = (category) => {
       setSelectCategory(category);
+      setActiveButton(category); // 버튼이 클릭되면 해당 카테고리를 활성화 상태로 설정
     };
     const onClickNewestBoard = async() => {
         const rsp = await BoardAPI.BoardGetByNewest();
@@ -132,11 +134,34 @@ const Board = () => {
         <BodyContainer>
           <Title><h1>커뮤니티</h1></Title>
           <Category>
-            <CatButton onClick={BoardGetAll}>전체</CatButton>
-            <CatButton onClick={() => handleCategoryClick("FREE_BOARD")}>자유게시판</CatButton>
-            <CatButton onClick={() => handleCategoryClick("Q_A")}>Q&A</CatButton>
-            <CatButton onClick={() => handleCategoryClick("FIND_PARTY")}>파티원 찾기</CatButton>
-          </Category>
+        <CatButton
+          isActive={activeButton === ""}
+          onClick={() => {
+            BoardGetAll();
+            handleCategoryClick("");
+          }}
+        >
+          전체
+        </CatButton>
+        <CatButton
+          isActive={activeButton === "FREE_BOARD"}
+          onClick={() => handleCategoryClick("FREE_BOARD")}
+        >
+          자유게시판
+        </CatButton>
+        <CatButton
+          isActive={activeButton === "Q_A"}
+          onClick={() => handleCategoryClick("Q_A")}
+        >
+          Q&A
+        </CatButton>
+        <CatButton
+          isActive={activeButton === "FIND_PARTY"}
+          onClick={() => handleCategoryClick("FIND_PARTY")}
+        >
+          파티원 찾기
+        </CatButton>
+      </Category>
           <Arrange>
                 <ArrButton >
                 <input type="radio" name="arrange" id="newest" onClick={onClickNewestBoard}/>

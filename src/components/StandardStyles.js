@@ -11,7 +11,6 @@ export const BodyContainer = styled.div`
   width: 1280px;
   display: flex;
   flex-direction: column;
-  background: black;
   @media screen and (max-width: 1280px) {
     width: 100%;
   }
