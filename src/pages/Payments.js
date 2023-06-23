@@ -3,11 +3,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import {UserContext} from "../context/UserStore";
 import { Navigate } from "react-router-dom";
-import FindModal from "./PaymentModal";
+import PayModal from "./PaymentModal";
 
 const PayReady = () => {
   const context = useContext(UserContext);
   const [payment, setPayment] = useState("");
+
   // 카카오페이로 보내려는 데이터 작성
   const [data, setData] = useState({
     next_redirect_pc_url: 1,
@@ -65,24 +66,43 @@ const PayReady = () => {
               tid : tid});
       // console.log("결제 성공시 받는 response 값 : " + response);
       console.log("PayReady 메소드 실행 성공");
+      
       // 실행 성공하면 pg토큰 발급을 위해 해당 주소로 리다이렉트
-
+      // 페이지 이동 없이 모달창에서 구현할 예정
+      window.localStorage.setItem("paymentResult", "success");
     }).catch(error => {
       console.log(error);
+      navigate("/fail-page");
+      // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
+
     });
   }, []);
-  const [modalOpen, setModalOpen] = useState(true);
+
+
+  const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => {
     setModalOpen(true);
-    
+    console.log(modalOpen);
   }
-  // 모달 닫으면 자동으로 메인으로 넘어가게 replace:true는 설정하면 이전 페이지로 돌아오지 못함
   const closeModal = () => {
-  setModalOpen(false);
+    setModalOpen(false);
   }
+
+  useEffect(() => {
+    const result = window.localStorage.getItem("paymentResult");
+    // 결제 승인 통신 성공 시 모달창 열기
+    if (result === "success") {
+      openModal();
+    } else if(result === "fail") {
+      closeModal();
+    }
+  }, []);
+
+
+  
   return(
     <div>
-      {modalOpen && <FindModal open={openModal} close={closeModal} />}
+      {modalOpen && <PayModal open={openModal} close={closeModal} />}
     </div>
   )
 }
@@ -109,9 +129,8 @@ const PayResult = () => {
     // 결제 타입
     method : ""
   });
-  // 위에 결제승인 token을 받기 위해
+  // 결제준비 api 통신 성공시 받아온 tg_token 받기
   let search = window.location.search;
-  console.log(search);
 
   // 카카오페이 결제 승인 요청에 보낼 정보
   const data = {
@@ -159,13 +178,16 @@ const PayResult = () => {
   console.log("결제 성공");
   // 나중에 전에 url로 다시 이 결제로 돌아올 수 있는 상황을 대비해 url 삭제
   window.localStorage.removeItem('url');
+
+  // window.localStorage.setItem("paymentResult", "success");
   }).catch(error => {
     // 실패하면 결제 고유번호를 지워줌 똑같은 중복 결제 방지 위랑 비슷하다.
+    window.localStorage.setItem("paymentResult", "fail");
+    console.log(window.localStorage.getItem("paymentResult"));
     window.localStorage.removeItem('tid');
     console.log(error);
   });
   }, []);
-  // window.location.href = next_redirect_pc_url;
 }
 
 
