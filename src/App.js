@@ -2,7 +2,6 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Payment from "./pages/Payments";
 import MyPage from "./pages/MyPage";
 import SideBar from "./pages/Sidebar";
 import MyRanking from "./pages/MyRanking";
@@ -13,10 +12,10 @@ import MyPayList from "./pages/MyPayList";
 import MyWrite from "./pages/MyWrite";
 import Board from "./pages/Board";
 import WriteBoard from "./pages/WriteBoard";
-import PayResultFalse from "./pages/PayResultFalse"
 import Ranking from "./pages/Ranking";
 import UpdateBoard from "./pages/UpdateBoard";
 import BoardArticle from "./pages/BoardArticle";
+import { PayReady, PayResult } from "./pages/Payments";
 
 function App() {
   return (
@@ -31,8 +30,8 @@ function App() {
         <Route path="/ReserveList" element={<MyReserveList />} />
         <Route path="/PayList" element={<MyPayList />} />
         <Route path="/MyWrite" element={<MyWrite />} />
-        <Route path="/Payment" element={<Payment />} />
-        <Route path="/resultfalse" element={<PayResultFalse />} />
+        <Route path="/payment" element={<PayReady />} />
+        <Route path="/success" element={<PayResult />} />
         <Route path="/Board" element={<Board />} />
         <Route path="/WriteBoard" element={<WriteBoard />} />
         <Route path="/UpdateBoard" element={<UpdateBoard />} />
