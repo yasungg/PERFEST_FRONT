@@ -103,6 +103,7 @@ const Board = () => {
         if (selectCategory) {
           const rsp = await BoardAPI.BoardGetByCategory(selectCategory);
           if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
+          console.log(rsp.data);
         }
       };
       onClickCategory();

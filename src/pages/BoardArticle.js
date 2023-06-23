@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { BodyContainer, Container } from "../components/StandardStyles";
 import { useState } from "react";
 import CommentAPI from "../api/CommentAPI";
+import { useEffect } from "react";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -56,8 +57,15 @@ width:7%;
     cursor: pointer;
 }
 `;
+const BoardLike = styled.div`
+display: flex;
+width: 100%;
+justify-content: center;
+align-items: center;
+`;
 const BoardArticle = () => {
     const [inputComment, setInputComment] = useState("");
+    const [commentCount, setCommentCount] = useState("");
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
@@ -66,6 +74,13 @@ const BoardArticle = () => {
         const response = await CommentAPI.CommentWrite(inputComment);
         console.log(response.data);
     }
+    useEffect(() => {
+    const getCommentCount = async() =>{
+        const rsp = await CommentAPI.CommentGetCount();
+        setCommentCount(rsp.data);
+    }
+    getCommentCount();
+    },[])
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
@@ -77,12 +92,13 @@ const BoardArticle = () => {
                 </BoardInfo>
                 <BoardDesc>게시판 내용+사진</BoardDesc>
                 <CommentInfo>
-                <CommentCount>댓글 9999</CommentCount>
+                <CommentCount>댓글{commentCount}</CommentCount>
                 </CommentInfo>
                 <CommentWrite>
                     <textarea className="commentwrite"  cols="160" rows="3" value={inputComment} onChange={onChangeComment}></textarea>
                     <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
                 </CommentWrite>
+                <BoardLike><button>공감하기</button></BoardLike>
             </BodyContainer>
         </Container>
     );
