@@ -10,6 +10,7 @@ const MemberAPI = {
     
     // 회원 탈퇴 (member status N -> Y)
     
+    
 
 }
 export default MemberAPI;
