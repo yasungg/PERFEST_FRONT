@@ -199,20 +199,55 @@ const MySetting = () => {
     setNicModalOpen(false);
   }
   
-
-  
-
   return (
     <>
-    <BodyContainer>
-      <Container>
-        <Header />
-        
-
-      </Container>
-    </BodyContainer>
+      <BodyContainer>
+        <Container>
+          <Header />
+  
+          {memberInfo && memberInfo.map(member => (
+            <Section2 key={member.id}>
+              <p>Email</p>
+              <Label>
+                <input type="text" value={member.email} readOnly placeholder={member.email} />
+              </Label>
+              <p>Name</p>
+              <Label>
+                <input type="text" value={member.name} readOnly placeholder={member.name} />
+              </Label>
+              <p>Nickname</p>
+              <Label>
+                <input
+                  type="text"
+                  value={inputNicName}
+                  onChange={onChangeNicName}
+                  placeholder={member.nickname}
+                />
+                <button>수정</button>
+              </Label>
+              <p>Address</p>
+              <Label>
+                <input
+                  type="text"
+                  value={inputAdd}
+                  onChange={onChangeAdd}
+                  placeholder={member.address}
+                />
+                <button>수정</button>
+              </Label>
+            </Section2>
+          ))}
+  
+          <DeleteMem>
+            <button onClick={deleteMem}>회원탈퇴</button>
+            <hr />
+          </DeleteMem>
+  
+        </Container>
+      </BodyContainer>
     </>
   );
+  
 };
 
 export default MySetting;
