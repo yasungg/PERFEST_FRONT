@@ -55,7 +55,7 @@ const MemberAPI = {
             email: email,
             img: img
         };
-        return await axios.post(KH_DOMAIN + "updateImg", updateImg)
+        return await axios.post(KH_DOMAIN + "/updateImg", updateImg)
     },
 
     // 
