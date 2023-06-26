@@ -74,10 +74,12 @@ const BoardArticle = () => {
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
     }
+    // 게시판 댓글 작성
     const onClickWriteComment = async() => {
         const response = await CommentAPI.CommentWrite(inputComment);
         console.log(response.data);
     }
+    // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
     const getCommentCount = async() =>{
         const rsp = await CommentAPI.CommentGetCount();
@@ -85,6 +87,7 @@ const BoardArticle = () => {
     }
     getCommentCount();
     },[])
+    // 게시판 본문 가져오기
     useEffect(() => {
     const getBoardArticle = async() => {
         const response = await BoardAPI.GetBoardArticle();
