@@ -4,6 +4,7 @@ import { useState } from "react";
 import CommentAPI from "../api/CommentAPI";
 import { useEffect } from "react";
 import BoardAPI from "../api/BoardAPI";
+import { useParams } from "react-router";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -67,6 +68,7 @@ justify-content: center;
 align-items: center;
 `;
 const BoardArticle = () => {
+    const {communityId} = useParams();
     const [inputComment, setInputComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
@@ -91,15 +93,15 @@ const BoardArticle = () => {
     // 게시판 본문 가져오기
     useEffect(() => {
     const getBoardArticle = async() => {
-        const response = await BoardAPI.GetBoardArticle();
+        const response = await BoardAPI.GetBoardArticle(communityId);
         console.log(response.data);
         setBoardArticle(response.data);
     }
     getBoardArticle();
-    },[])
+    },[communityId])
     // 게시판 공감하기 눌르면 공감하기 1 추가
     const onClickLike = async() => {
-        const response = await BoardAPI.AddLike(boardId);
+        const response = await BoardAPI.AddLike(communityId);
         console.log(response.data);
     }
     return(
