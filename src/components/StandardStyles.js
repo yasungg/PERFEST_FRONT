@@ -1,11 +1,13 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: ${(props) => props.justifyContent};
   align-items: ${(props) => props.alignItems};
+  overflow: scroll;
 `;
 export const BodyContainer = styled.div`
   width: 1280px;
