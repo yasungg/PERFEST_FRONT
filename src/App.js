@@ -18,6 +18,7 @@ import BoardArticle from "./pages/BoardArticle";
 import { PayReady, PayResult } from "./pages/Payments";
 import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
+import Festival from "./pages/Festival";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
         <Route path="/UpdateBoard" element={<UpdateBoard />} />
         <Route path="/Ranking" element={<Ranking />} />
         <Route path="/BoardArticle" element={<BoardArticle />} />
+        <Route path="/festival" element={<Festival />} />
       </Routes>
     </Router>
   );

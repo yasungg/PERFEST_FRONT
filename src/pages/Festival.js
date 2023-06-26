@@ -162,7 +162,8 @@ const BodyContainer = styled.div`
 		cursor: pointer;
 	}
 
-	.checkbox_area {
+  /* 지역별 검색 */
+	.location_search_area {
 		width: 550px;
 		height: 220px;
 		background-color: #FFF;
@@ -170,7 +171,7 @@ const BodyContainer = styled.div`
 		border-radius: 5px;
 	}
 
-	.checkbox_area div {
+	.location_search_area div {
 		display: flex;
 		flex-wrap: wrap;
 		width: 100%;
@@ -179,13 +180,13 @@ const BodyContainer = styled.div`
 		align-items: center;
 	}
 
-	.checkbox_area p {
+	.location_search_area p {
 		margin: 0 10px 10px 0;
   	flex-basis: calc(20% - 20px);
   	box-sizing: border-box;
 	}
 
-	.location_search {
+	.location_search_button {
 		width: 50px;
 		height: 30px;
 		background-color: #FFF;
@@ -195,11 +196,12 @@ const BodyContainer = styled.div`
 		margin: 0 10px;
 	}
 
-	.date_area {
+  /* 날짜별 검색 */
+	.period_search_area {
 		display: flex;
 		width: 300px;
 		height: 250px;
-		margin: -4px 0 0 145px;
+		margin: -10px 0 0 145px;
 		background-color: #FFF;
 		border-radius: 5px;
 		z-index: 2;
@@ -207,7 +209,7 @@ const BodyContainer = styled.div`
 		/* align-items: center; */
 	}
 
-	.date_area div {
+	.period_search_area div {
 		display: flex;
 		width: 85%;
 		height: 40px;
@@ -217,18 +219,38 @@ const BodyContainer = styled.div`
 		margin-top: 15px;
 	}
 
-	.date_area input {
+	.period_search_area input {
 		margin: 10px;
 	}
 
-	.map_control {
+  .period_search_button {
+    width: 50px;
+		height: 30px;
+		background-color: #FFF;
+		border: 0.5px solid lightgray;
+		border-radius: 5px;
+  }
+
+  /* 계절별 검색 */
+  .season_search_area {
+    display: flex;
+    width: 300px;
+		height: 250px;
+    margin: -10px 0 0 285px;
+    background-color: #FFF;
+    border-radius: 5px;
+    z-index: 2;
+  }
+
+  /* 지도 조종 영역 */
+	.map_control_area {
 		position: absolute;
 		z-index: 2;
 		bottom: 10px;
 		right: 10px;
 	}
 
-	.zoom_control {
+	.zoom_control_area {
 		display: flex;
 		flex-direction: column;
 		margin-bottom: 10px;
@@ -287,10 +309,28 @@ const Festival = () => {
 
 	// bubble filter 버튼 펼치기 / 닫기 기능
 	const [isOpenLocation, setIsOpenLocation] = useState(false);
-	// const [isOpenPeriod, setIsOpenPeriod] = useState(false);
-	// const [isOpenTheme, setIsOpenTheme] = useState(false);
+	const [isOpenPeriod, setIsOpenPeriod] = useState(false);
+	const [isOpenSeason, setIsOpenSeason] = useState(false);
 	const formRef = useRef(null);
 
+  // 다른 필터 닫기
+  const handleFilterButtonClick = (filterName, isOpenState, setIsOpenState) => {
+    setIsOpenState(!isOpenState);
+
+    if(filterName !== 'location') {
+      setIsOpenLocation(false);
+    }
+
+    if(filterName !== 'period') {
+      setIsOpenPeriod(false);
+    }
+
+    if(filterName !== 'season') {
+      setIsOpenSeason(false);
+    }
+  }
+  
+  // 지역별 검색
 	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if(formRef.current && !formRef.current.contains(event.target)) {
@@ -311,13 +351,55 @@ const Festival = () => {
 			document.removeEventListener('click', handleClickOutside);
 			document.removeEventListener('keydown', hanldeEscapeKey);
 		};
+	}, []);
+
+  // 기간별 검색
+  useEffect(() => {
+		const handleClickOutside = (event) => {
+			if(formRef.current && !formRef.current.contains(event.target)) {
+				setIsOpenPeriod(false);
+			}
+		};
+
+		const hanldeEscapeKey = (event) => {
+			if(event.key === 'Escape') {
+				setIsOpenPeriod(false);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+		document.addEventListener('keydown', hanldeEscapeKey);
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+			document.removeEventListener('keydown', hanldeEscapeKey);
+		};
 
 	}, []);
 
-	function handleButtonClick() {
-		setIsOpenLocation(!isOpenLocation);
-	}
+  // 계절별 검색
+  useEffect(() => {
+		const handleClickOutside = (event) => {
+			if(formRef.current && !formRef.current.contains(event.target)) {
+				setIsOpenSeason(false);
+			}
+		};
 
+		const hanldeEscapeKey = (event) => {
+			if(event.key === 'Escape') {
+				setIsOpenSeason(false);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+		document.addEventListener('keydown', hanldeEscapeKey);
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+			document.removeEventListener('keydown', hanldeEscapeKey);
+		};
+
+	}, []);
 	
 	return(
 		<Container justifyContent="center">
@@ -383,7 +465,7 @@ const Festival = () => {
 								<li className="bubble_filter_item">
 									<button
 										className="bubble_filter_button_location"
-										onClick={handleButtonClick}
+										onClick={() => handleFilterButtonClick('location', isOpenLocation, setIsOpenLocation)}
 										onMouseEnter={handleLocationButtonHover}
 										onMouseLeave={handleLocationButtonLeave}
 										style={{color: isOpenLocation || isLocationHovered ? '#0475F4' : 'black'}}
@@ -393,54 +475,73 @@ const Festival = () => {
 								</li>
 
 								<li className="bubble_filter_item">
-									<button className="bubble_filter_button_period"
-									onMouseEnter={handlePeriodButtonHover}
-									onMouseLeave={handlePeriodButtonLeave}
-									style={{color: isPeriodHovered ? '#0475F4' : 'black'}}
+									<button
+                    className="bubble_filter_button_period"
+                    onClick={() => handleFilterButtonClick('period', isOpenPeriod, setIsOpenPeriod)}
+									  onMouseEnter={handlePeriodButtonHover}
+									  onMouseLeave={handlePeriodButtonLeave}
+									  style={{color: isOpenPeriod || isPeriodHovered ? '#0475F4' : 'black'}}
 									>@ 기간별 검색</button>
 								</li>
 
 								<li className="bubble_filter_item">
 									<button
 										className="bubble_filter_button_theme"
+                    onClick={() => handleFilterButtonClick('season', isOpenSeason, setIsOpenSeason)}
 										onMouseEnter={handleThemeButtonHover}
 										onMouseLeave={handleThemeButtonLeave}
-										style={{color: isThemeHovered ? '#0475F4' : 'black'}}>@ 테마별 검색</button>
+										style={{color: isOpenSeason || isThemeHovered ? '#0475F4' : 'black'}}>@ 계절별 검색</button>
 								</li>
 							</ul>
 
 							{/* 지역별 검색 */}
 							{isOpenLocation && (
-								<form className="checkbox_area">
-									<div>
-										<p><input type="checkbox"></input> 서울</p>
-										<p><input type="checkbox"></input> 경기도</p>
-										<p><input type="checkbox"></input> 강원도</p>
-										<p><input type="checkbox"></input> 충청북도</p>
-										<p><input type="checkbox"></input> 충청남도</p>
-										<p><input type="checkbox"></input> 경상북도</p>
-										<p><input type="checkbox"></input> 경상남도</p>
-										<p><input type="checkbox"></input> 전라북도</p>
-										<p><input type="checkbox"></input> 전라남도</p>
-										<p><input type="checkbox"></input> 제주도</p>
-									</div>
-									<button className="location_search">검색</button>
-								</form>
+							<form className="location_search_area">
+								<div>
+									<p><input type="checkbox"></input>서울</p>
+									<p><input type="checkbox"></input>경기도</p>
+									<p><input type="checkbox"></input>강원도</p>
+									<p><input type="checkbox"></input>충청북도</p>
+									<p><input type="checkbox"></input>충청남도</p>
+									<p><input type="checkbox"></input>경상북도</p>
+									<p><input type="checkbox"></input>경상남도</p>
+									<p><input type="checkbox"></input>전라북도</p>
+									<p><input type="checkbox"></input>전라남도</p>
+									<p><input type="checkbox"></input>제주도</p>
+								</div>
+								<button className="location_search_button">검색</button>
+							</form>
 							)}
 
-							
-							<form className="date_area">
+              {/* 기간별 검색 */}
+              {isOpenPeriod && (
+							<form className="period_search_area">
 								<div>
 									<input type="date"></input>
 									<p>~</p>
 									<input type="date"></input>
-									<button>검색</button>
 								</div>
+								<button className="period_search_button">검색</button>
 							</form>
+              )}
+              
+              {/* 계절별 검색 */}
+              {isOpenSeason && (
+              <form className="season_search_area">
+                <div>
+                  <p><input type="checkbox"></input>봄</p>
+									<p><input type="checkbox"></input>여름</p>
+									<p><input type="checkbox"></input>가을</p>
+									<p><input type="checkbox"></input>겨울</p>
+                </div>
+                <button className="season_search_button">검색</button>
+              </form>
+              )}
+
 						</div>
 						
-						<div className="map_control">
-							<div className="zoom_control">
+						<div className="map_control_area">
+							<div className="zoom_control_area">
 								<button className="zoom_in">+</button>
 								<button className="zoom_out">-</button>
 							</div>
