@@ -92,11 +92,11 @@ const PayReady = () => {
   useEffect(() => {
     // 결제 승인 통신 성공 시 모달창 열기
     if (result === "success") {
-      openModal(true);
+      openModal();
     } else if(result === "fail") {
       closeModal(false);
     }
-  }, [modalOpen]);
+  }, []);
 
 
   

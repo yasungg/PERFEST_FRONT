@@ -23,7 +23,7 @@ const CatButton = styled.button`
 border: none;
 font-size: 24px;
 height: 100%;
-background-color: ${({ isActive }) => (isActive ? "red" : "#D9D9D9")};
+background-color: ${({ isActive }) => (isActive ? "purple" : "#D9D9D9")};
 &:hover{
     cursor: pointer;
 }
@@ -56,6 +56,7 @@ const WriteButton = styled.button`
 display:flex;
 justify-content: flex-end;
 background-color: white;
+height: 100%;
 border-style: none;
 margin-top: 20px;
 font-size: 22px;

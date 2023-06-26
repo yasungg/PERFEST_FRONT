@@ -53,7 +53,7 @@ const MySetting = () => {
         setAddress(data.address);
         setNickname(data.nickname);
       } catch (error) {
-        console.error("에러", error);
+        console.error("ㅜㅜ", error);
       }
     };
     fetchData();
