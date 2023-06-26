@@ -21,7 +21,7 @@ const BodyContainer = styled.div`
 	.mapContainer {
 		display: flex;
 		width: 100%;
-		height: 100vh;
+		height: 100%;
 		position: relative;
 	}
 
@@ -71,7 +71,8 @@ const BodyContainer = styled.div`
 		align-items: center;
 		justify-content: center;
 		width: auto;
-		height: 88vh;
+		height: 100%;
+		max-height: 86vh;
 		background-color: #FFF;
 		overflow: auto;
 		overflow-x: hidden;
