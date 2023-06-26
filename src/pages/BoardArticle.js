@@ -3,11 +3,14 @@ import { BodyContainer, Container } from "../components/StandardStyles";
 import { useState } from "react";
 import CommentAPI from "../api/CommentAPI";
 import { useEffect } from "react";
+import BoardAPI from "../api/BoardAPI";
 const Title = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
 margin-top: 50px;
+`;
+const BoardInfo = styled.div`
 `;
 const BoardTitle = styled.div`
 display: flex;
@@ -15,7 +18,7 @@ justify-content: flex-start;
 align-items: center;
 
 `;
-const BoardInfo = styled.div`
+const UserInfo = styled.div`
 display: flex;
 justify-content: space-between;
 align-items: center;
@@ -66,6 +69,7 @@ align-items: center;
 const BoardArticle = () => {
     const [inputComment, setInputComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
+    const [boardArticle, setBoardArticle] = useState([]);
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
@@ -81,16 +85,28 @@ const BoardArticle = () => {
     }
     getCommentCount();
     },[])
+    useEffect(() => {
+    const getBoardArticle = async() => {
+        const response = await BoardAPI.GetBoardArticle();
+        console.log(response.data);
+        setBoardArticle(response.data);
+    }
+    getBoardArticle();
+    },[])
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
                 <Title><h1>자유 게시판</h1></Title>
-                <BoardTitle>게시글 제목1</BoardTitle>
-                <BoardInfo>
-                    <BoardNickname>닉네임1</BoardNickname>
-                    <BoardDate>2023.06.21</BoardDate>
+                {boardArticle.map((community) => (
+                <BoardInfo key={community.communityTitle}>
+                <BoardTitle >{community.communityTitle}</BoardTitle>
+                <UserInfo>
+                    <BoardNickname>{community.memberDTOs}</BoardNickname>
+                    <BoardDate>{community.writtenTime}</BoardDate>
+                </UserInfo>
+                <BoardDesc>{community.communityDesc}</BoardDesc>
                 </BoardInfo>
-                <BoardDesc>게시판 내용+사진</BoardDesc>
+                ))}
                 <CommentInfo>
                 <CommentCount>댓글{commentCount}</CommentCount>
                 </CommentInfo>
