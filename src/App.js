@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
-import SideBar from "./pages/Sidebar";
 import MyRanking from "./pages/MyRanking";
 import MySetting from "./pages/MySetting";
 import MyReview from "./pages/MyReview";
@@ -18,6 +17,7 @@ import BoardArticle from "./pages/BoardArticle";
 import { PayReady, PayResult } from "./pages/Payments";
 import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
+
 import Festival from "./pages/Festival";
 
 function App() {
@@ -42,7 +42,8 @@ function App() {
         <Route path="/UpdateBoard" element={<UpdateBoard />} />
         <Route path="/Ranking" element={<Ranking />} />
         <Route path="/BoardArticle" element={<BoardArticle />} />
-        <Route path="/festival" element={<Festival />} />
+        <Route path="/Festival" element={<Festival />} />
+
       </Routes>
     </Router>
   );

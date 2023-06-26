@@ -14,6 +14,17 @@ const BoardAPI = {
     BoardGetByNewest: async() => {
         return await axios.get(localHost + `/community/getnewestboard`)
     },
+    // 게시판 본문 내용 가져오기
+    GetBoardArticle: async() => {
+        return await axios.get(localHost + `/community/getboardarticle`)
+    },
+    // 게시판 게시글에 좋아요 추가
+    AddLike: async(boardId) => {
+        const addLike = {
+            communityId : boardId
+        };
+        return await axios.post(localHost + `community/addlike`, addLike);
+    },
     // 게시판 작성
     BoardWrite : async(title, category, text ) => {
         const writeBoard = {

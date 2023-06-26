@@ -3,11 +3,14 @@ import { BodyContainer, Container } from "../components/StandardStyles";
 import { useState } from "react";
 import CommentAPI from "../api/CommentAPI";
 import { useEffect } from "react";
+import BoardAPI from "../api/BoardAPI";
 const Title = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
 margin-top: 50px;
+`;
+const BoardInfo = styled.div`
 `;
 const BoardTitle = styled.div`
 display: flex;
@@ -15,7 +18,7 @@ justify-content: flex-start;
 align-items: center;
 
 `;
-const BoardInfo = styled.div`
+const UserInfo = styled.div`
 display: flex;
 justify-content: space-between;
 align-items: center;
@@ -66,14 +69,18 @@ align-items: center;
 const BoardArticle = () => {
     const [inputComment, setInputComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
+    const [boardArticle, setBoardArticle] = useState([]);
+    const [boardId, setBoardId] = useState("");
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
     }
+    // 게시판 댓글 작성
     const onClickWriteComment = async() => {
         const response = await CommentAPI.CommentWrite(inputComment);
         console.log(response.data);
     }
+    // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
     const getCommentCount = async() =>{
         const rsp = await CommentAPI.CommentGetCount();
@@ -81,16 +88,34 @@ const BoardArticle = () => {
     }
     getCommentCount();
     },[])
+    // 게시판 본문 가져오기
+    useEffect(() => {
+    const getBoardArticle = async() => {
+        const response = await BoardAPI.GetBoardArticle();
+        console.log(response.data);
+        setBoardArticle(response.data);
+    }
+    getBoardArticle();
+    },[])
+    // 게시판 공감하기 눌르면 공감하기 1 추가
+    const onClickLike = async() => {
+        const response = await BoardAPI.AddLike(boardId);
+        console.log(response.data);
+    }
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
                 <Title><h1>자유 게시판</h1></Title>
-                <BoardTitle>게시글 제목1</BoardTitle>
-                <BoardInfo>
-                    <BoardNickname>닉네임1</BoardNickname>
-                    <BoardDate>2023.06.21</BoardDate>
+                {boardArticle.map((community) => (
+                <BoardInfo key={community.communityTitle}>
+                <BoardTitle >{community.communityTitle}</BoardTitle>
+                <UserInfo>
+                    <BoardNickname>{community.memberDTOs}</BoardNickname>
+                    <BoardDate>{community.writtenTime}</BoardDate>
+                </UserInfo>
+                <BoardDesc>{community.communityDesc}</BoardDesc>
                 </BoardInfo>
-                <BoardDesc>게시판 내용+사진</BoardDesc>
+                ))}
                 <CommentInfo>
                 <CommentCount>댓글{commentCount}</CommentCount>
                 </CommentInfo>
@@ -98,7 +123,7 @@ const BoardArticle = () => {
                     <textarea className="commentwrite"  cols="160" rows="3" value={inputComment} onChange={onChangeComment}></textarea>
                     <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
                 </CommentWrite>
-                <BoardLike><button>공감하기</button></BoardLike>
+                <BoardLike><button onClick={onClickLike}>공감하기</button></BoardLike>
             </BodyContainer>
         </Container>
     );

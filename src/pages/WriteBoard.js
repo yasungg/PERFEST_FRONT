@@ -74,6 +74,7 @@ const WriteBoard = () => {
     const onChangeCategory = (e) => {
         setSelectedCategory(e.target.value);
     };
+    // 게시판 작성하기
     const onClickWriteBoard = async() => {
         const response = await BoardAPI.BoardWrite(inputBoardTitle,selectedCategory,inputBoardText);
         console.log(response.data);

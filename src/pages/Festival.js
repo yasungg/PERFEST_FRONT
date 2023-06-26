@@ -329,7 +329,7 @@ const Festival = () => {
       setIsOpenSeason(false);
     }
   }
-  
+
   // 지역별 검색
 	useEffect(() => {
 		const handleClickOutside = (event) => {

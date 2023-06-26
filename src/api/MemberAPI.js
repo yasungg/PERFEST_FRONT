@@ -9,9 +9,9 @@ const MemberAPI = {
     },
     
     // 회원 닉네임 수정
-    updateNicName: async(id, nicName) => {
+    updateNicName: async(email, nicName) => {
         const updateNicName = {
-            id: id,
+            email: email,
             nicName: nicName
         };
         return await axios.post(KH_DOMAIN + "/updateNicName", updateNicName);
