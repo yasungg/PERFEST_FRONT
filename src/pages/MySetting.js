@@ -117,7 +117,7 @@ const MySetting = () => {
   const [addModalOpen, setAddModalOpen] = useState(false); // 주소 수정 모달
   const [nicModalOpen, setNicModalOpen] = useState(false); // 닉네임 수정 모달
 
-  // 오류 메세지
+  // 오류 메세지 (바꿀수있음)
   const [addMsg, setAddMsg] = useState("");
   const [nicMsg, setNicMsg] = useState("");
 
@@ -141,6 +141,8 @@ const MySetting = () => {
   const updateNicName = () => {
     setNicModalOpen(true);
   }
+
+  // 
 
   const confirm = async(modalType) => {
     if(modalType === "del") {
