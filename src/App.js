@@ -41,7 +41,7 @@ function App() {
         <Route path="/WriteBoard" element={<WriteBoard />} />
         <Route path="/UpdateBoard" element={<UpdateBoard />} />
         <Route path="/Ranking" element={<Ranking />} />
-        <Route path="/BoardArticle" element={<BoardArticle />} />
+        <Route path="/BoardArticle/:communityId" element={<BoardArticle />} />
         <Route path="/Festival" element={<Festival />} />
 
       </Routes>

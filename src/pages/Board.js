@@ -132,7 +132,9 @@ const Board = () => {
     const onClickNewestBoard = async() => {
         const rsp = await BoardAPI.BoardGetByNewest();
         setSelectedBoardInfo(rsp.data);
-
+      }
+    const boardClick = (communityId) => {
+      navigate(`/BoardArticle/${communityId}`);
     }
     return (
       <Container justifyContent="center" alignItems="center">
@@ -179,7 +181,7 @@ const Board = () => {
             </Arrange>
           {selectedBoardInfo.map((community) => (
             <BoardText key={community.communityTitle}>
-              <BoardContents>
+              <BoardContents onClick={() => boardClick(community.communityId)}>
                 <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
                 <BTitle>{community.communityTitle}</BTitle>
                 <BTime>{community.writtenTime}</BTime>
