@@ -70,6 +70,7 @@ const BoardArticle = () => {
     const [inputComment, setInputComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
+    const [boardId, setBoardId] = useState("");
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
@@ -96,6 +97,11 @@ const BoardArticle = () => {
     }
     getBoardArticle();
     },[])
+    // 게시판 공감하기 눌르면 공감하기 1 추가
+    const onClickLike = async() => {
+        const response = await BoardAPI.AddLike(boardId);
+        console.log(response.data);
+    }
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
@@ -117,7 +123,7 @@ const BoardArticle = () => {
                     <textarea className="commentwrite"  cols="160" rows="3" value={inputComment} onChange={onChangeComment}></textarea>
                     <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
                 </CommentWrite>
-                <BoardLike><button>공감하기</button></BoardLike>
+                <BoardLike><button onClick={onClickLike}>공감하기</button></BoardLike>
             </BodyContainer>
         </Container>
     );
