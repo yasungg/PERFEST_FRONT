@@ -4,6 +4,7 @@ import MemberAPI from "../api/MemberAPI";
 import { UserContext } from "../context/UserStore";
 import { useNavigate } from "react-router";
 import Header from "../components/Header";
+import Modal from "../utils/Modal";
 
 
 const BodyContainer = styled.div`
@@ -206,36 +207,42 @@ const MySetting = () => {
       <BodyContainer>
         <Container>
           <Header />
-  
           {memberInfo && memberInfo.map(member => (
             <Section2 key={member.id}>
-              <p>Email</p>
               <Label>
-                <input type="text" value={member.email} readOnly placeholder={member.email} />
+                <div>
+                  <p>이메일</p>
+                  <input type="email" value={member.email} readOnly placeholder={member.email} />
+                </div>
               </Label>
-              <p>Name</p>
               <Label>
-                <input type="text" value={member.name} readOnly placeholder={member.name} />
+                <div>
+                  <p>이름</p>
+                  <div className="name"></div>
+                  <input type="text" value={member.name} readOnly placeholder={member.name} />
+                </div>
               </Label>
-              <p>Nickname</p>
               <Label>
+                <div>
+                  <p>닉네임</p>
+                  <div className="nicName"></div>
                 <input
                   type="text"
-                  value={inputNicName}
-                  onChange={onChangeNicName}
                   placeholder={member.nickname}
                 />
-                <button>수정</button>
+                <button onClick={updateNicName}>수정</button>
+                </div>
               </Label>
-              <p>Address</p>
               <Label>
+                <div>
+                  <p>주소</p>
+                  <div className="address"></div>
                 <input
-                  type="text"
-                  value={inputAdd}
-                  onChange={onChangeAdd}
+                  type="address"
                   placeholder={member.address}
                 />
-                <button>수정</button>
+                <button onClick={updateAdd}>수정</button>
+                </div>
               </Label>
             </Section2>
           ))}
@@ -244,9 +251,11 @@ const MySetting = () => {
             <button onClick={deleteMem}>회원탈퇴</button>
             <hr />
           </DeleteMem>
-  
         </Container>
       </BodyContainer>
+      <Modal open={delModalOpen} type={true} close={closeModal} confirm={() => confirm("del")} header="회원탈퇴">
+              정말 탈퇴하시겠습니까?
+      </Modal>
     </>
   );
   
