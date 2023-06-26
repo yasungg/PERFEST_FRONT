@@ -68,7 +68,7 @@ justify-content: center;
 align-items: center;
 `;
 const BoardArticle = () => {
-    const {communityId} = useParams();
+    const {communityId} = useParams(); // 게시판 번호 옮기기위해서 useparams 사용
     const [inputComment, setInputComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
