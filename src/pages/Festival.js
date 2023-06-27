@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { Container } from "../components/StandardStyles";
+import { Container as BaseContainer } from "../components/StandardStyles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import festivalPoster from "../images/2023-대한민국-과학축제-포스터.webp";
@@ -12,10 +12,14 @@ const BodyContainer = styled.div`
   display: flex;
 
 	.searchContainer {
+		display: inline-block;
 		max-width: 400px;
 		min-width: 400px;
 		height: auto;
 		background: linear-gradient(to right, #654ea3, #eaafc8);
+		overflow-y: hidden;
+		z-index: 3;
+		box-shadow: 1px 0px 5px 0px #555555
 	}
 
 	.mapContainer {
@@ -29,10 +33,11 @@ const BodyContainer = styled.div`
 	.input_box {
 		display: flex;
 		width: 100%;
-		height: 8vh;
+		height: 8%;
 		min-height: 74.95px;
 		align-items: center;
 		justify-content: center;
+		box-shadow: 5px 0 5px -5px #333;
 	}
 
 	.search {
@@ -42,7 +47,8 @@ const BodyContainer = styled.div`
 		border: none;
 		outline: none;
 		padding-left: 15px;
-		font-size: 15px;
+		font-size: 13px;
+		box-shadow: 1px 1px 4px -1px #555555;
 	}
 
 	.search_button {
@@ -53,13 +59,14 @@ const BodyContainer = styled.div`
 		background-color: #FFF;
 		border: none;
 		border-radius: 5px;
+		box-shadow: 1px 1px 4px -1px #555555;
 	}
 
 	.result {
 		display: flex;
 		width: 100%;
-		height: 4vh;
-		min-height: 38.47px;
+		height: 4%;
+		min-height: 40px;
 		align-items: center;
 		justify-content: center;
 		background-color: aliceblue;
@@ -67,15 +74,40 @@ const BodyContainer = styled.div`
 	}
 
 	.list_container {
-		display: flexbox;
+		display: block;
 		align-items: center;
 		justify-content: center;
 		width: auto;
-		height: 100%;
-		max-height: 86vh;
+		height: 88%;
+		min-height: 80;
+		margin-top: auto;
 		background-color: #FFF;
-		overflow: auto;
+		overflow-y: auto;
 		overflow-x: hidden;
+
+		.show-scroll {
+			overflow-y: scroll;
+		}
+
+		/* 스크롤바 커스터마이징 */
+		&::-webkit-scrollbar {
+			width: 10px;
+			background: #F4EBFF;
+			border-radius: 2px;
+  	}
+
+		&::-webkit-scrollbar-thumb {
+			/* background: #FED4E5; */
+			background: lightgray;
+			border-radius: 10px;
+			background-clip: padding-box;
+			border: 1px solid transparent;
+			/* height: 20px; */
+		}
+
+		&::-webkit-scrollbar-track {
+			box-shadow: inset 0px 0px 3px gray;
+		}
 	}
 
 	/* ul */
@@ -117,9 +149,11 @@ const BodyContainer = styled.div`
 	.festival_content {
 		width: 200px;
 		height: 100px;
-		border: 1px solid gray;
+		/* border: 1px solid gray; */
+		border-radius: 5px;
 		margin: 5px 0;
 		margin-right: 10px;
+		background-color: #F4EBFF;
 	}
 	
 	/* mapContainer 영역 */
@@ -161,6 +195,7 @@ const BodyContainer = styled.div`
 		background-color: #fff;
 		margin-right: 20px;
 		cursor: pointer;
+		box-shadow: 1px 1px 4px 0px #555555;
 	}
 
   /* 지역별 검색 */
@@ -170,9 +205,10 @@ const BodyContainer = styled.div`
 		background-color: #FFF;
 		margin: -10px 0 0 5px;
 		border-radius: 5px;
+		box-shadow: 1px 1px 5px -1px #555555;
 	}
 
-	.location_search_area div {
+	.location_checkbox_area {
 		display: flex;
 		flex-wrap: wrap;
 		width: 100%;
@@ -181,10 +217,36 @@ const BodyContainer = styled.div`
 		align-items: center;
 	}
 
-	.location_search_area p {
-		margin: 0 10px 10px 0;
-  	flex-basis: calc(20% - 20px);
-  	box-sizing: border-box;
+	.location_checkbox {
+		display: flex;
+		width: 95px;
+		height: 40px;
+		border: 0.5px solid lightgray;
+		border-radius: 4px;
+		margin: 5px;
+		align-items: center;
+		box-shadow: 1px 1px 5px 0px #E2E2E2;
+	}
+
+	.location_checkbox:hover {
+		background-color: #FFF5FB;
+	}
+	
+	.location_search_area input {
+		width: 14px;
+		height: 14px;
+		margin: 7px; 
+		cursor: pointer;
+	}
+	
+	.location_checkbox label {
+		font-size: 15px;
+		font-weight: 1000	;
+		cursor: pointer;
+	}
+	
+	.location_checkbox label:hover {
+		color: #0475F4;
 	}
 
 	.location_search_button {
@@ -195,53 +257,119 @@ const BodyContainer = styled.div`
 		border-radius: 5px;
 		float: right;
 		margin: 0 10px;
+		cursor: pointer;
+		box-shadow: 1px 1px 5px 0px #E2E2E2;
 	}
 
-  /* 날짜별 검색 */
+  /* 기간별 검색 */
 	.period_search_area {
 		display: flex;
+		flex-direction: column;
 		width: 300px;
-		height: 250px;
+		height: 110px;
 		margin: -10px 0 0 145px;
 		background-color: #FFF;
 		border-radius: 5px;
 		z-index: 2;
 		justify-content: center;
-		/* align-items: center; */
+		align-items: center;
+		box-shadow: 1px 1px 5px -1px #555555;
 	}
 
 	.period_search_area div {
 		display: flex;
-		width: 85%;
+		width: 90%;
 		height: 40px;
 		justify-content: center;
 		align-items: center;
 		border: 0.5px solid lightgray;
+		border-radius: 4px;
 		margin-top: 15px;
+		box-shadow: 1px 1px 5px 0px #E2E2E2;
 	}
 
 	.period_search_area input {
 		margin: 10px;
+		cursor: pointer;
 	}
 
   .period_search_button {
     width: 50px;
 		height: 30px;
+		margin: 10px 15px;
 		background-color: #FFF;
 		border: 0.5px solid lightgray;
 		border-radius: 5px;
+		align-self: flex-end;
+		cursor: pointer;
+		box-shadow: 1px 1px 5px 0px #E2E2E2;
   }
 
   /* 계절별 검색 */
   .season_search_area {
     display: flex;
-    width: 300px;
-		height: 250px;
+		flex-direction: column;
+    width: 340px;
+		height: 110px;
     margin: -10px 0 0 285px;
     background-color: #FFF;
     border-radius: 5px;
     z-index: 2;
+		box-shadow: 1px 1px 5px -1px #555555;
   }
+
+	.season_checkbox_area {
+		display: flex;
+		width: 100%;
+		height: 40px;
+		margin-top: 15px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.season_checkbox {
+		display: flex;
+		width: 68px;
+		height: 38px;
+		border: 0.5px solid lightgray;
+		border-radius: 4px;
+		margin: 5px;
+		align-items: center;
+		box-shadow: 1px 1px 5px 0px #E2E2E2;
+	}
+
+	.season_checkbox:hover {
+		background-color: #FFF5FB;
+	}
+
+	.season_checkbox input {
+		width: 14px;
+		height: 14px;
+		margin: 7px;
+		cursor: pointer;
+	}
+
+	.season_checkbox label {
+		font-size: 15px;
+		font-weight: 1000;
+		cursor: pointer;
+	}
+
+	.season_checkbox label:hover {
+		color: #0475F4;
+	}
+
+	.season_search_button {
+		width: 50px;
+		height: 30px;
+		background-color: #FFF;
+		margin: 10px 15px;
+		border: 0.5px solid lightgray;
+		border-radius: 5px;
+		align-self: flex-end;
+		cursor: pointer;
+		box-shadow: 1px 1px 5px 0px #E2E2E2;
+	}
 
   /* 지도 조종 영역 */
 	.map_control_area {
@@ -258,14 +386,15 @@ const BodyContainer = styled.div`
 	}
 
 	.zoom_in, .zoom_out {
-		margin: 0.08px 0;
+		margin: 0.15px 0;
 		width: 35px;
 		height: 35px;
 		background-color: #FFF;
 		border: 0.5px solid gray;
-		border-radius: 2px;
+		border-radius: 3px;
 		cursor: pointer;
 		font-size: 18px;
+		box-shadow: 1px 1px 5px -1px #555555;
 	}
 
 	.my_location {
@@ -273,11 +402,20 @@ const BodyContainer = styled.div`
 		height: 35px;
 		background-color: #FFF;
 		border: 0.5px solid gray;
-		border-radius: 2px;
+		border-radius: 3px;
 		cursor: pointer;
+		box-shadow: 1px 1px 5px -1px #555555;
 	}
-
 `;
+// 전체 페이지 스크롤바 숨김 기능
+const Container = styled(BaseContainer)`
+	-ms-overflow-style: none; /* 인터넷 익스플로러 */
+  scrollbar-width: none; /* 파이어폭스 */
+
+  &::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지 */
+  }
+`
 
 
 const Festival = () => {
@@ -403,7 +541,8 @@ const Festival = () => {
 	}, []);
 	
 	return(
-		<Container justifyContent="center">
+		<Container
+			justifyContent="center">	
     	<Header />
         <BodyContainer>
 
@@ -419,7 +558,7 @@ const Festival = () => {
 								<li className="card">
 									<img className="poster" src={festivalPoster} alt="festival_poster"></img>
 										<div className="card_content">
-										<div className="festival_name">2023년 대한민국 과학축제</div>
+										<div className="festival_name"><strong>2023년 대한민국 과학축제</strong></div>
 										<div className="festival_season">2023.04.27 ~ 2023.04.30</div>
 										<div className="festival_content">대전 엑스포시민광장 및 엑스포과학공원 일원</div>
 									</div>
@@ -427,7 +566,7 @@ const Festival = () => {
 								<li className="card">
 									<img className="poster" src={festivalPoster} alt="festival_poster"></img>
 										<div className="card_content">
-										<div className="festival_name">2023년 대한민국 과학축제</div>
+										<div className="festival_name"><strong>2023년 대한민국 과학축제</strong></div>
 										<div className="festival_season">2023.04.27 ~ 2023.04.30</div>
 										<div className="festival_content">대전 엑스포시민광장 및 엑스포과학공원 일원</div>
 									</div>
@@ -435,21 +574,21 @@ const Festival = () => {
 								<li className="card">
 									<img className="poster" src={festivalPoster} alt="festival_poster"></img>
 										<div className="card_content">
-										<div className="festival_name">2023년 대한민국 과학축제</div>
+										<div className="festival_name"><strong>2023년 대한민국 과학축제</strong></div>
 										<div className="festival_season">2023.04.27 ~ 2023.04.30</div>
 										<div className="festival_content">대전 엑스포시민광장 및 엑스포과학공원 일원</div>
 									</div>
 								</li><li className="card">
 									<img className="poster" src={festivalPoster} alt="festival_poster"></img>
 										<div className="card_content">
-										<div className="festival_name">2023년 대한민국 과학축제</div>
+										<div className="festival_name"><strong>2023년 대한민국 과학축제</strong></div>
 										<div className="festival_season">2023.04.27 ~ 2023.04.30</div>
 										<div className="festival_content">대전 엑스포시민광장 및 엑스포과학공원 일원</div>
 									</div>
 								</li><li className="card">
 									<img className="poster" src={festivalPoster} alt="festival_poster"></img>
 										<div className="card_content">
-										<div className="festival_name">2023년 대한민국 과학축제</div>
+										<div className="festival_name"><strong>2023년 대한민국 과학축제</strong></div>
 										<div className="festival_season">2023.04.27 ~ 2023.04.30</div>
 										<div className="festival_content">대전 엑스포시민광장 및 엑스포과학공원 일원</div>
 									</div>
@@ -471,8 +610,6 @@ const Festival = () => {
 										onMouseLeave={handleLocationButtonLeave}
 										style={{color: isOpenLocation || isLocationHovered ? '#0475F4' : 'black'}}
 										>@ 지역별 검색</button>
-									{/* 서울 대전 인천 부산 대구 광주 울산 */}
-									{/* 경기도 강원도 충청북도 충청남도 경상북도 경상남도 전라북도 전라남도 제주도 */}
 								</li>
 
 								<li className="bubble_filter_item">
@@ -491,24 +628,55 @@ const Festival = () => {
                     onClick={() => handleFilterButtonClick('season', isOpenSeason, setIsOpenSeason)}
 										onMouseEnter={handleThemeButtonHover}
 										onMouseLeave={handleThemeButtonLeave}
-										style={{color: isOpenSeason || isThemeHovered ? '#0475F4' : 'black'}}>@ 계절별 검색</button>
+										style={{color: isOpenSeason || isThemeHovered ? '#0475F4' : 'black'}}
+										>@ 계절별 검색</button>
 								</li>
 							</ul>
 
 							{/* 지역별 검색 */}
 							{isOpenLocation && (
 							<form className="location_search_area">
-								<div>
-									<p><input type="checkbox"></input>서울</p>
-									<p><input type="checkbox"></input>경기도</p>
-									<p><input type="checkbox"></input>강원도</p>
-									<p><input type="checkbox"></input>충청북도</p>
-									<p><input type="checkbox"></input>충청남도</p>
-									<p><input type="checkbox"></input>경상북도</p>
-									<p><input type="checkbox"></input>경상남도</p>
-									<p><input type="checkbox"></input>전라북도</p>
-									<p><input type="checkbox"></input>전라남도</p>
-									<p><input type="checkbox"></input>제주도</p>
+								<div className="location_checkbox_area">
+									<div className="location_checkbox">
+										<input type="checkbox" id="서울" />
+										<label htmlFor="서울">서울</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="경기도" />
+										<label htmlFor="경기도">경기도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="강원도" />
+										<label htmlFor="강원도">강원도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="충청북도" />
+										<label htmlFor="충청북도">충청북도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="충청남도" />
+										<label htmlFor="충청남도">충청남도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="경상북도" />
+										<label htmlFor="경상북도">경상북도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="경상남도" />
+										<label htmlFor="경상남도">경상남도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="전라북도" />
+										<label htmlFor="전라북도">전라북도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="전라남도" />
+										<label htmlFor="전라남도">전라남도</label>
+									</div>
+									<div className="location_checkbox">
+										<input type="checkbox" id="제주도" />
+										<label htmlFor="제주도">제주도</label>
+									</div>
 								</div>
 								<button className="location_search_button">검색</button>
 							</form>
@@ -529,11 +697,23 @@ const Festival = () => {
               {/* 계절별 검색 */}
               {isOpenSeason && (
               <form className="season_search_area">
-                <div>
-                  <p><input type="checkbox"></input>봄</p>
-									<p><input type="checkbox"></input>여름</p>
-									<p><input type="checkbox"></input>가을</p>
-									<p><input type="checkbox"></input>겨울</p>
+                <div className="season_checkbox_area">
+									<div className="season_checkbox">
+										<input type="checkbox" id="spring"/>
+										<label htmlFor="spring">봄</label>
+									</div>
+									<div className="season_checkbox">
+										<input type="checkbox" id="summer"/>
+										<label htmlFor="summer">여름</label>
+									</div>
+									<div className="season_checkbox">
+										<input type="checkbox" id="autumn"/>
+										<label htmlFor="autumn">가을</label>
+									</div>
+									<div className="season_checkbox">
+										<input type="checkbox" id="winter"/>
+										<label htmlFor="winter">겨울</label>
+									</div>
                 </div>
                 <button className="season_search_button">검색</button>
               </form>
