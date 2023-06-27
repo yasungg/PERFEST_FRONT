@@ -17,7 +17,7 @@ const SideBarWrapper = styled.div`
   flex-direction: column;
   background-color: #f5f5f5;
   padding: 20px;
-  width: 240px;
+  width: 220px;
 `;
 
 const ProfileImage = styled.img`

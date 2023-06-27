@@ -105,8 +105,9 @@ const ModalStyle = styled.div`
 const MySetting = () => {
 
   const navigate = useNavigate();
-  const context = useContext(UserContext);
-  const { userEmail } = context;
+  // const context = useContext(UserContext);
+  // const { userEmail } = context;  // 로그인후 컨텍스트에 담아올 예정..
+  let userEmail = "qhwkal1@naver.com"
 
   // 회원정보 조회 및 닉네임 , 주소 수정
   const [memberInfo, setMemberInfo] = useState("");
@@ -149,7 +150,7 @@ const MySetting = () => {
     if(modalType === "del") {
       const response = await MemberAPI.deleteMem(userEmail);
       console.log(response.data);
-      if(response.data === true) navigate("/"); // 탈퇴시 홈
+      if(response.data === true) navigate("/Login"); // 탈퇴시 로그인 화면
     } else if(modalType === "updateAdd") {
       const addCheck = await MemberAPI.addRegCheck(inputAdd);
       if(addCheck.data === true) {
@@ -256,6 +257,27 @@ const MySetting = () => {
       <Modal open={delModalOpen} type={true} close={closeModal} confirm={() => confirm("del")} header="회원탈퇴">
               정말 탈퇴하시겠습니까?
       </Modal>
+      <Modal open={addModalOpen} type={true} close={closeModal} confirm={() => confirm("updateAdd")} header="주소 변경" >
+        <ModalStyle>
+          <p>수정할 주소를 입력해주세요</p>
+          <br />
+          <input type="address" value={inputAdd} onChange={onChangeAdd} />
+          <div>
+            <p>{addMsg}</p>
+          </div>
+        </ModalStyle>
+      </Modal>
+      <Modal open={nicModalOpen} type={true} close={closeModal} confirm={() => confirm("upNicname")} header="닉네임 변경">
+        <ModalStyle>
+          <p>수정할 닉네임을 입력해주세요</p>
+          <br />
+          <input type="text" value={inputNicName} onChange={onChangeNicName} />
+          <div>
+            <p>{nicMsg}</p>
+          </div>
+        </ModalStyle>
+      </Modal>
+
     </>
   );
   
