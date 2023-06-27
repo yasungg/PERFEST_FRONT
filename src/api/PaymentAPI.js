@@ -11,7 +11,7 @@ const PaymentAPI = {
       tid: tid,
       tax_free: kakaoTaxFreeAmount
     };
-    return await axios.post(KH_DOMAIN + "/payment" + info);
+    return await axios.post(KH_DOMAIN + "/payment/regist" + info);
   }
 }
 
