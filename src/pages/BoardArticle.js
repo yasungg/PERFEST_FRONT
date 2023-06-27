@@ -5,6 +5,7 @@ import CommentAPI from "../api/CommentAPI";
 import { useEffect } from "react";
 import BoardAPI from "../api/BoardAPI";
 import { useParams } from "react-router";
+import {formatDate} from "../components/DateStyle";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -57,10 +58,23 @@ width: 100%;
 `;
 const CommentDesc = styled.div`
 display: flex;
+flex-direction: column;
 `;
-const CommentBody = styled.div`
+const Comment = styled.div`
+margin-top: 5px;
+margin-bottom: 5px;
+background-color: #D9D9D9;
+`;
+const CommentHead = styled.div`
+display: flex;
+justify-content: flex-start;
+`;
+const CommentNickName = styled.div`
 `;
 const CommentWrittenTime = styled.div`
+font-size: 13px;
+`;
+const CommentBody = styled.div`
 `;
 const CommentLikeCount = styled.div`
 `;
@@ -143,7 +157,7 @@ const BoardArticle = () => {
                 <BoardTitle>{community.communityTitle}</BoardTitle>
                 <UserInfo>
                     <BoardNickname>{community.memberDTOs}</BoardNickname>
-                    <BoardDate>{community.writtenTime}</BoardDate>
+                    <BoardDate>{formatDate(community.writtenTime)}</BoardDate>
                 </UserInfo>
                 <BoardDesc>{community.communityDesc}</BoardDesc>
                 </BoardInfo>
@@ -157,18 +171,14 @@ const BoardArticle = () => {
                 </CommentWrite>
                 {commentData&&commentData.map((comment) => (
                 <CommentDesc key={comment.commentBody}>
+                    <Comment>
+                    <CommentHead>
+                        <CommentNickName></CommentNickName>
+                        <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
+                    </CommentHead>
                     <CommentBody>{comment.commentBody}</CommentBody>
-                    <CommentWrittenTime>
-                        {new Date(comment.commentWrittenTime).toLocaleString("ko-KR",{
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                        })}
-                        </CommentWrittenTime>
                     <CommentLikeCount>{comment.CommentLikeCount}</CommentLikeCount>
+                    </Comment>
                 </CommentDesc>
                 ))}
                 <BoardLike><button onClick={onClickLike}>공감하기</button></BoardLike>

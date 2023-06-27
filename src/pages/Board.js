@@ -4,6 +4,7 @@ import BoardAPI from "../api/BoardAPI";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { formatDate } from "../components/DateStyle";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -184,16 +185,7 @@ const Board = () => {
               <BoardContents onClick={() => boardClick(community.communityId)}>
                 <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
                 <BTitle>{community.communityTitle}</BTitle>
-                <BTime>
-                  {new Date(community.writtenTime).toLocaleString("ko-KR",{
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                        })}
-                  </BTime>
+                <BTime>{formatDate(community.writtenTime)}</BTime>
               </BoardContents>
             </BoardText>
           ))}
