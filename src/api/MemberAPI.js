@@ -28,7 +28,7 @@ const MemberAPI = {
         const deleteMem = {
             email: email
         };
-        return await axios.get(KH_DOMAIN + "/del", deleteMem);
+        return await axios.post(KH_DOMAIN + "auth/member/del", deleteMem);
     },
 
     // 주소 수정 중복값 체크

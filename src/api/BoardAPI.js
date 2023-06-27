@@ -43,6 +43,7 @@ const BoardAPI = {
         };
         return await axios.post(localHost + `/community/updateboard`, updateBoard);
     },
+
    
 };
 export default BoardAPI;
