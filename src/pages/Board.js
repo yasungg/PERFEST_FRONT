@@ -184,7 +184,16 @@ const Board = () => {
               <BoardContents onClick={() => boardClick(community.communityId)}>
                 <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
                 <BTitle>{community.communityTitle}</BTitle>
-                <BTime>{community.writtenTime}</BTime>
+                <BTime>
+                  {new Date(community.writtenTime).toLocaleString("ko-KR",{
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                        })}
+                  </BTime>
               </BoardContents>
             </BoardText>
           ))}

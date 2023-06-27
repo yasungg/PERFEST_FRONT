@@ -9,8 +9,11 @@ const CommentAPI = {
         };
         return await axios.post(localHost + `/comment/writecomment`, writeComment);
     },
-    CommentGetCount : async() => {
-        return await axios.get(localHost + `/comment/commentcount`)
+    CommentGetCount : async(communityId) => {
+        return await axios.get(localHost + `/comment/commentcount?communityId=${communityId}`)
+    },
+    GetComment : async(communityId) => {
+        return await axios.get(localHost + `/comment/getcomment?communityId=${communityId}`)
     }
 }
 export default CommentAPI;

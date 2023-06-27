@@ -55,6 +55,15 @@ width: 100%;
     width: 90%;
 }
 `;
+const CommentDesc = styled.div`
+display: flex;
+`;
+const CommentBody = styled.div`
+`;
+const CommentWrittenTime = styled.div`
+`;
+const CommentLikeCount = styled.div`
+`;
 const CommentWriteButton = styled.button`
 width:7%;
 &:hover{
@@ -72,7 +81,7 @@ const BoardArticle = () => {
     const [inputComment, setInputComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
-    const [boardId, setBoardId] = useState("");
+    const [commentData, setCommentData] = useState([]);
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
@@ -85,7 +94,7 @@ const BoardArticle = () => {
     // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
     const getCommentCount = async() =>{
-        const rsp = await CommentAPI.CommentGetCount();
+        const rsp = await CommentAPI.CommentGetCount(communityId);
         setCommentCount(rsp.data);
     }
     getCommentCount();
@@ -104,6 +113,15 @@ const BoardArticle = () => {
         const response = await BoardAPI.AddLike(communityId);
         console.log(response.data);
     }
+    // 해당 게시판 댓글 가져오기
+    useEffect(() => {
+    const getBoardComment = async() => {
+        const response = await CommentAPI.GetComment(communityId);
+        console.log(response.data);
+        setCommentData(response.data);
+    }
+    getBoardComment();
+    },[])
     const getCategoryText = (category) => {
         switch (category) {
           case 'FIND_PARTY':
@@ -119,7 +137,7 @@ const BoardArticle = () => {
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
-            {boardArticle.map((community) => (
+            {boardArticle&&boardArticle.map((community) => (
                 <BoardInfo key={community.communityTitle}>
                 <Title><h1>{getCategoryText(community.communityCategory)}</h1></Title> 
                 <BoardTitle>{community.communityTitle}</BoardTitle>
@@ -137,6 +155,22 @@ const BoardArticle = () => {
                     <textarea className="commentwrite"  cols="160" rows="3" value={inputComment} onChange={onChangeComment}></textarea>
                     <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
                 </CommentWrite>
+                {commentData&&commentData.map((comment) => (
+                <CommentDesc key={comment.commentBody}>
+                    <CommentBody>{comment.commentBody}</CommentBody>
+                    <CommentWrittenTime>
+                        {new Date(comment.commentWrittenTime).toLocaleString("ko-KR",{
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                        })}
+                        </CommentWrittenTime>
+                    <CommentLikeCount>{comment.CommentLikeCount}</CommentLikeCount>
+                </CommentDesc>
+                ))}
                 <BoardLike><button onClick={onClickLike}>공감하기</button></BoardLike>
             </BodyContainer>
         </Container>
