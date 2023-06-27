@@ -154,7 +154,7 @@ const BoardArticle = () => {
             {boardArticle&&boardArticle.map((community) => (
                 <BoardInfo key={community.communityTitle}>
                 <Title><h1>{getCategoryText(community.communityCategory)}</h1></Title> 
-                <BoardTitle>{community.communityTitle}</BoardTitle>
+                <BoardTitle><h2>{community.communityTitle}</h2></BoardTitle>
                 <UserInfo>
                     <BoardNickname>{community.memberDTOs}</BoardNickname>
                     <BoardDate>{formatDate(community.writtenTime)}</BoardDate>
