@@ -104,13 +104,25 @@ const BoardArticle = () => {
         const response = await BoardAPI.AddLike(communityId);
         console.log(response.data);
     }
+    const getCategoryText = (category) => {
+        switch (category) {
+          case 'FIND_PARTY':
+            return '파티원 찾기';
+          case 'FREE_BOARD':
+            return '자유게시판';
+          case 'Q_A':
+            return 'Q&A';
+          default:
+            return '';
+        }
+      };
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
-                <Title><h1>자유 게시판</h1></Title>
-                {boardArticle.map((community) => (
+            {boardArticle.map((community) => (
                 <BoardInfo key={community.communityTitle}>
-                <BoardTitle >{community.communityTitle}</BoardTitle>
+                <Title><h1>{getCategoryText(community.communityCategory)}</h1></Title> 
+                <BoardTitle>{community.communityTitle}</BoardTitle>
                 <UserInfo>
                     <BoardNickname>{community.memberDTOs}</BoardNickname>
                     <BoardDate>{community.writtenTime}</BoardDate>
