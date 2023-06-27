@@ -15,7 +15,7 @@ const Container = styled.div`
   background-color: #FEFDFD;
   width: 40%;
   margin: 3px auto;
-  border: 1px solid lightgray;
+  border: 1px solid gray;
   padding: 30px;
 
 `;
@@ -206,6 +206,7 @@ const MySetting = () => {
   return (
     <>
       <BodyContainer>
+        <p>내 정보 관리</p>
         <Container>
           <Header />
           {memberInfo && memberInfo.map(member => (

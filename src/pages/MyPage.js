@@ -17,7 +17,9 @@ const SideBarWrapper = styled.div`
   flex-direction: column;
   background-color: #f5f5f5;
   padding: 20px;
-  width: 220px;
+  width: 240px;
+  margin-right: 20px;
+  text-align: center;
 `;
 
 const ProfileImage = styled.img`
@@ -29,7 +31,7 @@ const ProfileImage = styled.img`
 
 const Nickname = styled.span`
   color: #333;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
 `;
@@ -39,13 +41,16 @@ const Menu = styled.div`
 `;
 
 const MenuItem = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 `;
 
 const MenuLink = styled.div`
   color: #555;
   font-size: 16px;
   cursor: pointer;
+  display: inline-block;
+  margin: 0 auto;
+  line-height: 1.5;
 
   &.active {
     color: #333;

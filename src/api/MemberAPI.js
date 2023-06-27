@@ -1,30 +1,26 @@
 import axios from "axios";
 
-
-
 const KH_DOMAIN = "http://localhost:8111";
-
-
 
 const MemberAPI = {
 
     // 이메일로 특정회원 조회
     getMemberInfo: async(email) => {
-        return await axios.get(KH_DOMAIN + `/member/email?email=${email}`);
+        return await axios.get(KH_DOMAIN + `/auth/member/email?email=${email}`);
     },
     
     // 회원 닉네임 수정
-    updateNicName: async(email, nicName) => {
+    updateNicName: async(email, nickname) => {
         const updateNicName = {
             email: email,
-            nicName: nicName
+            nickname: nickname
         };
-        return await axios.post(KH_DOMAIN + "/updateNicName", updateNicName);
+        return await axios.post(KH_DOMAIN + "auth/member/updateNicname", updateNicName);
     },
 
     // 닉네임 수정 중복값 체크
     nickNameRegCheck: async(nicName) => {
-        return await axios.get(KH_DOMAIN + `/nicNameCheck?nicName=${nicName}`);
+        return await axios.get(KH_DOMAIN + `auth/member/nicknameCheck?nicname=${nicName}`);
     },
 
     // 회원 탈퇴
