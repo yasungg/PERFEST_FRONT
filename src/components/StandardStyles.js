@@ -7,7 +7,6 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: ${(props) => props.justifyContent};
   align-items: ${(props) => props.alignItems};
-  overflow: scroll;
 `;
 export const BodyContainer = styled.div`
   width: 1280px;

@@ -76,6 +76,8 @@ font-size: 13px;
 `;
 const CommentReWrite = styled.div`
 `;
+const CommentLike = styled.div`
+`;
 const CommentBody = styled.div`
 `;
 const CommentLikeCount = styled.div`
@@ -128,8 +130,14 @@ const BoardArticle = () => {
     getBoardArticle();
     },[communityId])
     // 게시판 공감하기 눌르면 공감하기 1 추가
-    const onClickLike = async() => {
-        const response = await BoardAPI.AddLike(communityId);
+    const onClickBoardLike = async() => {
+        const response = await BoardAPI.AddBoardLike(communityId);
+        console.log(response.data);
+    }
+    // 댓글 좋아요 눌르면 댓글 좋아요 1 추가
+    const onClickCommentLike  = async(commentId) => {
+        console.log(commentId);
+        const response = await CommentAPI.AddCommentLike(commentId);
         console.log(response.data);
     }
     // 해당 게시판 댓글 가져오기
@@ -181,13 +189,14 @@ const BoardArticle = () => {
                         <CommentNickName></CommentNickName>
                         <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
                         <CommentReWrite><button>대댓글</button></CommentReWrite>
+                        <CommentLike><button onClick={() => onClickCommentLike(comment.commentId)}>좋아요</button></CommentLike>
                     </CommentHead>
                     <CommentBody>{comment.commentBody}</CommentBody>
-                    <CommentLikeCount>{comment.CommentLikeCount}</CommentLikeCount>
+                    <CommentLikeCount>{comment.commentLikeCount}</CommentLikeCount>
                     </Comment>
                 </CommentDesc>
                 ))}
-                <BoardLike><button onClick={onClickLike}>공감하기</button></BoardLike>
+                <BoardLike><button onClick={onClickBoardLike}>공감하기</button></BoardLike>
             </BodyContainer>
         </Container>
     );
