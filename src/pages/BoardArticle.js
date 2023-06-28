@@ -74,6 +74,8 @@ const CommentNickName = styled.div`
 const CommentWrittenTime = styled.div`
 font-size: 13px;
 `;
+const CommentReWrite = styled.div`
+`;
 const CommentBody = styled.div`
 `;
 const CommentLikeCount = styled.div`
@@ -178,6 +180,7 @@ const BoardArticle = () => {
                     <CommentHead>
                         <CommentNickName></CommentNickName>
                         <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
+                        <CommentReWrite><button>대댓글</button></CommentReWrite>
                     </CommentHead>
                     <CommentBody>{comment.commentBody}</CommentBody>
                     <CommentLikeCount>{comment.CommentLikeCount}</CommentLikeCount>
