@@ -63,7 +63,7 @@ const DeleteMem = styled.div`
     height: 35px;
     font-size: .8em;
     font-weight: bold;
-    background-color: #D4F4FA;
+    background-color: #2f4050;
     color: white;
     border: none;
     border-radius: 2px;
