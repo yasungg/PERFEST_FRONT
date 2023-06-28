@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MyPage from "./pages/MyPage";
-import SideBar from "./pages/Sidebar";
 import MyRanking from "./pages/MyRanking";
 import MySetting from "./pages/MySetting";
 import MyReview from "./pages/MyReview";
@@ -19,6 +18,9 @@ import { PayReady, PayResult } from "./pages/Payments";
 import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
 
+import Festival from "./pages/Festival";
+import SideBar from "./pages/Sidebar";
+
 function App() {
   return (
     <Router>
@@ -26,6 +28,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/MyPage" element={<MyPage />} />
+        {/* sidebar 테스트용 수정예정/ */}
+        <Route path="/Sidebar" element={<SideBar />} /> 
         <Route path="/MyRanking" element={<MyRanking />} />
         <Route path="/Setting" element={<MySetting />} />
         <Route path="/MyReview" element={<MyReview />} />
@@ -40,7 +44,9 @@ function App() {
         <Route path="/WriteBoard" element={<WriteBoard />} />
         <Route path="/UpdateBoard" element={<UpdateBoard />} />
         <Route path="/Ranking" element={<Ranking />} />
-        <Route path="/BoardArticle" element={<BoardArticle />} />
+        <Route path="/BoardArticle/:communityId" element={<BoardArticle />} />
+        <Route path="/Festival" element={<Festival />} />
+
       </Routes>
     </Router>
   );

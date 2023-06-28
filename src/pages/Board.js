@@ -4,6 +4,7 @@ import BoardAPI from "../api/BoardAPI";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { formatDate } from "../components/DateStyle";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -87,8 +88,9 @@ const Board = () => {
     const [selectedBoardInfo, setSelectedBoardInfo] = useState([]);
     const [selectCategory, setSelectCategory] = useState("");
     const [activeButton, setActiveButton] = useState(""); // 버튼의 활성화 여부를 저장하는 상태
-  
 
+  
+    // 게시판 전체 글 목록 가져오기
     const BoardGetAll = async () => {
         const rsp = await BoardAPI.BoardGet();
         if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
@@ -99,6 +101,7 @@ const Board = () => {
         BoardGetAll();
       }, []);
   
+    // 게시판 카테고리별 가져오기
     useEffect(() => {
       const onClickCategory = async() => {
         if (selectCategory) {
@@ -127,10 +130,13 @@ const Board = () => {
       setSelectCategory(category);
       setActiveButton(category); // 버튼이 클릭되면 해당 카테고리를 활성화 상태로 설정
     };
+    // 게시판 최신순 정렬
     const onClickNewestBoard = async() => {
         const rsp = await BoardAPI.BoardGetByNewest();
         setSelectedBoardInfo(rsp.data);
-
+      }
+    const boardClick = (communityId) => {
+      navigate(`/BoardArticle/${communityId}`);
     }
     return (
       <Container justifyContent="center" alignItems="center">
@@ -177,10 +183,10 @@ const Board = () => {
             </Arrange>
           {selectedBoardInfo.map((community) => (
             <BoardText key={community.communityTitle}>
-              <BoardContents>
+              <BoardContents onClick={() => boardClick(community.communityId)}>
                 <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
                 <BTitle>{community.communityTitle}</BTitle>
-                <BTime>{community.writtenTime}</BTime>
+                <BTime>{formatDate(community.writtenTime)}</BTime>
               </BoardContents>
             </BoardText>
           ))}

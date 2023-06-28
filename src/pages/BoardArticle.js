@@ -3,11 +3,16 @@ import { BodyContainer, Container } from "../components/StandardStyles";
 import { useState } from "react";
 import CommentAPI from "../api/CommentAPI";
 import { useEffect } from "react";
+import BoardAPI from "../api/BoardAPI";
+import { useParams } from "react-router";
+import {formatDate} from "../components/DateStyle";
 const Title = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
 margin-top: 50px;
+`;
+const BoardInfo = styled.div`
 `;
 const BoardTitle = styled.div`
 display: flex;
@@ -15,7 +20,7 @@ justify-content: flex-start;
 align-items: center;
 
 `;
-const BoardInfo = styled.div`
+const UserInfo = styled.div`
 display: flex;
 justify-content: space-between;
 align-items: center;
@@ -51,6 +56,30 @@ width: 100%;
     width: 90%;
 }
 `;
+const CommentDesc = styled.div`
+display: flex;
+flex-direction: column;
+`;
+const Comment = styled.div`
+margin-top: 5px;
+margin-bottom: 5px;
+background-color: #D9D9D9;
+`;
+const CommentHead = styled.div`
+display: flex;
+justify-content: flex-start;
+`;
+const CommentNickName = styled.div`
+`;
+const CommentWrittenTime = styled.div`
+font-size: 13px;
+`;
+const CommentReWrite = styled.div`
+`;
+const CommentBody = styled.div`
+`;
+const CommentLikeCount = styled.div`
+`;
 const CommentWriteButton = styled.button`
 width:7%;
 &:hover{
@@ -64,33 +93,80 @@ justify-content: center;
 align-items: center;
 `;
 const BoardArticle = () => {
+    const {communityId} = useParams(); // 게시판 번호 전달 하기 위해서 useparams 사용
     const [inputComment, setInputComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
+    const [boardArticle, setBoardArticle] = useState([]);
+    const [commentData, setCommentData] = useState([]);
+    const [commentUpdateTrigger, setCommentUpdateTrigger] = useState(false); // 댓글 업데이트를 트리거하는 상태 추가
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
     }
+    // 게시판 댓글 작성
     const onClickWriteComment = async() => {
-        const response = await CommentAPI.CommentWrite(inputComment);
+        const response = await CommentAPI.CommentWrite(inputComment, communityId);
         console.log(response.data);
+        setCommentUpdateTrigger(prev => !prev);
+        setInputComment(""); // 댓글 작성 후 inputComment 상태를 초기화하여 textarea의 내용을 지움
     }
+    // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
     const getCommentCount = async() =>{
-        const rsp = await CommentAPI.CommentGetCount();
+        const rsp = await CommentAPI.CommentGetCount(communityId);
         setCommentCount(rsp.data);
     }
     getCommentCount();
-    },[])
+    },[commentUpdateTrigger])
+    // 게시판 본문 가져오기
+    useEffect(() => {
+    const getBoardArticle = async() => {
+        const response = await BoardAPI.GetBoardArticle(communityId);
+        console.log(response.data);
+        setBoardArticle(response.data);
+    }
+    getBoardArticle();
+    },[communityId])
+    // 게시판 공감하기 눌르면 공감하기 1 추가
+    const onClickLike = async() => {
+        const response = await BoardAPI.AddLike(communityId);
+        console.log(response.data);
+    }
+    // 해당 게시판 댓글 가져오기
+    useEffect(() => {
+    const getBoardComment = async() => {
+        const response = await CommentAPI.GetComment(communityId);
+        console.log(response.data);
+        setCommentData(response.data);
+    }
+    getBoardComment();
+    },[commentUpdateTrigger])
+    const getCategoryText = (category) => {
+        switch (category) {
+          case 'FIND_PARTY':
+            return '파티원 찾기';
+          case 'FREE_BOARD':
+            return '자유게시판';
+          case 'Q_A':
+            return 'Q&A';
+          default:
+            return '';
+        }
+      };
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
-                <Title><h1>자유 게시판</h1></Title>
-                <BoardTitle>게시글 제목1</BoardTitle>
-                <BoardInfo>
-                    <BoardNickname>닉네임1</BoardNickname>
-                    <BoardDate>2023.06.21</BoardDate>
+            {boardArticle&&boardArticle.map((community) => (
+                <BoardInfo key={community.communityTitle}>
+                <Title><h1>{getCategoryText(community.communityCategory)}</h1></Title> 
+                <BoardTitle><h2>{community.communityTitle}</h2></BoardTitle>
+                <UserInfo>
+                    <BoardNickname>{community.memberDTOs}</BoardNickname>
+                    <BoardDate>{formatDate(community.writtenTime)}</BoardDate>
+                </UserInfo>
+                <BoardDesc>{community.communityDesc}</BoardDesc>
                 </BoardInfo>
-                <BoardDesc>게시판 내용+사진</BoardDesc>
+                ))}
                 <CommentInfo>
                 <CommentCount>댓글{commentCount}</CommentCount>
                 </CommentInfo>
@@ -98,7 +174,20 @@ const BoardArticle = () => {
                     <textarea className="commentwrite"  cols="160" rows="3" value={inputComment} onChange={onChangeComment}></textarea>
                     <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
                 </CommentWrite>
-                <BoardLike><button>공감하기</button></BoardLike>
+                {commentData&&commentData.map((comment) => (
+                <CommentDesc key={comment.commentBody}>
+                    <Comment>
+                    <CommentHead>
+                        <CommentNickName></CommentNickName>
+                        <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
+                        <CommentReWrite><button>대댓글</button></CommentReWrite>
+                    </CommentHead>
+                    <CommentBody>{comment.commentBody}</CommentBody>
+                    <CommentLikeCount>{comment.CommentLikeCount}</CommentLikeCount>
+                    </Comment>
+                </CommentDesc>
+                ))}
+                <BoardLike><button onClick={onClickLike}>공감하기</button></BoardLike>
             </BodyContainer>
         </Container>
     );

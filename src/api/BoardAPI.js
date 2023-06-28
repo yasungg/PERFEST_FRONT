@@ -14,6 +14,17 @@ const BoardAPI = {
     BoardGetByNewest: async() => {
         return await axios.get(localHost + `/community/getnewestboard`)
     },
+    // 게시판 본문 내용 가져오기
+    GetBoardArticle: async(communityId) => {
+        return await axios.get(localHost + `/community/getboardarticle?communityId=${communityId}`)
+    },
+    // 게시판 게시글에 좋아요 추가
+    AddLike: async(communityId) => {
+        const addLike = {
+            communityId : communityId
+        };
+        return await axios.post(localHost + `/community/BoardArticle/${communityId}/addlike`, addLike);
+    },
     // 게시판 작성
     BoardWrite : async(title, category, text ) => {
         const writeBoard = {
@@ -32,6 +43,7 @@ const BoardAPI = {
         };
         return await axios.post(localHost + `/community/updateboard`, updateBoard);
     },
+
    
 };
 export default BoardAPI;

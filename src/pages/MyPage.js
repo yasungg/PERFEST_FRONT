@@ -10,14 +10,24 @@ import MyRanking from "./MyRanking";
 
 const Container = styled.div`
   display: flex;
+  width: 100vw;
+  height: 100vh;
+  
 `;
 
 const SideBarWrapper = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 300px;
+  background-color: #2f4050;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  background-color: #f5f5f5;
-  padding: 20px;
-  width: 240px;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
 `;
 
 const ProfileImage = styled.img`
@@ -28,8 +38,8 @@ const ProfileImage = styled.img`
 `;
 
 const Nickname = styled.span`
-  color: #333;
-  font-size: 18px;
+  color: white;
+  font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
 `;
@@ -39,18 +49,30 @@ const Menu = styled.div`
 `;
 
 const MenuItem = styled.div`
-  margin-bottom: 20px;
+  width: 100%;
+  height: 50px;
+  border: 1px solid black;
+  list-style-type: none;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #293846;
+  }
+
+  &.active {
+    background-color: #293846;
+  }
 `;
 
 const MenuLink = styled.div`
-  color: #555;
-  font-size: 16px;
-  cursor: pointer;
-
-  &.active {
-    color: #333;
-    font-weight: bold;
-  }
+  color: white;
 `;
 
 const ContentWrapper = styled.div`
