@@ -51,7 +51,6 @@ const Menu = styled.div`
 const MenuItem = styled.div`
   width: 100%;
   height: 50px;
-  border: 1px solid black;
   list-style-type: none;
   margin: 0;
   display: flex;

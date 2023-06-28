@@ -30,7 +30,7 @@ const MemberAPI = {
         };
         return await axios.post(KH_DOMAIN + "auth/member/del", deleteMem);
     },
-
+    
     // 주소 수정 중복값 체크
     addRegCheck: async(address) => {
         return await axios.get(KH_DOMAIN + `auth/member/addressCheck?address=${address}`);
