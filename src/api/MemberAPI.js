@@ -40,7 +40,7 @@ const MemberAPI = {
         return await axios.post(KH_DOMAIN + "auth/member/updateAdd", updateAdd);
     },
 
-    // 주소 수정 중복값 체크
+    // 주소 수정 중복값 체크 (중복시 errorMsg)
     addRegCheck: async(address) => {
         return await axios.get(KH_DOMAIN + `auth/member/addressCheck?address=${address}`);
     },
