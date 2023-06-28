@@ -96,6 +96,7 @@ const BoardArticle = () => {
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
     const [commentData, setCommentData] = useState([]);
+    const [commentUpdateTrigger, setCommentUpdateTrigger] = useState(false); // 댓글 업데이트를 트리거하는 상태 추가
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
@@ -104,6 +105,8 @@ const BoardArticle = () => {
     const onClickWriteComment = async() => {
         const response = await CommentAPI.CommentWrite(inputComment, communityId);
         console.log(response.data);
+        setCommentUpdateTrigger(prev => !prev);
+        setInputComment(""); // 댓글 작성 후 inputComment 상태를 초기화하여 textarea의 내용을 지움
     }
     // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
@@ -112,7 +115,7 @@ const BoardArticle = () => {
         setCommentCount(rsp.data);
     }
     getCommentCount();
-    },[])
+    },[commentUpdateTrigger])
     // 게시판 본문 가져오기
     useEffect(() => {
     const getBoardArticle = async() => {
@@ -135,7 +138,7 @@ const BoardArticle = () => {
         setCommentData(response.data);
     }
     getBoardComment();
-    },[])
+    },[commentUpdateTrigger])
     const getCategoryText = (category) => {
         switch (category) {
           case 'FIND_PARTY':
