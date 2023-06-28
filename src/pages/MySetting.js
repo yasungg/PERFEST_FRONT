@@ -162,6 +162,7 @@ const MySetting = () => {
             setMemberInfo(updateInfo.data);
             setAddModalOpen(false);
             setInputAdd("");
+            
           }
         }
       } else {
@@ -221,7 +222,7 @@ const MySetting = () => {
                 <div>
                   <p>이름</p>
                   <div className="name"></div>
-                  <input type="text" value={member.name} readOnly placeholder={member.name} />
+                  <input type="text" value={member.memberName} readOnly placeholder={member.name} />
                 </div>
               </Label>
               <Label>
@@ -231,7 +232,7 @@ const MySetting = () => {
                 <input
                   type="text"
                   readOnly
-                  placeholder={member.nickname}
+                  placeholder={member.nickName}
                 />
                 <button onClick={updateNicName}>수정</button>
                 </div>
