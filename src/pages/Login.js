@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import kakaoButton from "../images/kakaoButton.png";
 import loginBackgroundImg from "../images/loginboxbackground.jpg";
+import LoginAPI from "../api/LoginAPI";
+import SignupAPI from "../api/SignupAPI";
 
 const Container = styled.div`
   width: 100%;
@@ -99,7 +102,7 @@ const SignUpLogo = styled.div`
     cursor: pointer;
   }
 `;
-const InputBoxContainer = styled.div`
+const InputBoxContainer = styled.form`
   display: flex;
   flex-flow: column;
   width: 320px;
@@ -213,14 +216,33 @@ const KakaoBtn = styled.button`
 `;
 
 const Login = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
   const REST_API_KEY = "86c9013e77a6aad5b8b2c49eddca45b7";
   const REDIRECT_URI = "http://localhost:8111/koauth/login/kakao";
   const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
-  const [loginBoxTransformY, setLoginBoxTransformY] = useState("100px");
-  const [loginLogoSize, setLoginLogoSize] = useState("24px");
-  const [logoYLocation, setLogoYLocation] = useState("0");
-  const [signUpLogoSize, setSignUpLogoSize] = useState("64px");
-  const [signUpLogoYLocation, setSignUpLogoYLocation] = useState("0px");
+
+  // 로그인 페이지 상태 결정을 위해 서버로부터 함께 전송된 파라미터
+  const isKakao = searchParams.get("isKakao");
+  const needSignup = searchParams.get("needSignup");
+  //로그인 페이지 상태 변경을 위해 사용하는 useState
+  const [loginBoxTransformY, setLoginBoxTransformY] = useState("-350px");
+  const [loginLogoSize, setLoginLogoSize] = useState("64px");
+  const [logoYLocation, setLogoYLocation] = useState("64px");
+  const [signUpLogoSize, setSignUpLogoSize] = useState("24px");
+  const [signUpLogoYLocation, setSignUpLogoYLocation] = useState("-48px");
+
+  //회원가입 inputbox 입력용 useState
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [memberName, setMemberName] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  //로그인 inputbox 입력용 useState
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
   const changeLoginForm = () => {
     setLoginBoxTransformY("-350px");
     setLoginLogoSize("64px");
@@ -228,6 +250,7 @@ const Login = () => {
     setSignUpLogoYLocation("-48px");
     setSignUpLogoSize("24px");
   };
+
   const changeSignUpForm = () => {
     setLoginBoxTransformY("100px");
     setLoginLogoSize("24px");
@@ -235,6 +258,32 @@ const Login = () => {
     setSignUpLogoYLocation("0");
     setSignUpLogoSize("64px");
   };
+
+  const onClickSignup = (event) => {
+    // 회원가입 inputbox에서 전달받은 value를 formData에 담아 axios로 전송하는 함수
+    event.preventDefault();
+
+    // 파라미터로 전달된 boolean isKakao에 따라 카카오 로그인 axios가 활성화될지 일반 로그인이 활성화될지 결정
+    const response = isKakao
+      ? SignupAPI.KakaoSignup(email, password, memberName, nickname)
+      : SignupAPI.Signup(email, password, memberName, nickname);
+    console.log(response);
+  };
+
+  const onClickLogin = (loginevent) => {
+    // 로그인 함수
+    loginevent.preventDefault();
+
+    const response = LoginAPI.Login(email, password);
+
+    console.log(response);
+  };
+
+  useEffect(() => {
+    // 전달받은 값에 따라 Login 페이지를 띄워줄지, Signup 페이지를 띄워줄지 결정함.
+    needSignup ? changeSignUpForm() : changeLoginForm();
+  }, [needSignup]);
+
   return (
     <Container justifyContent="center" alignItems="center">
       <Box>
@@ -251,8 +300,10 @@ const Login = () => {
           </LogoBox>
           <InputBoxContainer height="184px">
             <SignUpInputBox
-              type="email"
+              type="text"
               name="signUpMail"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               placeholder="이메일을 입력하세요."
               height="32px"
             />
@@ -262,6 +313,8 @@ const Login = () => {
             <SignUpInputBox
               type="password"
               name="signUpPassword"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
               placeholder="비밀번호를 입력하세요."
               height="32px"
             />
@@ -271,6 +324,8 @@ const Login = () => {
             <SignUpInputBox
               type="text"
               name="name"
+              value={memberName}
+              onChange={(event) => setMemberName(event.target.value)}
               placeholder="이름을 입력하세요."
               height="32px"
             />
@@ -278,6 +333,8 @@ const Login = () => {
             <SignUpInputBox
               type="text"
               name="nickname"
+              value={nickname}
+              onChange={(event) => setNickname(event.target.value)}
               placeholder="닉네임을 입력하세요."
               height="32px"
             />
@@ -285,7 +342,7 @@ const Login = () => {
               <span className="regex">aa</span>
             </RegexResult>
           </InputBoxContainer>
-          <SignUpBtn>Sign up</SignUpBtn>
+          <SignUpBtn onClick={onClickSignup}>Sign up</SignUpBtn>
         </SignUpBox>
         <LoginBox transForm={loginBoxTransformY}>
           <LogoBox height="192px" justifyContent="flex-start">
@@ -303,6 +360,8 @@ const Login = () => {
             <LoginInputBox
               type="email"
               name="mail"
+              value={loginEmail}
+              onChange={(event) => setLoginEmail(event.target.value)}
               placeholder="이메일을 입력하세요."
               height="32px"
             />
@@ -312,6 +371,8 @@ const Login = () => {
             <LoginInputBox
               type="password"
               name="password"
+              value={loginPassword}
+              onChange={(event) => setLoginPassword(event.target.value)}
               placeholder="비밀번호를 입력하세요."
               height="32px"
             />
@@ -319,7 +380,7 @@ const Login = () => {
               <span className="regex">aa</span>
             </RegexResult>
           </InputBoxContainer>
-          <LoginBtn>
+          <LoginBtn onClick={onClickLogin}>
             <span>로그인</span>
           </LoginBtn>
           <KakaoBtn>
