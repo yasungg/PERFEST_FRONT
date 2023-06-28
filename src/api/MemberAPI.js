@@ -31,11 +31,6 @@ const MemberAPI = {
         return await axios.post(KH_DOMAIN + "auth/member/del", deleteMem);
     },
     
-    // 주소 수정 중복값 체크
-    addRegCheck: async(address) => {
-        return await axios.get(KH_DOMAIN + `auth/member/addressCheck?address=${address}`);
-    },
-
     // 주소 수정
     updateAdd: async(email, address) => {
         const updateAdd = {
@@ -43,6 +38,11 @@ const MemberAPI = {
             address: address
         };
         return await axios.post(KH_DOMAIN + "auth/member/updateAdd", updateAdd);
+    },
+
+    // 주소 수정 중복값 체크
+    addRegCheck: async(address) => {
+        return await axios.get(KH_DOMAIN + `auth/member/addressCheck?address=${address}`);
     },
 
     // 이미지 수정
