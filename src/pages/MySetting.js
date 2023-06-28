@@ -152,7 +152,7 @@ const MySetting = () => {
       console.log(response.data);
       if(response.data === true) navigate("/Login"); // 탈퇴시 로그인 화면
     } else if(modalType === "updateAdd") {
-      const addCheck = await MemberAPI.addRegCheck(inputAdd);
+      const addCheck = await MemberAPI.addRegCheck(userEmail, inputAdd);
       if(addCheck.data === true) {
         const response = await MemberAPI.updateAdd(userEmail, inputAdd);
         console.log(response.data);
@@ -210,7 +210,7 @@ const MySetting = () => {
         <Container>
           <Header />
           {memberInfo && memberInfo.map(member => (
-            <Section2 key={member.id}>
+            <Section2 key={member.email}>
               <Label>
                 <div>
                   <p>이메일</p>
@@ -230,6 +230,7 @@ const MySetting = () => {
                   <div className="nicName"></div>
                 <input
                   type="text"
+                  readOnly
                   placeholder={member.nickname}
                 />
                 <button onClick={updateNicName}>수정</button>
@@ -241,6 +242,7 @@ const MySetting = () => {
                   <div className="address"></div>
                 <input
                   type="address"
+                  readOnly
                   placeholder={member.address}
                 />
                 <button onClick={updateAdd}>수정</button>
