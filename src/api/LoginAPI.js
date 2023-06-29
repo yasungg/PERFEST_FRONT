@@ -9,19 +9,22 @@ const LoginAPI = {
       password: password,
     };
     const stringified = JSON.stringify(requestBody);
+
+    const Authorization =
+      "Bearer " + window.localStorage.getItem("accessToken");
+    console.log(Authorization);
+
     return await axios
       .post(KH_DOMAIN + `/auth/member/login`, stringified, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: Authorization,
         },
       })
       .then((response) => {
         if (response.status === 200) {
           return response.data;
         }
-      })
-      .catch((error) => {
-        console.error(error);
       });
   },
   KakaoLoign: async (email, password) => {
