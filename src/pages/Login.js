@@ -281,14 +281,18 @@ const Login = () => {
     loginevent.preventDefault();
 
     const loginResponse = LoginAPI.Login(email, password).then((result) => {
-      localStorage.setItem("grantType", result.accessToken);
-      localStorage.setItem("accessToken", result.accessToken);
-      localStorage.setItem("refreshToken", result.refreshToken);
-      localStorage.setItem("tokenExpiresIn", result.tokenExpiresIn);
-      localStorage.setItem(
-        "refreshTokenExpiresIn",
-        result.refreshTokenExpiresIn
-      );
+      
+      setTimeout(() => {
+        localStorage.setItem("grantType", result.accessToken);
+        localStorage.setItem("accessToken", result.accessToken);
+        localStorage.setItem("refreshToken", result.refreshToken);
+        localStorage.setItem("tokenExpiresIn", result.tokenExpiresIn);
+        localStorage.setItem(
+          "refreshTokenExpiresIn",
+          result.refreshTokenExpiresIn
+        );
+      }, 1000)
+      
       console.log(result.accessToken);
     });
     console.log(localStorage.getItem("accessToken"));

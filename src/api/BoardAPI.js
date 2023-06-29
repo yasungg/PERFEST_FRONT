@@ -32,7 +32,23 @@ const BoardAPI = {
         communityCategory : category,
         communityDesc : text
         };
-        return await axios.post(localHost + `/community/writeboard`, writeBoard);
+        const Authorization =
+            "Bearer " + window.localStorage.getItem("accessToken");
+        console.log(Authorization);
+        return await axios.post(localHost + `/community/writeboard`, writeBoard, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: Authorization,
+            }, // 여기까지가 서버로 header를 실은 요청을 던지는 기능
+          })
+          .then((response) => {
+            if (response.status === 200) {
+              return response;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
     // 게시판 수정
     BoardUpdate : async(title, category, text ) => {
