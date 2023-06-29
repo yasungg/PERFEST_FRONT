@@ -190,9 +190,9 @@ const BoardArticle = () => {
                         <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
                         <CommentReWrite><button>대댓글</button></CommentReWrite>
                         <CommentLike><button onClick={() => onClickCommentLike(comment.commentId)}>좋아요</button></CommentLike>
+                        <CommentLikeCount>{comment.commentLikeCount}</CommentLikeCount>
                     </CommentHead>
                     <CommentBody>{comment.commentBody}</CommentBody>
-                    <CommentLikeCount>{comment.commentLikeCount}</CommentLikeCount>
                     </Comment>
                 </CommentDesc>
                 ))}
