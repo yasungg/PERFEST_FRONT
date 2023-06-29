@@ -5,6 +5,7 @@ import kakaoButton from "../images/kakaoButton.png";
 import loginBackgroundImg from "../images/loginboxbackground.jpg";
 import LoginAPI from "../api/LoginAPI";
 import SignupAPI from "../api/SignupAPI";
+import LoginModal from "../utils/LoginModal";
 
 const Container = styled.div`
   width: 100%;
@@ -259,6 +260,10 @@ const Login = () => {
     setSignUpLogoSize("64px");
   };
 
+  const [open, setOpen] = useState(false);
+  const [children, setChildren] = useState("");
+  const [header, setHeader] = useState("");
+
   const onClickSignup = (event) => {
     // 회원가입 inputbox에서 전달받은 value를 formData에 담아 axios로 전송하는 함수
     event.preventDefault();
@@ -268,20 +273,43 @@ const Login = () => {
       ? SignupAPI.KakaoSignup(email, password, memberName, nickname)
       : SignupAPI.Signup(email, password, memberName, nickname);
     console.log(response);
+    changeLoginForm();
   };
 
   const onClickLogin = (loginevent) => {
     // 로그인 함수
     loginevent.preventDefault();
 
-    const response = LoginAPI.Login(email, password);
+    const loginResponse = LoginAPI.Login(email, password).then((result) => {
+      localStorage.setItem("grantType", result.accessToken);
+      localStorage.setItem("accessToken", result.accessToken);
+      localStorage.setItem("refreshToken", result.refreshToken);
+      localStorage.setItem("tokenExpiresIn", result.tokenExpiresIn);
+      localStorage.setItem(
+        "refreshTokenExpiresIn",
+        result.refreshTokenExpiresIn
+      );
+      console.log(result.accessToken);
+    });
+    console.log(localStorage.getItem("accessToken"));
 
-    console.log(response);
+    loginResponse.catch((error) => {
+      if (error) {
+        setOpen(true);
+        setChildren("로그인에 실패하였습니다!");
+        setHeader("로그인 에러");
+      }
+    });
+  };
+
+  const closeModal = () => {
+    setOpen(false);
   };
 
   useEffect(() => {
     // 전달받은 값에 따라 Login 페이지를 띄워줄지, Signup 페이지를 띄워줄지 결정함.
     needSignup ? changeSignUpForm() : changeLoginForm();
+    setOpen(false);
   }, [needSignup]);
 
   return (
@@ -391,6 +419,12 @@ const Login = () => {
           <AdditionalBox />
         </LoginBox>
       </Box>
+      <LoginModal
+        open={open}
+        header={header}
+        children={children}
+        close={closeModal}
+      />
     </Container>
   );
 };
