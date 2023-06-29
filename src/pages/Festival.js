@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { Container as BaseContainer } from "../components/StandardStyles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import festivalPoster from "../images/2023-대한민국-과학축제-포스터.webp";
-import festivalPoster2 from "../images/2023안양충훈벚꽃축제.jpg"
+import festivalPoster from "../images/33_1680685808051.jpg"
 import KakaoMap from "../components/KakaoMap";
 
 const BodyContainer = styled.div`
@@ -681,7 +680,7 @@ const Festival = () => {
                         <li className="card_wrap">
                            <div className="card_inner">
                               <div className="img_area">
-                                 <img src={festivalPoster2} alt="festival_poster"></img>
+                                 <img src={festivalPoster} alt="festival_poster"></img>
                               </div>
                               <div className="text_area">
                                  <a href="#none"><strong>안양충훈벚꽃축제</strong></a>
@@ -700,7 +699,7 @@ const Festival = () => {
                         <li className="card_wrap">
                            <div className="card_inner">
                               <div className="img_area">
-                                 <img className="festival_img" src={festivalPoster2} alt="festival_poster"></img>
+                                 <img src={festivalPoster} alt="festival_poster"></img>
                               </div>
                               <div className="text_area">
                                  <a href="#none"><strong>안양충훈벚꽃축제</strong></a>
@@ -719,7 +718,7 @@ const Festival = () => {
                         <li className="card_wrap">
                            <div className="card_inner">
                               <div className="img_area">
-                                 <img className="festival_img" src={festivalPoster2} alt="festival_poster"></img>
+                                 <img src={festivalPoster} alt="festival_poster"></img>
                               </div>
                               <div className="text_area">
                                  <a href="#none"><strong>안양충훈벚꽃축제</strong></a>
