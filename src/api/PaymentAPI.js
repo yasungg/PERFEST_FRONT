@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const KH_DOMAIN = "http://localhost:8111";
+const localhost = "http://localhost:8111";
 
 const PaymentAPI = {
   PaymentSubmit: async(memberid, productId, price, quantity, tid, kakaoTaxFreeAmount) => {
@@ -12,7 +12,7 @@ const PaymentAPI = {
       tid: tid,
       tax_free: kakaoTaxFreeAmount
     };
-    return await axios.post(KH_DOMAIN + "/payment/regist" + info);
+    return await axios.post(localhost + "/payment/regist", info);
   }
 }
 

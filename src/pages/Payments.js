@@ -30,11 +30,11 @@ const PayReady = () => {
         // 상품 비과세
         tax_free_amount: 0,
         // 결제 성공 URL
-        approval_url: "http://localhost:3000/success",
+        approval_url: "http://localhost:3000/payment/success",
         // 결제 실패 URL
-        fail_url: "http://localhost:3000/resultFail",
+        fail_url: "http://localhost:3000/payment/resultFail",
         // 결제 취소 URL
-        cancel_url: "http://localhost:3000/resultFail"
+        cancel_url: "http://localhost:3000/payment/resultFail"
     }
   });
 
@@ -74,7 +74,7 @@ const PayReady = () => {
     }).catch(error => {
       console.log(error);
       // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
-      navigate("/resultFail");
+      navigate("/payment/resultFail");
     });
   }, []);
 }
@@ -149,16 +149,16 @@ const PayResult = () => {
   console.log("결제 성공");
   // 나중에 전에 url로 다시 이 결제로 돌아올 수 있는 상황을 대비해 url 삭제
   window.localStorage.removeItem('url');
-  navigate("/resultSuccess");
   // window.localStorage.setItem("paymentResult", "success");
   console.log("PayResult 실행 완료");
+  setIsTrue(true);
   }).catch(error => {
     // 실패하면 결제 고유번호를 지워줌
     window.localStorage.setItem("paymentResult", "fail");
     window.localStorage.removeItem('tid');
     console.log("에러");
     console.log(error);
-    navigate("/resultFail");
+    navigate("/payment/resultFail");
   });
   },[]);
 
@@ -171,18 +171,19 @@ const PayResult = () => {
     console.log("PaymentResult 메소드 실행");
     const PaymentResult = async() => {
       try {
-      const userId = 1;
-      const response = await PaymentAPI.PaymentSubmit(userId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
+      const memberId = 1;
+      const response = await PaymentAPI.PaymentSubmit(memberId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
       if(response.data.status === 200) {
         // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
         window.localStorage.removeItem('tid');
         console.log("PaymentResult 메소드 성공");
+        navigate("/payment/resultSuccess");
       }} catch (e) {
         console.log(e);
         console.log("PaymentResult 메소드 실패");
       }
     }
-    if(isTrue) PaymentResult();
+  if(isTrue)PaymentResult();
   }, [isTrue])
 };
 
@@ -195,8 +196,6 @@ const PayCancel = () => {
     setModalOpen(false);
     navigate('/', {replace:true});
   }
-
-
 
     return (
       <ResultFalse>
