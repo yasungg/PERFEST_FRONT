@@ -19,7 +19,7 @@ const BoardAPI = {
         return await axios.get(localHost + `/community/getboardarticle?communityId=${communityId}`)
     },
     // 게시판 게시글에 좋아요 추가
-    AddLike: async(communityId) => {
+    AddBoardLike: async(communityId) => {
         const addLike = {
             communityId : communityId
         };

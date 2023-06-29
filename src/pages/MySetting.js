@@ -63,7 +63,7 @@ const DeleteMem = styled.div`
     height: 35px;
     font-size: .8em;
     font-weight: bold;
-    background-color: #D4F4FA;
+    background-color: #2f4050;
     color: white;
     border: none;
     border-radius: 2px;
@@ -152,7 +152,7 @@ const MySetting = () => {
       console.log(response.data);
       if(response.data === true) navigate("/Login"); // 탈퇴시 로그인 화면
     } else if(modalType === "updateAdd") {
-      const addCheck = await MemberAPI.addRegCheck(inputAdd);
+      const addCheck = await MemberAPI.addRegCheck(userEmail, inputAdd);
       if(addCheck.data === true) {
         const response = await MemberAPI.updateAdd(userEmail, inputAdd);
         console.log(response.data);
@@ -162,6 +162,7 @@ const MySetting = () => {
             setMemberInfo(updateInfo.data);
             setAddModalOpen(false);
             setInputAdd("");
+            
           }
         }
       } else {
@@ -210,7 +211,7 @@ const MySetting = () => {
         <Container>
           <Header />
           {memberInfo && memberInfo.map(member => (
-            <Section2 key={member.id}>
+            <Section2 key={member.email}>
               <Label>
                 <div>
                   <p>이메일</p>
@@ -221,7 +222,7 @@ const MySetting = () => {
                 <div>
                   <p>이름</p>
                   <div className="name"></div>
-                  <input type="text" value={member.name} readOnly placeholder={member.name} />
+                  <input type="text" value={member.memberName} readOnly placeholder={member.name} />
                 </div>
               </Label>
               <Label>
@@ -230,7 +231,8 @@ const MySetting = () => {
                   <div className="nicName"></div>
                 <input
                   type="text"
-                  placeholder={member.nickname}
+                  readOnly
+                  placeholder={member.nickName}
                 />
                 <button onClick={updateNicName}>수정</button>
                 </div>
@@ -241,6 +243,7 @@ const MySetting = () => {
                   <div className="address"></div>
                 <input
                   type="address"
+                  readOnly
                   placeholder={member.address}
                 />
                 <button onClick={updateAdd}>수정</button>

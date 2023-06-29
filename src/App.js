@@ -19,6 +19,7 @@ import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
 
 import Festival from "./pages/Festival";
+import SideBar from "./pages/Sidebar";
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/MyPage" element={<MyPage />} />
+        {/* sidebar 테스트용 수정예정/ */}
+        <Route path="/Sidebar" element={<SideBar />} /> 
         <Route path="/MyRanking" element={<MyRanking />} />
         <Route path="/Setting" element={<MySetting />} />
         <Route path="/MyReview" element={<MyReview />} />

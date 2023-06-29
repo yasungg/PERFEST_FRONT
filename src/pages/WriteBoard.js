@@ -78,6 +78,9 @@ const WriteBoard = () => {
     const onClickWriteBoard = async() => {
         const response = await BoardAPI.BoardWrite(inputBoardTitle,selectedCategory,inputBoardText);
         console.log(response.data);
+        setInputBoardTitle("");
+        setSelectedCategory("");
+        setInputBoardText("");
         if(response.data === true) {
             console.log(response.data);
         }

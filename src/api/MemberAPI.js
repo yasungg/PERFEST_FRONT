@@ -11,47 +11,48 @@ const MemberAPI = {
     
     // 회원 닉네임 수정
     updateNicName: async(email, nickname) => {
-        const updateNicName = {
-            email: email,
+        const updateData = {
+            username: email,
             nickname: nickname
         };
-        return await axios.post(KH_DOMAIN + "auth/member/updateNicname", updateNicName);
+        return await axios.post(KH_DOMAIN + "/auth/member/nickname", updateData);
     },
 
     // 닉네임 수정 중복값 체크
-    nickNameRegCheck: async(nicName) => {
-        return await axios.get(KH_DOMAIN + `auth/member/nicknameCheck?nicname=${nicName}`);
+    nickNameRegCheck: async(nicknameCheck) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/nicknameCheck?nicname=${nicknameCheck}`);
     },
 
     // 회원 탈퇴
     deleteMem: async(email) => {
         const deleteMem = {
-            email: email
+            username: email
         };
-        return await axios.post(KH_DOMAIN + "auth/member/del", deleteMem);
+        return await axios.post(KH_DOMAIN + "/auth/member/del", deleteMem);
     },
-
-    // 주소 수정 중복값 체크
-    addRegCheck: async(address) => {
-        return await axios.get(KH_DOMAIN + `auth/member/addressCheck?address=${address}`);
-    },
-
+    
     // 주소 수정
     updateAdd: async(email, address) => {
-        const updateAdd = {
-            email: email,
+        const updateData = {
+            username: email,
             address: address
         };
-        return await axios.post(KH_DOMAIN + "auth/member/updateAdd", updateAdd);
+        return await axios.post(KH_DOMAIN + "/auth/member/updateAdd", updateData);
     },
+
+    // 주소 수정 중복값 체크 (중복시 errorMsg)
+    addRegCheck: async(email, address) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/addressCheck?email=${email}&address=${address}`);
+      },
+      
 
     // 이미지 수정
     updateImg: async(email, img) => {
-        const updateImg = {
+        const updateData = {
             email: email,
             img: img
         };
-        return await axios.post(KH_DOMAIN + "auth/member/updateImg", updateImg)
+        return await axios.post(KH_DOMAIN + "auth/member/updateImg", updateData)
     },
 
     // 

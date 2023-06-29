@@ -74,6 +74,10 @@ const CommentNickName = styled.div`
 const CommentWrittenTime = styled.div`
 font-size: 13px;
 `;
+const CommentReWrite = styled.div`
+`;
+const CommentLike = styled.div`
+`;
 const CommentBody = styled.div`
 `;
 const CommentLikeCount = styled.div`
@@ -96,6 +100,7 @@ const BoardArticle = () => {
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
     const [commentData, setCommentData] = useState([]);
+    const [commentUpdateTrigger, setCommentUpdateTrigger] = useState(false); // 댓글 업데이트를 트리거하는 상태 추가
 
     const onChangeComment = (e) => {
         setInputComment(e.target.value);
@@ -104,6 +109,8 @@ const BoardArticle = () => {
     const onClickWriteComment = async() => {
         const response = await CommentAPI.CommentWrite(inputComment, communityId);
         console.log(response.data);
+        setCommentUpdateTrigger(prev => !prev);
+        setInputComment(""); // 댓글 작성 후 inputComment 상태를 초기화하여 textarea의 내용을 지움
     }
     // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
@@ -112,7 +119,7 @@ const BoardArticle = () => {
         setCommentCount(rsp.data);
     }
     getCommentCount();
-    },[])
+    },[commentUpdateTrigger])
     // 게시판 본문 가져오기
     useEffect(() => {
     const getBoardArticle = async() => {
@@ -123,8 +130,14 @@ const BoardArticle = () => {
     getBoardArticle();
     },[communityId])
     // 게시판 공감하기 눌르면 공감하기 1 추가
-    const onClickLike = async() => {
-        const response = await BoardAPI.AddLike(communityId);
+    const onClickBoardLike = async() => {
+        const response = await BoardAPI.AddBoardLike(communityId);
+        console.log(response.data);
+    }
+    // 댓글 좋아요 눌르면 댓글 좋아요 1 추가
+    const onClickCommentLike  = async(commentId) => {
+        console.log(commentId);
+        const response = await CommentAPI.AddCommentLike(commentId);
         console.log(response.data);
     }
     // 해당 게시판 댓글 가져오기
@@ -135,7 +148,7 @@ const BoardArticle = () => {
         setCommentData(response.data);
     }
     getBoardComment();
-    },[])
+    },[commentUpdateTrigger])
     const getCategoryText = (category) => {
         switch (category) {
           case 'FIND_PARTY':
@@ -175,13 +188,15 @@ const BoardArticle = () => {
                     <CommentHead>
                         <CommentNickName></CommentNickName>
                         <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
+                        <CommentReWrite><button>대댓글</button></CommentReWrite>
+                        <CommentLike><button onClick={() => onClickCommentLike(comment.commentId)}>좋아요</button></CommentLike>
+                        <CommentLikeCount>{comment.commentLikeCount}</CommentLikeCount>
                     </CommentHead>
                     <CommentBody>{comment.commentBody}</CommentBody>
-                    <CommentLikeCount>{comment.CommentLikeCount}</CommentLikeCount>
                     </Comment>
                 </CommentDesc>
                 ))}
-                <BoardLike><button onClick={onClickLike}>공감하기</button></BoardLike>
+                <BoardLike><button onClick={onClickBoardLike}>공감하기</button></BoardLike>
             </BodyContainer>
         </Container>
     );
