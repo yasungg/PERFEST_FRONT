@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import festivalPoster from "../images/2023-대한민국-과학축제-포스터.webp";
 import festivalPoster2 from "../images/2023안양충훈벚꽃축제.jpg"
-import KakaoMap from "../components/KakaoMap";
+import NaverMap from "../components/NaverMap";
 
 const BodyContainer = styled.div`
   width: 100%;
@@ -26,8 +26,9 @@ const BodyContainer = styled.div`
 	.mapContainer {
 		display: flex;
 		width: 100%;
-		height: 100%;
+		height: 100vh;
 		position: relative;
+		background-color: black;
 	}
 
 	/* searchContainer 영역 */
@@ -740,7 +741,7 @@ const Festival = () => {
 
 					{/* 지도 */}
 					<div className="mapContainer">
-						<KakaoMap />
+						<NaverMap />
 						<div className="category_container">
 							<ul className="bubble_filter_list">
 								<li className="bubble_filter_item">
