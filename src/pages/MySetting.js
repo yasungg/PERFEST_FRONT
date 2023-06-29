@@ -128,6 +128,7 @@ const MySetting = () => {
     const memberInfo = async() => {
       const rsp = await MemberAPI.getMemberInfo(userEmail);
       if(rsp.status === 200) setMemberInfo(rsp.data);
+     
     };
     memberInfo();
   },[userEmail]);
@@ -172,7 +173,7 @@ const MySetting = () => {
       const nicNameCheck = await MemberAPI.nickNameRegCheck(inputNicName);
       console.log(nicNameCheck.data);
       if(nicNameCheck.data === true) {
-        const response = await MemberAPI.updateNicName(userEmail, inputNicName);
+        const response = await MemberAPI.updateNickName(userEmail, inputNicName);
         console.log(response.data);
         if(response.data === true) {
           const updatedInfo = await MemberAPI.getMemberInfo(userEmail);

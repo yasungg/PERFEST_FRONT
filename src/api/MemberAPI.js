@@ -10,7 +10,7 @@ const MemberAPI = {
     },
     
     // 회원 닉네임 수정
-    updateNicName: async(email, nickname) => {
+    updateNickName: async(email, nickname) => {
         const updateData = {
             username: email,
             nickname: nickname
@@ -20,7 +20,7 @@ const MemberAPI = {
 
     // 닉네임 수정 중복값 체크
     nickNameRegCheck: async(nicknameCheck) => {
-        return await axios.get(KH_DOMAIN + `/auth/member/nicknameCheck?nicname=${nicknameCheck}`);
+        return await axios.get(KH_DOMAIN + `/auth/member/nicknameCheck?nickname=${nicknameCheck}`);
     },
 
     // 회원 탈퇴
