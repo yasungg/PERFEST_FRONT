@@ -70,7 +70,6 @@ const PayReady = () => {
       console.log("PayReady 메소드 실행 성공");
       window.location.href = response.data.next_redirect_pc_url;
       // 실행 성공하면 pg토큰 발급을 위해 해당 주소로 리다이렉트
-      window.localStorage.setItem("paymentResult", "success");
     }).catch(error => {
       console.log(error);
       // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
@@ -99,9 +98,12 @@ const PayResult = () => {
     // 결제 타입
     method : ""
   });
-  // 결제준비 api 통신 성공시 받아온 tg_token 받기
+  // 결제준비 api 통신 성공시 받아온 pg_token 받기
   let search = window.location.search;
-
+  let splitToken = search.split("=")[1];
+  console.log("search 값 : "+search);
+  console.log(splitToken);
+  // ?pg_token=8bebbe14fde18da1dd3d
   // 카카오페이 결제 승인 요청에 보낼 정보
   const data = {
     params: {
@@ -113,12 +115,32 @@ const PayResult = () => {
       // 가맹점 회원 id
       partner_user_id: "partner_user_id",
       // 결제승인 요청을 인정하는 토큰
-      pg_token: search.split("=")[1],
+      pg_token: splitToken
+    }
+  };
+  console.log(data);
+  console.log("pg 토큰 : "+data.params.pg_token);
+
+  const navigate = useNavigate();
+
+  console.log("PaymentResult 메소드 실행");
+  const PaymentResult = async() => {
+    try {
+    const memberId = 1;
+    const response = await PaymentAPI.PaymentSubmit(memberId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
+    if(response.data.status === 200) {
+      console.log("PaymentSubmit 메소드 실행 성공한 값 : "+response);
+      // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
+      window.localStorage.removeItem('tid');
+      console.log("PaymentResult 메소드 성공");
+      navigate("/payment/resultSuccess");
+    }} catch (e) {
+      console.log(e);
+      console.log("PaymentResult 메소드 실패");
     }
   };
 
-
-  const navigate = useNavigate();
+  const [isTrue, setIsTrue] = useState(false);
   useEffect(() => {
   const { params } = data;
   axios({
@@ -141,17 +163,31 @@ const PayResult = () => {
     // 결제 고유번호
     tid : response.data.tid,
     // 카카오 비과세
-    kakaoTaxFreeAmount : response.data.amount.tax_free,
-    // CARD OR MONEY 둘 중 하나의 방식이면 백에서 받을 때 KAKAOPAY라고 알려주기 위하여 KAKAOPAY로 변환해서 넘겨줌 둘 다 아니면 에러
-    // method : response.data.payment_method_type === 'CARD' || 
-    //         response.data.payment_method_type === 'MONEY' ? 'KAKAOPAY' : 'ERROR'
+    kakaoTaxFreeAmount : response.data.amount.tax_free
   }); 
-  console.log("결제 성공");
-  // 나중에 전에 url로 다시 이 결제로 돌아올 수 있는 상황을 대비해 url 삭제
-  window.localStorage.removeItem('url');
   // window.localStorage.setItem("paymentResult", "success");
   console.log("PayResult 실행 완료");
+  // 나중에 전에 url로 다시 이 결제로 돌아올 수 있는 상황을 대비해 url 삭제
+  window.localStorage.removeItem('url');
   setIsTrue(true);
+
+  const PaymentResult = async() => {
+    try {
+    console.log("tid 값 : " + localStorage.getItem("tid"));
+    const memberId = 1;
+    const response = await PaymentAPI.PaymentSubmit(memberId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
+    if(response.data.status === 200) {
+      console.log("PaymentSubmit 메소드 실행 성공한 값 : "+response);
+      // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
+      window.localStorage.removeItem('tid');
+      console.log("PaymentResult 메소드 성공");
+      navigate("/payment/resultSuccess");
+    }} catch (e) {
+      console.log(e);
+      console.log("PaymentResult 메소드 실패");
+    }
+  };
+  PaymentResult();
   }).catch(error => {
     // 실패하면 결제 고유번호를 지워줌
     window.localStorage.setItem("paymentResult", "fail");
@@ -162,29 +198,13 @@ const PayResult = () => {
   });
   },[]);
 
-
+  if(isTrue) { PaymentResult(); }
   // 결제 승인 완료 후 예약 정보를 백엔드에 보내는 로직
 
   // 결제 로직이 전부 성공한 뒤에 DB로 값을 넣게 하기 위해
-  const [isTrue, setIsTrue] = useState(false);
-  useEffect(() => {
-    console.log("PaymentResult 메소드 실행");
-    const PaymentResult = async() => {
-      try {
-      const memberId = 1;
-      const response = await PaymentAPI.PaymentSubmit(memberId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
-      if(response.data.status === 200) {
-        // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
-        window.localStorage.removeItem('tid');
-        console.log("PaymentResult 메소드 성공");
-        navigate("/payment/resultSuccess");
-      }} catch (e) {
-        console.log(e);
-        console.log("PaymentResult 메소드 실패");
-      }
-    }
-  if(isTrue)PaymentResult();
-  }, [isTrue])
+  // useEffect(() => {
+
+  // }, [isTrue])
 };
 
 
