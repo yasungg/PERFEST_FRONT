@@ -8,10 +8,15 @@ const RankButton = styled.div`
 `;
 const Ranking = () => {
     const [richRanking, setRichRanking] = useState([]);
+    const [badgeranking, setBadgeRanking] = useState([]);
     const getRichRanking = async() => {
         const response = await RankingAPI.GetRichRanking();
         console.log(response.data);
         setRichRanking(response.data);
+    }
+    const getBadgeRanking = async() => {
+        const response = await RankingAPI.GetBadgeRanking();
+        setBadgeRanking(response.data);
     }
 
 
