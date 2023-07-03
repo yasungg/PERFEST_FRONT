@@ -36,10 +36,10 @@ function App() {
         <Route path="/ReserveList" element={<MyReserveList />} />
         <Route path="/PayList" element={<MyPayList />} />
         <Route path="/MyWrite" element={<MyWrite />} />
-        <Route path="/payment" element={<PayReady />} />
-        <Route path="/payment/success" element={<PayResult />} />
-        <Route path="/payment/resultFail" element={<ResultFalse />} />
-        <Route path="/payment/resultSuccess" element={<ResultSuccess />} />
+        <Route path="/payready" element={<PayReady />} />
+        <Route path="/payresult" element={<PayResult />} />
+        <Route path="/resultFail" element={<ResultFalse />} />
+        <Route path="/resultSuccess" element={<ResultSuccess />} />
         <Route path="/Board" element={<Board />} />
         <Route path="/WriteBoard" element={<WriteBoard />} />
         <Route path="/UpdateBoard" element={<UpdateBoard />} />

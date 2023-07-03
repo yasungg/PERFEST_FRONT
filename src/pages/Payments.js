@@ -30,11 +30,11 @@ const PayReady = () => {
         // 상품 비과세
         tax_free_amount: 0,
         // 결제 성공 URL
-        approval_url: "http://localhost:3000/payment/success",
+        approval_url: "http://localhost:3000/payresult",
         // 결제 실패 URL
-        fail_url: "http://localhost:3000/payment/resultFail",
+        fail_url: "http://localhost:3000/resultfail",
         // 결제 취소 URL
-        cancel_url: "http://localhost:3000/payment/resultFail"
+        cancel_url: "http://localhost:3000/resultfail"
     }
   });
 
@@ -59,21 +59,23 @@ const PayReady = () => {
           data: { next_redirect_pc_url, tid }, // next_redirect_pc_url : 결제 준비 API 응답으로 받으며, PC 환경에서 사용. 
       } = response;
       // 결제 고유번호 tid를 저장
-      window.localStorage.setItem("tid", tid);
+      window.localStorage.setItem("tid", response.data.tid);
       // 결제 페이지를 위한 url
       window.localStorage.setItem('url', next_redirect_pc_url);
       console.log("통신 : " + JSON.stringify(response) );
       // useContext 에 reponse 값을 저장.
       setData({next_redirect_pc_url : next_redirect_pc_url, 
               tid : tid});
-      // console.log("결제 성공시 받는 response 값 : " + response);
       console.log("PayReady 메소드 실행 성공");
-      window.location.href = response.data.next_redirect_pc_url;
       // 실행 성공하면 pg토큰 발급을 위해 해당 주소로 리다이렉트
+      window.location.href = response.data.next_redirect_pc_url;
+
     }).catch(error => {
       console.log(error);
+      window.localStorage.removeItem("tid");
+      window.localStorage.removeItem("url");
       // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
-      navigate("/payment/resultFail");
+      navigate("/resultFail");
     });
   }, []);
 }
@@ -118,29 +120,10 @@ const PayResult = () => {
       pg_token: splitToken
     }
   };
-  console.log(data);
-  console.log("pg 토큰 : "+data.params.pg_token);
 
   const navigate = useNavigate();
-
-  console.log("PaymentResult 메소드 실행");
-  const PaymentResult = async() => {
-    try {
-    const memberId = 1;
-    const response = await PaymentAPI.PaymentSubmit(memberId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
-    if(response.data.status === 200) {
-      console.log("PaymentSubmit 메소드 실행 성공한 값 : "+response);
-      // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
-      window.localStorage.removeItem('tid');
-      console.log("PaymentResult 메소드 성공");
-      navigate("/payment/resultSuccess");
-    }} catch (e) {
-      console.log(e);
-      console.log("PaymentResult 메소드 실패");
-    }
-  };
-
   const [isTrue, setIsTrue] = useState(false);
+  
   useEffect(() => {
   const { params } = data;
   axios({
@@ -155,60 +138,55 @@ const PayResult = () => {
     console.log("결제 승인 완료 : " + JSON.stringify(response));
     // 여기까지 통신이 성공했으면 카카오 결제 API 는 완료
     // 응답을 받으면 위에 백에다 보낼 정보를 세팅해줌
-  setPayment({
-    // 총 가격
-    price : response.data.amount.total,
-    // 수량
-    quantity : response.data.quantity,
-    // 결제 고유번호
-    tid : response.data.tid,
-    // 카카오 비과세
-    kakaoTaxFreeAmount : response.data.amount.tax_free
-  }); 
-  // window.localStorage.setItem("paymentResult", "success");
-  console.log("PayResult 실행 완료");
-  // 나중에 전에 url로 다시 이 결제로 돌아올 수 있는 상황을 대비해 url 삭제
-  window.localStorage.removeItem('url');
-  setIsTrue(true);
-
-  const PaymentResult = async() => {
-    try {
-    console.log("tid 값 : " + localStorage.getItem("tid"));
-    const memberId = 1;
-    const response = await PaymentAPI.PaymentSubmit(memberId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
-    if(response.data.status === 200) {
-      console.log("PaymentSubmit 메소드 실행 성공한 값 : "+response);
-      // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
-      window.localStorage.removeItem('tid');
-      console.log("PaymentResult 메소드 성공");
-      navigate("/payment/resultSuccess");
-    }} catch (e) {
-      console.log(e);
-      console.log("PaymentResult 메소드 실패");
-    }
-  };
-  PaymentResult();
+    setPayment({
+      // 총 가격
+      price : response.data.amount.total,
+      // 수량
+      quantity : response.data.quantity,
+      // 결제 고유번호
+      tid : response.data.tid,
+      // 카카오 비과세
+      kakaoTaxFreeAmount : response.data.amount.tax_free
+    }); 
+    setIsTrue(true);
   }).catch(error => {
-    // 실패하면 결제 고유번호를 지워줌
-    window.localStorage.setItem("paymentResult", "fail");
-    window.localStorage.removeItem('tid');
-    console.log("에러");
+    // 실패하면 결제 고유번호와 url을 지워줌
+    window.localStorage.removeItem("tid");
     console.log(error);
-    navigate("/payment/resultFail");
-  });
+    navigate("/resultFail");
+  }).finally(
+    // 나중에 전에 url로 다시 이 결제로 돌아올 수 있는 상황을 대비해 url 삭제
+    window.localStorage.removeItem('url')
+  );
   },[]);
 
-  if(isTrue) { PaymentResult(); }
-  // 결제 승인 완료 후 예약 정보를 백엔드에 보내는 로직
-
-  // 결제 로직이 전부 성공한 뒤에 DB로 값을 넣게 하기 위해
-  // useEffect(() => {
-
-  // }, [isTrue])
+  useEffect(() => {
+    // 결제 승인 완료 후 예약 정보를 백엔드에 보내는 로직
+    // 결제 로직이 전부 성공한 뒤에 DB로 값을 넣게 하기 위해
+    const PaymentResult = async() => {
+      try {
+        // const tid = window.localStorage.getItem("tid");
+        const memberId = 1;
+        const productId = 1;
+        const response = await PaymentAPI.PaymentSubmit(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
+        console.log(response);
+        if(response.status === 200) {
+          navigate("/resultSuccess");
+        }
+      } catch (e) {
+        console.log(e);
+        
+      } finally {
+        // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
+        window.localStorage.removeItem('tid');
+      }
+    };
+    isTrue && PaymentResult();
+  }, [isTrue])
 };
 
-
-const PayCancel = () => {
+// 카카오페이 결제 취소 함수
+const PayCancel = ({memberId, productId}) => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const openModal = () => setModalOpen(true);
@@ -216,6 +194,72 @@ const PayCancel = () => {
     setModalOpen(false);
     navigate('/', {replace:true});
   }
+
+  // 사용자가 예약한 주문 내역이 있는지 확인
+  const [memberData, setMemberData] = useState({
+    data : {
+      memberId : memberId,
+      productId : productId,
+      price : "",
+      quantity : "",
+      tid : "",
+      tax_free : ""
+    }
+  });
+  useEffect(() => {
+    const getData = async() => {
+      const respone = await PaymentAPI.CheckPaymentData(memberId, productId);
+      if(respone.status === 200) {
+        console.log("해당 상품 주문 데이터 확인");
+        const {
+          data : {price, quantity, tid, tax_free}
+        } = respone;
+        setMemberData({
+          price : price,
+          quantity : quantity,
+          tid : tid,
+          tax_free : tax_free
+        });
+      } else {
+        console.log("해당 상품 주문 데이터 없음");
+      }
+    }
+  }, []);
+
+  const { data } = memberData;
+  axios({
+      url: "https://kapi.kakao.com/v1/payment/cancel",
+      method: "POST",
+      headers: {
+        Authorization: `KakaoAK 632fb98346e85fd6ea660b71beaf9b70`,
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+        data,
+  }).then(response => {
+    // 요청이 성공하면 응답 본문에 JSON 객체로 다음 단계 진행을 위한 값들을 받습니다. 
+    // 서버(Server)는 tid를 저장하고, 클라이언트는 사용자 환경에 맞는 URL로 리다이렉트
+    const {
+        data: { next_redirect_pc_url, tid }, // next_redirect_pc_url : 결제 준비 API 응답으로 받으며, PC 환경에서 사용. 
+    } = response;
+    // 결제 고유번호 tid를 저장
+    window.localStorage.setItem("tid", response.data.tid);
+    // 결제 페이지를 위한 url
+    window.localStorage.setItem('url', next_redirect_pc_url);
+    console.log("통신 : " + JSON.stringify(response) );
+    // useContext 에 reponse 값을 저장.
+    console.log("PayReady 메소드 실행 성공");
+
+    // 실행 성공하면 pg토큰 발급을 위해 해당 주소로 리다이렉트
+    window.location.href = response.data.next_redirect_pc_url;
+
+  }).catch(error => {
+    console.log(error);
+    window.localStorage.removeItem("tid");
+    window.localStorage.removeItem("url");
+    // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
+    navigate("/resultFail");
+  });
+ 
 
     return (
       <ResultFalse>

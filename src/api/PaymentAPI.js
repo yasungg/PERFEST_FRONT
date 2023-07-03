@@ -3,16 +3,22 @@ import axios from "axios";
 const localhost = "http://localhost:8111";
 
 const PaymentAPI = {
+  // 결제 완료 시 DB에 정보 저장하기 위한 메소드
   PaymentSubmit: async(memberid, productId, price, quantity, tid, kakaoTaxFreeAmount) => {
     const info = {
-      memberId: 1,
-      productId: 1,
-      price: 2000,
-      quantity: 1,
+      memberId: memberid,
+      productId: productId,
+      price: price,
+      quantity: quantity,
       tid: tid,
       tax_free: kakaoTaxFreeAmount
     };
     return await axios.post(localhost + "/auth/payment/regist", info);
+  },
+
+  // 결제 취소 시 사용자가 결제한 결제 정보가 있는지 DB에 가서 확인
+  CheckPaymentData: async(memberId, productId) => {
+   return await axios.get(localhost + `/auth/payment/CheckPaymentData?memberId=${memberId}&productId=${productId}`); 
   }
 }
 
