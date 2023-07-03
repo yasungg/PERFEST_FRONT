@@ -16,6 +16,7 @@ const Ranking = () => {
     }
     const getBadgeRanking = async() => {
         const response = await RankingAPI.GetBadgeRanking();
+        console.log(response.data);
         setBadgeRanking(response.data);
     }
 
