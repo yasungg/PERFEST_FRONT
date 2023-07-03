@@ -3,10 +3,11 @@ import axios from "axios";
 const localHost = "http://localhost:8111";
 const CommentAPI = {
     // 댓글 작성하기
-    CommentWrite : async(commentBody, communityId) => {
+    CommentWrite : async(commentBody, communityId, memberId) => {
         const writeComment = {
             commentBody: commentBody,
-            communityId: communityId
+            communityId: communityId,
+            memberId: memberId
         };
         return await axios.post(localHost + `/comment/writecomment`, writeComment);
     },

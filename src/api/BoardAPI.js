@@ -26,11 +26,12 @@ const BoardAPI = {
         return await axios.post(localHost + `/community/BoardArticle/${communityId}/addlike`, addLike);
     },
     // 게시판 작성
-    BoardWrite : async(title, category, text ) => {
+    BoardWrite : async(title, category, text, memberId ) => {
         const writeBoard = {
         communityTitle : title,
         communityCategory : category,
-        communityDesc : text
+        communityDesc : text,
+        memberId :memberId
         };
         const Authorization =
             "Bearer " + window.localStorage.getItem("accessToken");
