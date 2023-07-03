@@ -17,7 +17,8 @@ const BodyContainer = styled.div`
 		max-width: 400px;
 		min-width: 400px;
 		height: 100vh;
-		background: linear-gradient(to right, #654ea3, #eaafc8);
+		/* background: linear-gradient(to right, #654ea3, #eaafc8); */
+		background-color: #FFF;
 		overflow-y: hidden;
 		z-index: 3;
 		box-shadow: 1px 0px 5px 0px #555555
@@ -32,7 +33,7 @@ const BodyContainer = styled.div`
 	}
 
 	/* searchContainer 영역 */
-	.input_box {
+	.search_area {
 		display: flex;
 		width: 100%;
 		height: 8%;
@@ -40,23 +41,40 @@ const BodyContainer = styled.div`
 		align-items: center;
 		justify-content: center;
 		box-shadow: 5px 0 5px -5px #333;
+		border-bottom: 1px solid lightgray;
+	}
+
+	.input_box_area {
+		display: flex;
+		width: 90%;
+		height: 45px;
+		border-radius: 5px;
+		border: 1px solid transparent;
+		background-image: linear-gradient(#FFF, #FFF),
+		linear-gradient(to right, #fbfcb9be, #ffcdf3aa, #65d3ffaa);
+		/* linear-gradient(to right, #7E2BFE, #23C3F4); */
+		background-origin: border-box;
+		background-clip: content-box, border-box;
+		outline: none;
+		font-size: 13px;
+		box-shadow: 1px 1px 4px -1px #555555;
+		margin: 0px -5px;
 	}
 
 	.search {
-		width: 75%;
-		height: 45px;
-		border-radius: 5px;
+		width: 83%;
+		height: 43px;
+		background-color: #FFF;
 		border: none;
 		outline: none;
-		padding-left: 15px;
 		font-size: 13px;
-		box-shadow: 1px 1px 4px -1px #555555;
+		margin-left: 15px;
 	}
 
 	.search_button {
 		margin: 3px;
-		width: 47px;
-		height: 47px;
+		width: 40px;
+		height: 40px;
 		cursor: pointer;
 		background-color: #FFF;
 		border: none;
@@ -108,7 +126,6 @@ const BodyContainer = styled.div`
 			align-items: center;
 			justify-content: center;
 			background-color: #FFF;
-			border-bottom: 1px solid lightgray;
 		}
 
 	/* ol */
@@ -700,9 +717,11 @@ const Festival = () => {
 					{/* 검색창 / 결과창 */}
           <div className="searchContainer" onClick={() => {setIsOpenLocation(false)}}>
 						{/* 검색창 */}
-						<div className="input_box">
+						<div className="search_area">
+							<div className="input_box_area">
 							<input className="search" type="text" placeholder="찾을 지역이나 축제 이름을 입력하세요."></input>
 							<button className="search_button">돋보기</button>
+							</div>
 						</div>
 						{/* 검색 결과 */}
             <div className="list_container">
