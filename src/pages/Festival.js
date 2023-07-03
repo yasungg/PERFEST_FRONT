@@ -479,8 +479,8 @@ const BodyContainer = styled.div`
 	.map_control_area {
 		position: absolute;
 		z-index: 2;
-		bottom: 10px;
-		right: 10px;
+		bottom: 30px;
+		right: 12px;
 	}
 
 	.zoom_control_area {
