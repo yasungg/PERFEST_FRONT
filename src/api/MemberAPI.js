@@ -52,10 +52,19 @@ const MemberAPI = {
             email: email,
             img: img
         };
-        return await axios.post(KH_DOMAIN + "auth/member/updateImg", updateData)
+        return await axios.post(KH_DOMAIN + "/auth/member/updateImg", updateData);
     },
 
-    // 
+    // 내 게시글 조회
+    getMyWrite: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/communities?memberId=${memberId}`);
+    },
+
+    // 내 게시글 삭제
+    delMyWrite: async(memberId) => {
+        return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyCommunities?memberId=${memberId}`);
+    },
+
 
 
 
