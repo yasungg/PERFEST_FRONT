@@ -76,7 +76,8 @@ const WriteBoard = () => {
     };
     // 게시판 작성하기
     const onClickWriteBoard = async() => {
-        const response = await BoardAPI.BoardWrite(inputBoardTitle,selectedCategory,inputBoardText);
+        const memberId = 1;
+        const response = await BoardAPI.BoardWrite(inputBoardTitle,selectedCategory,inputBoardText, memberId);
         console.log(response.data);
         setInputBoardTitle("");
         setSelectedCategory("");
