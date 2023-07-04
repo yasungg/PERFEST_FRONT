@@ -14,7 +14,7 @@ import WriteBoard from "./pages/WriteBoard";
 import Ranking from "./pages/Ranking";
 import UpdateBoard from "./pages/UpdateBoard";
 import BoardArticle from "./pages/BoardArticle";
-import { PayReady, PayResult } from "./pages/Payments";
+import { PayCancel, PayReady, PayResult } from "./pages/Payments";
 import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
 
@@ -38,6 +38,7 @@ function App() {
         <Route path="/MyWrite" element={<MyWrite />} />
         <Route path="/payready" element={<PayReady />} />
         <Route path="/payresult" element={<PayResult />} />
+        <Route path="/paycancel" element={<PayCancel />} />
         <Route path="/resultFail" element={<ResultFalse />} />
         <Route path="/resultSuccess" element={<ResultSuccess />} />
         <Route path="/Board" element={<Board />} />

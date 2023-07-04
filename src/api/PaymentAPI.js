@@ -18,7 +18,7 @@ const PaymentAPI = {
 
   // 결제 취소 시 사용자가 결제한 결제 정보가 있는지 DB에 가서 확인
   CheckPaymentData: async(memberId, productId) => {
-   return await axios.get(localhost + `/auth/payment/CheckPaymentData?memberId=${memberId}&productId=${productId}`); 
+   return await axios.get(localhost + `/auth/payment/checkPaymentData?memberId=1&productId=1`); 
   }
 }
 
