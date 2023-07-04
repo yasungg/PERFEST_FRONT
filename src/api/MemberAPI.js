@@ -100,7 +100,14 @@ const MemberAPI = {
         return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyReview?memberId=${memberId}`);
     },
 
-    
+    // 내 예약목록 조회
+    getReservation: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/activites?memberId=${memberId}`);
+    },
+
+    // 내 예약목록 삭제
+
+
     
 
 }
