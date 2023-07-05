@@ -19,6 +19,7 @@ import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
 
 import Festival from "./pages/Festival";
+import FestivalDetail from "./pages/FestivalDetail";
 import SideBar from "./pages/Sidebar";
 import MyCalendar from "./pages/MyCalender";
 
@@ -48,6 +49,7 @@ function App() {
         <Route path="/Ranking" element={<Ranking />} />
         <Route path="/BoardArticle/:communityId" element={<BoardArticle />} />
         <Route path="/Festival" element={<Festival />} />
+        <Route path="/FestivalDetail" element={<FestivalDetail />} />
         <Route path="/MyCalender" element={<MyCalendar />} />
 
       </Routes>

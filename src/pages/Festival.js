@@ -4,8 +4,9 @@ import { Container as BaseContainer } from "../components/StandardStyles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import festivalPoster from "../images/2023-대한민국-과학축제-포스터.webp";
-import festivalPoster2 from "../images/2023안양충훈벚꽃축제.jpg"
+import festivalPoster2 from "../images/2023안양충훈벚꽃축제.jpg";
 import NaverMap from "../components/NaverMap";
+import FestivalAPI from "../api/FestivalAPI";
 
 const BodyContainer = styled.div`
   width: 100%;
@@ -186,7 +187,6 @@ const BodyContainer = styled.div`
 		align-items: center;
 		background-color: #FFF;
 		border-bottom: 1px solid lightgray;
-		margin: 20px 0;
 	}
 
 	.card_inner {
@@ -643,6 +643,20 @@ const Festival = () => {
 		};
 
 	}, []);
+
+	const [festival, setFestival] = useState([]);
+
+	useEffect(() => {
+		const FestivalInfo = async() => {
+			try {
+				const rsp = await FestivalAPI.getFestivalInfo();
+				if(rsp.status === 200) setFestival(rsp.data);
+			} catch (error) {
+				console.error("Error while fetching festival information:", error);
+			}
+		}
+		FestivalInfo();
+	},[]);
 	
 	return(
 		<Container
@@ -674,62 +688,25 @@ const Festival = () => {
 						</div>
 						{/* 결과 카드 */}
 							<ul className="card_list">
-								<li className="card_wrap">
-									<div className="card_inner">
-										<div className="img_area">
-											<img src={festivalPoster2} alt="festival_poster"></img>
+								{festival && festival.map((e, idx) => (
+									<li className="card_wrap" key={idx}>
+										<div className="card_inner">
+											<div className="img_area">
+												<img src={festivalPoster2} alt="festival_poster"></img>
+											</div>
+											<div className="text_area">
+												<a href="#none"><strong>{e.festivalName}</strong></a>
+												<p>{e.startDate} ~ {e.endDate}</p>
+												<p className="address">{e.festivalLocation ? e.festivalLocation : e.festivalDoro}</p>
+												<p>{e.festivalTel}</p>
+											</div>
+											<div className="content_area">
+												<p>{e.festivalDesc}</p>
+											</div>
 										</div>
-										<div className="text_area">
-											<a href="#none"><strong>안양충훈벚꽃축제</strong></a>
-											<p>2023.04.08 ~ 2023.04.09</p>
-											<p className="address">경기도 안양시 만안구 석수동 797번지경기도 안양시 만안구 석수동 797번지경기도 안양시 만안구 석수동 797번지</p>
-											<p>031-687-0500</p>
-										</div>
-										<div className="content_area">
-											<p>
-												벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등
-											</p>
-										</div>
-									</div>
-								</li>
+									</li>
+								))}
 
-								<li className="card_wrap">
-									<div className="card_inner">
-										<div className="img_area">
-											<img className="festival_img" src={festivalPoster2} alt="festival_poster"></img>
-										</div>
-										<div className="text_area">
-											<a href="#none"><strong>안양충훈벚꽃축제</strong></a>
-											<p className="festival_period">2023.04.08 ~ 2023.04.09</p>
-											<p className="festival_location">경기도 안양시 만안구 석수동 797번지</p>
-											<p className="festival_tel">031-687-0500</p>
-										</div>
-										<div className="content_area">
-											<p className="festival_content">
-												벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등
-											</p>
-										</div>
-									</div>
-								</li>
-
-								<li className="card_wrap">
-									<div className="card_inner">
-										<div className="img_area">
-											<img className="festival_img" src={festivalPoster2} alt="festival_poster"></img>
-										</div>
-										<div className="text_area">
-											<a href="#none"><strong>안양충훈벚꽃축제</strong></a>
-											<p className="festival_period">2023.04.08 ~ 2023.04.09</p>
-											<p className="festival_location">경기도 안양시 만안구 석수동 797번지</p>
-											<p className="festival_tel">031-687-0500</p>
-										</div>
-										<div className="content_area">
-											<p className="festival_content">
-												벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등
-											</p>
-										</div>
-									</div>
-								</li>
 							</ul>
             </div>
 					</div>
@@ -866,7 +843,6 @@ const Festival = () => {
 						</div>
 					</div>
         </BodyContainer>
-      <Footer />
     </Container>
   );
 };
