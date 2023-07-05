@@ -11,6 +11,15 @@ const CommentAPI = {
         };
         return await axios.post(localHost + `/comment/writecomment`, writeComment);
     },
+    // 대댓글 작성하기
+    ReplyCommentWrite : async(commentBody, memberId, parentId) => {
+        const writeReplyComment = {
+            commentBody: commentBody,
+            memberId: memberId,
+            parentId: parentId
+        };
+        return await axios.post(localHost + `/comment/writereplycomment`, writeReplyComment)
+    },
     // 댓글 갯수 가져오기
     CommentGetCount : async(communityId) => {
         return await axios.get(localHost + `/comment/commentcount?communityId=${communityId}`)
