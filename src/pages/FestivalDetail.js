@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Container } from "../components/StandardStyles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import SearchSideBar from "../components/SearchSideBar";
 import FestivalAPI from "../api/FestivalAPI";
 
 
@@ -15,6 +16,7 @@ const FestivalDetail = () => {
     <Container>
       <Header />
       <BodyContainer>
+        <SearchSideBar />
       </BodyContainer>
 
       <Footer />
