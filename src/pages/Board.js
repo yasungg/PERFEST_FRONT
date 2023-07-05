@@ -174,11 +174,11 @@ const Board = () => {
           <Arrange>
                 <ArrButton >
                 <input type="radio" name="arrange" id="newest" onClick={onClickNewestBoard}/>
-                <label for="newest">최신순</label>
+                <label htmlFor="newest">최신순</label>
                 </ArrButton>
                 <ArrButton>
                 <input type="radio" name="arrange" id="likest" />
-                <label for="likest">인기순</label>
+                <label htmlFor="likest">인기순</label>
                 </ArrButton>
             </Arrange>
           {selectedBoardInfo.map((community) => (
