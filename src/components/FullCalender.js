@@ -1,6 +1,7 @@
 import React from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
+import '../CalendarStyle.css';
 
 const Calendar = () => {
   const events = [
@@ -27,3 +28,4 @@ const Calendar = () => {
 };
 
 export default Calendar;
+ 
