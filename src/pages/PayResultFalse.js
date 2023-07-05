@@ -91,7 +91,6 @@ const ModalStyle = styled.div`
 `;
 
 function ResultFalse () {
-    console.log(      console.log(window.localStorage.getItem("tid")));
     return (
         <ModalStyle>
             <div className={'openModal modal'}>

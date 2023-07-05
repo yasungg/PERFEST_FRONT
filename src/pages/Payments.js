@@ -1,19 +1,18 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {UserContext} from "../context/UserStore";
-import { Navigator, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PaymentAPI from "../api/PaymentAPI";
-import ResultFalse from "./PayResultFalse";
 
 const PayReady = () => {
   const context = useContext(UserContext);
 
   // 카카오페이로 보내려는 데이터 작성
-  const [data, setData] = useState({
-    next_redirect_pc_url: 1,
+  let [data, setData] = useState({
+    next_redirect_pc_url: "",
     // 결제 한 건에 대한 고유번호, 결제 준비 API가 성공적으로 호출되면 발급,
-    tid: 1,
+    tid: "",
     params: {
         // 가맹점 코드
         cid: "TC0ONETIME",
@@ -75,7 +74,7 @@ const PayReady = () => {
       window.localStorage.removeItem("tid");
       window.localStorage.removeItem("url");
       // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
-      navigate("/resultFail");
+      // navigate("/resultFail");
     });
   }, []);
 }
@@ -103,9 +102,7 @@ const PayResult = () => {
   // 결제준비 api 통신 성공시 받아온 pg_token 받기
   let search = window.location.search;
   let splitToken = search.split("=")[1];
-  console.log("search 값 : "+search);
-  console.log(splitToken);
-  // ?pg_token=8bebbe14fde18da1dd3d
+
   // 카카오페이 결제 승인 요청에 보낼 정보
   const data = {
     params: {
@@ -116,79 +113,77 @@ const PayResult = () => {
       partner_order_id: "partner_order_id",
       // 가맹점 회원 id
       partner_user_id: "partner_user_id",
-      // 결제승인 요청을 인정하는 토큰
+      // pg 토큰
       pg_token: splitToken
     }
   };
 
   const navigate = useNavigate();
+  // 카카오페이 결제 완료되면 DB로 보낼 메소드를 실행하기 위해서 만듦
   const [isTrue, setIsTrue] = useState(false);
-  
   useEffect(() => {
-  const { params } = data;
-  axios({
-    url: "https://kapi.kakao.com/v1/payment/approve",
-    method: "POST",
-    headers: {
-      Authorization: `KakaoAK 632fb98346e85fd6ea660b71beaf9b70`,
-      "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-    },
-    params,
-  }).then(response => {
-    console.log("결제 승인 완료 : " + JSON.stringify(response));
-    // 여기까지 통신이 성공했으면 카카오 결제 API 는 완료
-    // 응답을 받으면 위에 백에다 보낼 정보를 세팅해줌
-    setPayment({
-      // 총 가격
-      price : response.data.amount.total,
-      // 수량
-      quantity : response.data.quantity,
-      // 결제 고유번호
-      tid : response.data.tid,
-      // 카카오 비과세
-      kakaoTaxFreeAmount : response.data.amount.tax_free
-    }); 
-    setIsTrue(true);
-  }).catch(error => {
-    // 실패하면 결제 고유번호와 url을 지워줌
-    window.localStorage.removeItem("tid");
-    console.log(error);
-    navigate("/resultFail");
-  }).finally(
-    // 나중에 전에 url로 다시 이 결제로 돌아올 수 있는 상황을 대비해 url 삭제
-    window.localStorage.removeItem('url')
-  );
+    const { params } = data;
+    axios({
+      url: "https://kapi.kakao.com/v1/payment/approve",
+      method: "POST",
+      headers: {
+        Authorization: `KakaoAK 632fb98346e85fd6ea660b71beaf9b70`,
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8"
+      },
+      params
+    }).then(response => {
+      console.log("결제 승인 완료 : " + JSON.stringify(response));
+      const responseData = response.data;
+
+      // 여기까지 통신이 성공했으면 카카오 결제 API 는 완료
+      // 응답을 받으면 위에 백에다 보낼 정보를 세팅해줌
+      setPayment({
+        // 총 가격
+        price : responseData.amount.total,
+        // 수량
+        quantity : responseData.quantity,
+        // 결제 고유번호
+        tid : responseData.tid,
+        // 카카오 비과세
+        kakaoTaxFreeAmount : responseData.amount.tax_free
+      });
+      // url을 이용하여 해당 결제로 돌아올 수 없도록 삭제
+      window.localStorage.removeItem('url')
+
+      // 성공할 경우 
+      setIsTrue(true);
+    }).catch(error => {
+      // 실패하면 결제 고유번호와 url을 지워줌
+      window.localStorage.removeItem("tid");
+      console.log(error);
+    });
   },[]);
 
-  useEffect(() => {
-    // 결제 승인 완료 후 예약 정보를 백엔드에 보내는 로직
-    // 결제 로직이 전부 성공한 뒤에 DB로 값을 넣게 하기 위해
-    const PaymentResult = async() => {
-      try {
-        // const tid = window.localStorage.getItem("tid");
-        const memberId = 1;
-        const productId = 1;
-        const response = await PaymentAPI.PaymentSubmit(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
-        console.log(response);
-        if(response.status === 200) {
-          navigate("/resultSuccess");
-        }
-      } catch (e) {
-        console.log(e);
-        
-      } finally {
-        // 백엔드 통신이 성공하면 DB에 tid 값이 저장되므로 tid 값을 삭제한다.
-        window.localStorage.removeItem('tid');
-      }
-    };
-    isTrue && PaymentResult();
-  }, [isTrue])
+  // 결제 승인 완료 후 정보를 백엔드에 보내는 로직
+  // 결제 로직이 전부 성공한 뒤에 DB로 값을 넣게 하기 위해
+  const PaymentResult = async() => {
+    console.log("paymentResult 실행");
+    // const tid = window.localStorage.getItem("tid");
+    const memberId = 1;
+    const productId = 1;
+    const response = await PaymentAPI.PaymentSubmit(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
+    console.log(response);
+    if(response.status === 200) {
+      // 카카오페이 와 DB전송까지 완료
+      navigate("/resultSuccess");
+    } else { 
+      console.log("paymentResult 오류");
+    }
+  };
+  isTrue && PaymentResult();
 };
+
+
 
 // 카카오페이 결제 취소 함수
 const PayCancel = ({memberId, productId}) => {
   const navigate = useNavigate();
-  const [isTrue, setIsTrue] = useState(false);
+  const [isCancel, setIsCancel] = useState(false);
   // 사용자가 예약한 주문 내역이 있는지 확인하기 위한 로직
   const [memberData, setMemberData] = useState({
     data : {
@@ -206,7 +201,7 @@ const PayCancel = ({memberId, productId}) => {
       const response = await PaymentAPI.CheckPaymentData(1, 1);
       if(response.status === 200) {
         console.log("해당 상품 주문 데이터 확인");
-        console.log(response.data[0]);
+        console.log(response);
         const {
           price, quantity, tid, tax_free
         } = response.data[0];
@@ -218,8 +213,8 @@ const PayCancel = ({memberId, productId}) => {
           cancel_amount : 1222,
           cancel_tax_free_amount : 1
         });
-      setIsTrue(true);
-      console.log(isTrue);
+      setIsCancel(true);
+      console.log(isCancel);
       } else {
         console.log("해당 상품 주문 데이터 없음");
       }
@@ -228,9 +223,8 @@ const PayCancel = ({memberId, productId}) => {
   }, []);
 
   useEffect(() => {
-    
     const { data } = memberData;
-    isTrue && axios({
+    setIsCancel && axios({
       url: "https://kapi.kakao.com/v1/payment/cancel",
       method: "POST",
       headers: {
@@ -246,7 +240,7 @@ const PayCancel = ({memberId, productId}) => {
     }).catch(error => {
       console.log(error);
     });
-  },[isTrue])
+  },[])
   
   }
 
