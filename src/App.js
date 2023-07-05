@@ -20,6 +20,7 @@ import ResultSuccess from "./pages/PaySuccess";
 
 import Festival from "./pages/Festival";
 import SideBar from "./pages/Sidebar";
+import MyCalendar from "./pages/MyCalender";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
         <Route path="/Ranking" element={<Ranking />} />
         <Route path="/BoardArticle/:communityId" element={<BoardArticle />} />
         <Route path="/Festival" element={<Festival />} />
+        <Route path="/MyCalender" element={<MyCalendar />} />
 
       </Routes>
     </Router>
