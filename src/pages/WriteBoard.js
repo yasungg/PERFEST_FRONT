@@ -84,6 +84,7 @@ const WriteBoard = () => {
         setInputBoardText("");
         if(response.data === true) {
             console.log(response.data);
+            
         }
         else {
             console.log(response.data);
