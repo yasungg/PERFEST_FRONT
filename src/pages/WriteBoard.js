@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { BodyContainer, Container } from "../components/StandardStyles";
 import { useState, useEffect } from "react";
 import BoardAPI from "../api/BoardAPI";
+import { useNavigate } from "react-router";
 const Title = styled.div`
   display: flex;
   justify-content: center;
@@ -61,6 +62,7 @@ const Button = styled.button`
   }
 `;
 const WriteBoard = () => {
+  const navigate = useNavigate();
   const [inputBoardTitle, setInputBoardTitle] = useState("");
   const [inputBoardText, setInputBoardText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -76,35 +78,24 @@ const WriteBoard = () => {
   };
   // 게시판 작성하기
   const onClickWriteBoard = async () => {
+    const memberId = 1;
     const response = await BoardAPI.BoardWrite(
       inputBoardTitle,
       selectedCategory,
-      inputBoardText
-    ).then((response) => {
-      console.log(response.headers);
-      const accessToken = response.headers["accesstoken"];
-      const accessTokenExpiresIn = response.headers["tokenexpiresin"];
-      console.log(accessToken);
-      console.log(accessTokenExpiresIn);
-      if (accessToken && accessTokenExpiresIn) {
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("tokenExpiresIn", accessTokenExpiresIn);
-        console.log(localStorage.getItem("accessToken"));
-        console.log(localStorage.getItem("tokenExpiresIn"));
-      }
-      if (response.data === true) {
-        console.log(response.data);
-      } else {
-        console.log(response.data);
-      }
-    });
-    console.log(localStorage.getItem("accessToken"));
-    console.log(localStorage.getItem("tokenExpiresIn"));
+      inputBoardText,
+      memberId
+    );
+    console.log(response.data);
     setInputBoardTitle("");
     setSelectedCategory("");
     setInputBoardText("");
+    if (response.data === true) {
+      console.log(response.data);
+      navigate("/Board");
+    } else {
+      console.log(response.data);
+    }
   };
-  useEffect(() => {});
   return (
     <Container justifyContent="center" alignItems="center">
       <BodyContainer>
@@ -171,7 +162,7 @@ const WriteBoard = () => {
         </WriteText>
         <WriteButton>
           <Button onClick={onClickWriteBoard}>작성</Button>
-          <Button>취소</Button>
+          <Button onClick={() => navigate("/Board")}>취소</Button>
         </WriteButton>
       </BodyContainer>
     </Container>

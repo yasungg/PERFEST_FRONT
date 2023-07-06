@@ -53,16 +53,18 @@ margin-bottom: 7px;
 background-color:  #D9D9D9;
 border: 1px solid  #D9D9D9;
 `
-const WriteButton = styled.button`
-display:flex;
+const WriteButton = styled.div`
+display: flex;
 justify-content: flex-end;
-background-color: white;
 height: 100%;
-border-style: none;
 margin-top: 20px;
-font-size: 22px;
-&:hover{
-    cursor: pointer;
+.write{
+  border-style: none;
+  background-color: white;
+  font-size: 22px;
+}
+.write:hover {
+  cursor: pointer;
 }
 `;
 const BCategory = styled.div`
@@ -77,11 +79,17 @@ justify-content: flex-start;
 align-items: center;
 width: 40%;
 `;
+const BNickName = styled.div`
+display: flex;
+justify-content: flex-start;
+align-items: center;
+width: 20%;
+`;
 const BTime = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
-width: 50%;
+width: 30%;
 `;
 const Board = () => {
     const navigate = useNavigate();
@@ -174,11 +182,11 @@ const Board = () => {
           <Arrange>
                 <ArrButton >
                 <input type="radio" name="arrange" id="newest" onClick={onClickNewestBoard}/>
-                <label for="newest">최신순</label>
+                <label htmlFor="newest">최신순</label>
                 </ArrButton>
                 <ArrButton>
                 <input type="radio" name="arrange" id="likest" />
-                <label for="likest">인기순</label>
+                <label htmlFor="likest">인기순</label>
                 </ArrButton>
             </Arrange>
           {selectedBoardInfo.map((community) => (
@@ -186,11 +194,12 @@ const Board = () => {
               <BoardContents onClick={() => boardClick(community.communityId)}>
                 <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
                 <BTitle>{community.communityTitle}</BTitle>
+                <BNickName>{community.nickname}</BNickName>
                 <BTime>{formatDate(community.writtenTime)}</BTime>
               </BoardContents>
             </BoardText>
           ))}
-          <WriteButton onClick={()=> navigate("/WriteBoard")}>글쓰기</WriteButton>
+          <WriteButton><button className="write" onClick={()=> navigate("/WriteBoard")}>글쓰기</button></WriteButton>
         </BodyContainer>
       </Container>
     );

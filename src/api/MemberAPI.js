@@ -52,11 +52,60 @@ const MemberAPI = {
             email: email,
             img: img
         };
-        return await axios.post(KH_DOMAIN + "auth/member/updateImg", updateData)
+        return await axios.post(KH_DOMAIN + "/auth/member/updateImg", updateData);
     },
 
-    // 
+    // 내 게시글 조회
+    getMyWrite: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/communities?memberId=${memberId}`);
+    },
 
+    // 내 게시글 삭제
+    delMyWrite: async(memberId) => {
+        return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyCommunities?memberId=${memberId}`);
+    },
+
+    // 내 댓글 조회
+    getComment: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/comments?memberId=${memberId}`);
+    },
+
+    // 내 댓글 삭제
+    delComment: async(memberId) => {
+        return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyComments?memberId=${memberId}`);
+    },
+
+    // 내 결제목록 조회(특산품)
+    getPayment: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/payments?memberId=${memberId}`);
+    },
+
+    // 내 큰손랭킹 조회
+    myRichRanking: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/ranking/${memberId}`);
+    },
+
+    // 내 뱃지랭킹 조회
+    myBadgeRanking: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/ranking/${memberId}`);
+    },
+
+    // 내 리뷰 조회
+    getReview: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/reviews?memberId=${memberId}`);
+    },
+
+    // 내 리뷰 삭제
+    delReview: async(memberId) => {
+        return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyReview?memberId=${memberId}`);
+    },
+
+    // 내 예약목록 조회
+    getReservation: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/activites?memberId=${memberId}`);
+    },
+
+    // 내 예약목록 삭제
 
 
     

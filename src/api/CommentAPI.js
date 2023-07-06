@@ -3,27 +3,37 @@ import axios from "axios";
 const localHost = "http://localhost:8111";
 const CommentAPI = {
     // 댓글 작성하기
-    CommentWrite : async(commentBody, communityId) => {
+    CommentWrite : async(commentBody, communityId, memberId) => {
         const writeComment = {
             commentBody: commentBody,
-            communityId: communityId
+            communityId: communityId,
+            memberId: memberId
         };
-        return await axios.post(localHost + `/comment/writecomment`, writeComment);
+        return await axios.post(localHost + `/auth/comment/writecomment`, writeComment);
+    },
+    // 대댓글 작성하기
+    ReplyCommentWrite : async(commentBody, memberId, parentId) => {
+        const writeReplyComment = {
+            commentBody: commentBody,
+            memberId: memberId,
+            parentId: parentId
+        };
+        return await axios.post(localHost + `/auth/comment/writereplycomment`, writeReplyComment)
     },
     // 댓글 갯수 가져오기
     CommentGetCount : async(communityId) => {
-        return await axios.get(localHost + `/comment/commentcount?communityId=${communityId}`)
+        return await axios.get(localHost + `/auth/comment/commentcount?communityId=${communityId}`)
     },
     // 댓글 가져 오기
     GetComment : async(communityId) => {
-        return await axios.get(localHost + `/comment/getcomment?communityId=${communityId}`)
+        return await axios.get(localHost + `/auth/comment/getcomment?communityId=${communityId}`)
     },
     // 댓글 좋아요 추가
     AddCommentLike: async(commentId) => {
         const addLike = {
             commentId : commentId
         };
-        return await axios.post(localHost + `/comment/addcommentlike`, addLike)
+        return await axios.post(localHost + `/auth/comment/addcommentlike`, addLike)
     },
 }
 export default CommentAPI;

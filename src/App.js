@@ -14,12 +14,14 @@ import WriteBoard from "./pages/WriteBoard";
 import Ranking from "./pages/Ranking";
 import UpdateBoard from "./pages/UpdateBoard";
 import BoardArticle from "./pages/BoardArticle";
-import { PayReady, PayResult } from "./pages/Payments";
+import { PayCancel, PayReady, PayResult } from "./pages/Payments";
 import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
 
 import Festival from "./pages/Festival";
+import FestivalDetail from "./pages/FestivalDetail";
 import SideBar from "./pages/Sidebar";
+import MyCalendar from "./pages/MyCalender";
 
 function App() {
   return (
@@ -36,16 +38,19 @@ function App() {
         <Route path="/ReserveList" element={<MyReserveList />} />
         <Route path="/PayList" element={<MyPayList />} />
         <Route path="/MyWrite" element={<MyWrite />} />
-        <Route path="/payment" element={<PayReady />} />
-        <Route path="/payment/success" element={<PayResult />} />
-        <Route path="/payment/resultFail" element={<ResultFalse />} />
-        <Route path="/payment/resultSuccess" element={<ResultSuccess />} />
+        <Route path="/payready" element={<PayReady />} />
+        <Route path="/payresult" element={<PayResult />} />
+        <Route path="/paycancel" element={<PayCancel />} />
+        <Route path="/resultFail" element={<ResultFalse />} />
+        <Route path="/resultSuccess" element={<ResultSuccess />} />
         <Route path="/Board" element={<Board />} />
         <Route path="/WriteBoard" element={<WriteBoard />} />
         <Route path="/UpdateBoard" element={<UpdateBoard />} />
         <Route path="/Ranking" element={<Ranking />} />
         <Route path="/BoardArticle/:communityId" element={<BoardArticle />} />
         <Route path="/Festival" element={<Festival />} />
+        <Route path="/FestivalDetail" element={<FestivalDetail />} />
+        <Route path="/MyCalender" element={<MyCalendar />} />
 
       </Routes>
     </Router>

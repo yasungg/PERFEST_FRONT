@@ -2,26 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Container as BaseContainer } from "../components/StandardStyles";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
-import festivalPoster from "../images/2023-대한민국-과학축제-포스터.webp";
-import festivalPoster2 from "../images/2023안양충훈벚꽃축제.jpg"
 import NaverMap from "../components/NaverMap";
+import FestivalAPI from "../api/FestivalAPI";
+import SearchSideBar from "../components/SearchSideBar";
 
 const BodyContainer = styled.div`
   width: 100%;
 	height: 100%;
   display: flex;
-
-	.searchContainer {
-		display: inline-block;
-		max-width: 400px;
-		min-width: 400px;
-		height: 100vh;
-		background: linear-gradient(to right, #654ea3, #eaafc8);
-		overflow-y: hidden;
-		z-index: 3;
-		box-shadow: 1px 0px 5px 0px #555555
-	}
 
 	.mapContainer {
 		display: flex;
@@ -30,218 +18,6 @@ const BodyContainer = styled.div`
 		position: relative;
 		background-color: black;
 	}
-
-	/* searchContainer 영역 */
-	.input_box {
-		display: flex;
-		width: 100%;
-		height: 8%;
-		min-height: 74.95px;
-		align-items: center;
-		justify-content: center;
-		box-shadow: 5px 0 5px -5px #333;
-	}
-
-	.search {
-		width: 75%;
-		height: 45px;
-		border-radius: 5px;
-		border: none;
-		outline: none;
-		padding-left: 15px;
-		font-size: 13px;
-		box-shadow: 1px 1px 4px -1px #555555;
-	}
-
-	.search_button {
-		margin: 3px;
-		width: 47px;
-		height: 47px;
-		cursor: pointer;
-		background-color: #FFF;
-		border: none;
-		border-radius: 5px;
-		box-shadow: 1px 1px 4px -1px #555555;
-	}
-	
-	.list_container {
-		display: block;
-		align-items: center;
-		justify-content: center;
-		width: auto;
-		height: 92%;
-		min-height: 80;
-		margin-top: auto;
-		background-color: #FFF;
-		overflow-y: auto;
-		overflow-x: hidden;
-
-		.show-scroll {
-			overflow-y: scroll;
-		}
-
-		/* 스크롤바 커스터마이징 */
-		&::-webkit-scrollbar {
-			width: 10px;
-			background: #F4EBFF;
-			border-radius: 2px;
-  	}
-
-		&::-webkit-scrollbar-thumb {
-			background: lightgray;
-			border-radius: 10px;
-			background-clip: padding-box;
-			border: 1px solid transparent;
-			/* height: 20px; */
-		}
-
-		&::-webkit-scrollbar-track {
-			box-shadow: inset 0px 0px 3px gray;
-		}
-	}
-
-	.result {
-			display: flex;
-			width: 100%;
-			height: 40px;
-			/* min-height: 40px; */
-			align-items: center;
-			justify-content: center;
-			background-color: aliceblue;
-			border-bottom: 1px solid lightgray;
-		}
-
-	/* ol */
-	.result_sort {
-		display: flex;
-		position: relative;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.result_sort li:not(:last-child)::after {
-		content: "";
-		display: inline-block;
-		width: 1px;
-		height: 10px;
-		background-color: lightgray;
-		margin: 0px 5px;
-	}
-
-	/* ol li */
-	.date_sort, .distance_sort {
-		display: inline-block;
-		list-style: none;
-		}
-
-	/* ol li a */
-	.result_sort a {
-		font-size: 12px;
-		text-decoration: none;
-		color: black;
-	}
-
-	.result_sort a:hover {
-		text-decoration: underline;
-	}
-	
-	.result_sort a:active{
-		color: #0475F4;
-	}
-
-
-	/* 결과 카드 ul */
-	.card_list {
-		width: 100%;
-		margin: 0;
-		padding: 0;
-	}
-
-	/* 결과 카드 ul li */
-	.card_wrap {
-		display: flex;
-		flex-direction: column;
-		list-style: none;
-		background-color: #FFF;
-		width: 100%;
-		height: 300px;
-		justify-content: center;
-		align-items: center;
-		background-color: #FFF;
-		border-bottom: 1px solid lightgray;
-		margin: 20px 0;
-	}
-
-	.card_inner {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto auto 1fr;
-  gap: 10px;
-	width: 350px;
-	align-items: center;
-	justify-content: center;
-}
-
-.card_inner p {
-	font-size: 13px;
-}
-
-.img_area {
-	position: relative;
-  grid-row: 1 / span 2;
-	cursor: pointer;
-	overflow: hidden;
-}
-
-.img_area img {
-	width: 120px;
-	margin-right: 10px;
-	transition: transform 0.3s ease;
-}
-
-.img_area img:hover {
-	transform: scale(1.1);
-	position: relative;
-}
-
-.text_area {
-  grid-column: 2;
-  grid-row: 1;
-	margin: 10px 0;
-}
-
-.text_area a {
-	font-size: 18px;
-	font-weight: bold;
-	text-decoration: none;
-	color: #0475F4;
-}
-
-.text_area p {
-	margin: 10px 0;
-	margin-right: 20px;
-}
-
-.content_area {
-  grid-column: 1 / span 2;
-  grid-row: 3;
-	background-color: #FFF5FB;
-	border-radius: 10px;
-	cursor: pointer;
-}
-
-.content_area:hover {
-	background-color: #F4EBFF;
-}
-
-.content_area p, .address {
-	margin: 20px;
-	display: -webkit-box;
-  -webkit-line-clamp: 2; /* 보여줄 줄 수 */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 	
 	/* mapContainer 영역 */
 	.category_container {
@@ -462,8 +238,8 @@ const BodyContainer = styled.div`
 	.map_control_area {
 		position: absolute;
 		z-index: 2;
-		bottom: 10px;
-		right: 10px;
+		bottom: 30px;
+		right: 12px;
 	}
 
 	.zoom_control_area {
@@ -627,117 +403,15 @@ const Festival = () => {
 
 	}, []);
 
-	// 축제 데이터 ex
-	// 필요한 데이터 (축제명, 개최장소, 기간, 내용, 주소, 위도 / 경도, 전화번호)
-
-	// {
-	// 	"축제명":"2023 안양충훈벚꽃축제",
-	// 	"개최장소":"안양충훈2교일대",
-	// 	"축제시작일자":"2023-04-08",
-	// 	"축제종료일자":"2023-04-09",
-	// 	"축제내용":"벚꽃콘서트+ 버스킹공연+ 벚꽃체험부스+ 푸드트럭&먹거리+ 벚꽃컬러링북+ SNS이벤트 등",
-	// 	"주관기관":"(재)안양문화예술재단",
-	// 	"주최기관":"안양시+안양충훈벚꽃축제추진위원회",
-	// 	"후원기관":"",
-	// 	"전화번호":"031-687-0500",
-	// 	"홈페이지주소":"http://www.ayac.or.kr",
-	// 	"관련정보":"안양예술공원+ APAP+ 김중업박물관",
-	// 	"소재지도로명주소":"경기도 안양시 만안구 석수로 159",
-	// 	"소재지지번주소":"경기도 안양시 만안구 석수동 797번지",
-	// 	"위도":"37.40461526",
-	// 	"경도":"126.8961574",
-	// 	"데이터기준일자":"2023-04-27",
-	// 	"제공기관코드":"3830000",
-	// 	"제공기관명":"경기도 안양시"
-	// }
-	
 	return(
 		<Container
 			justifyContent="center">	
     	<Header />
         <BodyContainer>
 					{/* 검색창 / 결과창 */}
-          <div className="searchContainer" onClick={() => {setIsOpenLocation(false)}}>
-						{/* 검색창 */}
-						<div className="input_box">
-							<input className="search" type="text" placeholder="찾을 지역이나 축제 이름을 입력하세요."></input>
-							<button className="search_button">돋보기</button>
-						</div>
-						{/* 검색 결과 */}
-            <div className="list_container">
-            <div className="result">
-							<p>검색된 결과 '0'개가 있습니다.</p>
-							{/* 결과 정렬버튼 */}
-							<ol className="result_sort">
-								<li className="date_sort">
-									<a href="#none">날짜순</a>
-								</li>
-								<li className="distance_sort">
-									<a href="#none">거리순</a>
-								</li>
-							</ol>
-						</div>
-						{/* 결과 카드 */}
-							<ul className="card_list">
-								<li className="card_wrap">
-									<div className="card_inner">
-										<div className="img_area">
-											<img src={festivalPoster2} alt="festival_poster"></img>
-										</div>
-										<div className="text_area">
-											<a href="#none"><strong>안양충훈벚꽃축제</strong></a>
-											<p>2023.04.08 ~ 2023.04.09</p>
-											<p className="address">경기도 안양시 만안구 석수동 797번지경기도 안양시 만안구 석수동 797번지경기도 안양시 만안구 석수동 797번지</p>
-											<p>031-687-0500</p>
-										</div>
-										<div className="content_area">
-											<p>
-												벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등
-											</p>
-										</div>
-									</div>
-								</li>
-
-								<li className="card_wrap">
-									<div className="card_inner">
-										<div className="img_area">
-											<img className="festival_img" src={festivalPoster2} alt="festival_poster"></img>
-										</div>
-										<div className="text_area">
-											<a href="#none"><strong>안양충훈벚꽃축제</strong></a>
-											<p className="festival_period">2023.04.08 ~ 2023.04.09</p>
-											<p className="festival_location">경기도 안양시 만안구 석수동 797번지</p>
-											<p className="festival_phone">031-687-0500</p>
-										</div>
-										<div className="content_area">
-											<p className="festival_content">
-												벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등
-											</p>
-										</div>
-									</div>
-								</li>
-
-								<li className="card_wrap">
-									<div className="card_inner">
-										<div className="img_area">
-											<img className="festival_img" src={festivalPoster2} alt="festival_poster"></img>
-										</div>
-										<div className="text_area">
-											<a href="#none"><strong>안양충훈벚꽃축제</strong></a>
-											<p className="festival_period">2023.04.08 ~ 2023.04.09</p>
-											<p className="festival_location">경기도 안양시 만안구 석수동 797번지</p>
-											<p className="festival_phone">031-687-0500</p>
-										</div>
-										<div className="content_area">
-											<p className="festival_content">
-												벚꽃콘서트, 버스킹공연, 벚꽃체험부스, 푸드트럭&먹거리, 벚꽃컬러링북, SNS이벤트 등
-											</p>
-										</div>
-									</div>
-								</li>
-							</ul>
-            </div>
-					</div>
+          <SearchSideBar
+						onClick={() => {setIsOpenLocation(false)}}
+					/>
 
 					{/* 지도 */}
 					<div className="mapContainer">
@@ -871,7 +545,6 @@ const Festival = () => {
 						</div>
 					</div>
         </BodyContainer>
-      <Footer />
     </Container>
   );
 };
