@@ -1,5 +1,5 @@
 import { Container, BodyContainer } from "../components/StandardStyles";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Header from "../components/Header";
 import { useLocation } from "react-router";
 
@@ -8,17 +8,12 @@ const Home = () => {
   const getJWT = new URLSearchParams(location.search);
   console.log(getJWT.get("jwt"));
 
-  useState(() => {
-    const accessToken = JSON.parse(getJWT.get("jwt"));
-    console.log(accessToken);
-    localStorage.setItem("grantType", accessToken.accessToken);
-    localStorage.setItem("accessToken", accessToken.accessToken);
-    localStorage.setItem("refreshToken", accessToken.refreshToken);
-    localStorage.setItem("tokenExpiresIn", accessToken.tokenExpiresIn);
-    localStorage.setItem(
-      "refreshTokenExpiresIn",
-      accessToken.refreshTokenExpiresIn
-    );
+  useEffect(() => {
+    const JWT = JSON.parse(getJWT.get("jwt"));
+    console.log(JWT);
+    localStorage.setItem("accessToken", JWT.accessToken);
+    localStorage.setItem("tokenExpiresIn", JWT.tokenExpiresIn);
+
     console.log(localStorage.getItem("accessToken"));
   }, [getJWT]);
 

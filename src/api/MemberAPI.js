@@ -108,6 +108,12 @@ const MemberAPI = {
     // 내 예약목록 삭제
 
 
+    // 사용자의 알림 목록 가져오기(GET)
+    getNotice: async(memberId) => {
+        return await axios.get(KH_DOMAIN + `/auth/member/noticeList?memberId=${memberId}`);
+    },
+    
+
     
 
 }
