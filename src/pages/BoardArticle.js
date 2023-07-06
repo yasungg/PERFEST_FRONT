@@ -107,10 +107,17 @@ const BoardArticle = () => {
     }
     // 게시판 댓글 작성
     const onClickWriteComment = async() => {
-        const response = await CommentAPI.CommentWrite(inputComment, communityId);
+        const memberId = 1;
+        const response = await CommentAPI.CommentWrite(inputComment, communityId, memberId);
         console.log(response.data);
         setCommentUpdateTrigger(prev => !prev);
         setInputComment(""); // 댓글 작성 후 inputComment 상태를 초기화하여 textarea의 내용을 지움
+    }
+    // 게시판 대댓글 작성
+    const onClickWriteReplyComment = async(commentId) => {
+        const memberId = 1;
+        const response = await CommentAPI.ReplyCommentWrite(inputComment, memberId, commentId);
+        console.log(response.data);
     }
     // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
@@ -169,7 +176,7 @@ const BoardArticle = () => {
                 <Title><h1>{getCategoryText(community.communityCategory)}</h1></Title> 
                 <BoardTitle><h2>{community.communityTitle}</h2></BoardTitle>
                 <UserInfo>
-                    <BoardNickname>{community.memberDTOs}</BoardNickname>
+                    <BoardNickname>{community.nickname}</BoardNickname>
                     <BoardDate>{formatDate(community.writtenTime)}</BoardDate>
                 </UserInfo>
                 <BoardDesc>{community.communityDesc}</BoardDesc>
@@ -186,9 +193,9 @@ const BoardArticle = () => {
                 <CommentDesc key={comment.commentBody}>
                     <Comment>
                     <CommentHead>
-                        <CommentNickName></CommentNickName>
+                        <CommentNickName>{comment.nickname}</CommentNickName>
                         <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
-                        <CommentReWrite><button>대댓글</button></CommentReWrite>
+                        <CommentReWrite><button onClick={() => onClickWriteReplyComment(comment.commentId)}>대댓글</button></CommentReWrite>
                         <CommentLike><button onClick={() => onClickCommentLike(comment.commentId)}>좋아요</button></CommentLike>
                         <CommentLikeCount>{comment.commentLikeCount}</CommentLikeCount>
                     </CommentHead>

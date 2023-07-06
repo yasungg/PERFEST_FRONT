@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { BodyContainer, Container } from "../components/StandardStyles";
 import { useState } from "react";
 import BoardAPI from "../api/BoardAPI";
+import { useNavigate } from "react-router";
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -61,6 +62,7 @@ background-color: white;
 }
 `;
 const WriteBoard = () => {
+    const navigate = useNavigate();
     const [inputBoardTitle, setInputBoardTitle] = useState("");
     const [inputBoardText, setInputBoardText] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
@@ -84,7 +86,7 @@ const WriteBoard = () => {
         setInputBoardText("");
         if(response.data === true) {
             console.log(response.data);
-            
+            navigate("/Board")
         }
         else {
             console.log(response.data);
@@ -121,7 +123,7 @@ const WriteBoard = () => {
                 </WriteText>
                 <WriteButton>
                     <Button onClick={onClickWriteBoard}>작성</Button>
-                    <Button>취소</Button>
+                    <Button onClick={() =>navigate("/Board")}>취소</Button>
                 </WriteButton>
             </BodyContainer>
         </Container>
