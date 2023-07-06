@@ -10,57 +10,126 @@ align-items: center;
 margin-top: 50px;
 `;
 const WriteTitle = styled.div`
-display: flex;
-justify-content: space-evenly;
-align-items: center;
-font-size: 24px;
-.writeTitle{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 24px;
+
+  .boardTitle {
+    font-size: 18px;
+    margin-right: 10px;
+  }
+  .writeTitle {
     height: 30px;
     width: 70%;
-}
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s ease-in-out;
+  }
+  .writeTitle:focus {
+    outline: none;
+    border-color: #6c63ff;
+  }
 `;
 const WriteCategory = styled.div`
-display: flex;
-justify-content: space-evenly;
-align-items: center;
-font-size: 20px;
-margin-top: 15px;
-margin-bottom: 15px;
-.boardTitle{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 20px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+
+  .boardTitle {
     display: flex;
     font-size: 24px;
-}
+  }
 `;
+
 const CategoryRadio = styled.div`
-display: flex;
-justify-content: space-around;
-align-items: center;
-width: 70%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 70%;
+
+  label {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  input[type="radio"] {
+    margin-right: 5px;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #888888;
+    border-radius: 50%;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+    cursor: pointer;
+  }
+
+  input[type="radio"]:checked {
+    background-color: #FF4545;
+  }
+  input[type="radio"]:checked::after {
+    content: "";
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+  }
 `;
 const WriteText = styled.div`
-display: flex;
-justify-content: space-evenly;
-align-items: center;
-font-size: 24px;
-.writeText{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 24px;
+  .writeText {
     width: 70%;
-}
+    height: 500px;
+    padding: 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    outline: none;
+    resize: vertical;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+  }
+  .writeText:focus {
+    outline: none;
+    border-color: #6c63ff;
+  }
 `;
 const WriteButton = styled.div`
-display: flex;
-justify-content: center;
-margin-top: 20px;
-margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
+
 const Button = styled.button`
-border-style: none;
-font-size: 20px;
-margin: 10px;
-background-color: white;
-&:hover{
+  border: none;
+  font-size: 20px;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #FF6B6B;
+  color: white;
+  border-radius: 5px;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #FF4545;
     cursor: pointer;
-}
-`;
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+`
 const WriteBoard = () => {
     const navigate = useNavigate();
     const [inputBoardTitle, setInputBoardTitle] = useState("");
