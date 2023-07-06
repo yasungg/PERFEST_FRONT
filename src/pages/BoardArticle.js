@@ -25,7 +25,6 @@ display: flex;
 justify-content: space-between;
 align-items: center;
 margin-top: 20px;
-background-color:  #D9D9D9;
 width: 100%;
 `;
 const BoardNickname = styled.div`
@@ -34,10 +33,9 @@ const BoardDate = styled.div`
 `;
 const BoardDesc = styled.div`
 display: flex;
-margin-top: 50px;
+margin-top: 20px;
 height: 200px;
 width: 100%;
-background-color:  #D9D9D9;
 `;
 const CommentInfo = styled.div`
 display: flex;
@@ -63,7 +61,6 @@ flex-direction: column;
 const Comment = styled.div`
 margin-top: 5px;
 margin-bottom: 5px;
-background-color: #D9D9D9;
 `;
 const CommentHead = styled.div`
 display: flex;
@@ -179,6 +176,7 @@ const BoardArticle = () => {
                     <BoardNickname>{community.nickname}</BoardNickname>
                     <BoardDate>{formatDate(community.writtenTime)}</BoardDate>
                 </UserInfo>
+                <hr></hr>
                 <BoardDesc>{community.communityDesc}</BoardDesc>
                 </BoardInfo>
                 ))}
@@ -200,6 +198,7 @@ const BoardArticle = () => {
                         <CommentLikeCount>{comment.commentLikeCount}</CommentLikeCount>
                     </CommentHead>
                     <CommentBody>{comment.commentBody}</CommentBody>
+                    <hr></hr>
                     </Comment>
                 </CommentDesc>
                 ))}

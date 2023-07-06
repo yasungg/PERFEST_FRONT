@@ -53,16 +53,18 @@ margin-bottom: 7px;
 background-color:  #D9D9D9;
 border: 1px solid  #D9D9D9;
 `
-const WriteButton = styled.button`
-display:flex;
+const WriteButton = styled.div`
+display: flex;
 justify-content: flex-end;
-background-color: white;
 height: 100%;
-border-style: none;
 margin-top: 20px;
-font-size: 22px;
-&:hover{
-    cursor: pointer;
+.write{
+  border-style: none;
+  background-color: white;
+  font-size: 22px;
+}
+.write:hover {
+  cursor: pointer;
 }
 `;
 const BCategory = styled.div`
@@ -197,7 +199,7 @@ const Board = () => {
               </BoardContents>
             </BoardText>
           ))}
-          <WriteButton onClick={()=> navigate("/WriteBoard")}>글쓰기</WriteButton>
+          <WriteButton><button className="write" onClick={()=> navigate("/WriteBoard")}>글쓰기</button></WriteButton>
         </BodyContainer>
       </Container>
     );
