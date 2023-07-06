@@ -37,6 +37,7 @@ const Section2 = styled.div`
 `;
 
 const Label = styled.label`
+
   position: relative;
 
   button {
@@ -49,7 +50,7 @@ const Label = styled.label`
     cursor: pointer;
     font-weight: bold;
     &:hover {
-    color: darkgray;
+    color: skyblue;
     }
   }
 `;
@@ -71,7 +72,7 @@ const DeleteMem = styled.div`
     margin-bottom: 20px;
 
     &:hover {
-      background-color: lightgray;
+      background-color: skyblue;
     }
   }
 
