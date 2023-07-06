@@ -77,11 +77,17 @@ justify-content: flex-start;
 align-items: center;
 width: 40%;
 `;
+const BNickName = styled.div`
+display: flex;
+justify-content: flex-start;
+align-items: center;
+width: 20%;
+`;
 const BTime = styled.div`
 display: flex;
 justify-content: center;
 align-items: center;
-width: 50%;
+width: 30%;
 `;
 const Board = () => {
     const navigate = useNavigate();
@@ -186,6 +192,7 @@ const Board = () => {
               <BoardContents onClick={() => boardClick(community.communityId)}>
                 <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
                 <BTitle>{community.communityTitle}</BTitle>
+                <BNickName>{community.nickname}</BNickName>
                 <BTime>{formatDate(community.writtenTime)}</BTime>
               </BoardContents>
             </BoardText>
