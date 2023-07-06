@@ -28,11 +28,11 @@ const PayReady = () => {
         total_amount: (2000).toString(),
         // 상품 비과세
         tax_free_amount: 0,
-        // 결제 성공 URL
+        // 결제 성공시 URL
         approval_url: "http://localhost:3000/payresult",
-        // 결제 실패 URL
+        // 결제 실패시 URL
         fail_url: "http://localhost:3000/resultfail",
-        // 결제 취소 URL
+        // 결제 취소시 URL
         cancel_url: "http://localhost:3000/resultfail"
     }
   });
@@ -169,7 +169,7 @@ const PayResult = () => {
     const response = await PaymentAPI.PaymentSubmit(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
     console.log(response);
     if(response.status === 200) {
-      // 카카오페이 와 DB전송까지 완료
+      // 카카오페이와 DB전송까지 완료
       navigate("/resultSuccess");
     } else { 
       console.log("paymentResult 오류");
@@ -199,22 +199,25 @@ const PayCancel = ({memberId, productId}) => {
     const getData = async() => {
       console.log("getData 실행");
       const response = await PaymentAPI.CheckPaymentData(1, 1);
-      if(response.status === 200) {
+      const cancelStatus = response.data[0].paymentStatus;
+      console.log(response);
+      // 취소 완료 된 결제는 다음 로직을 실행하지 않도록 하기 위해
+      if(response.status === 200 && cancelStatus === 'PAID') {
         console.log("해당 상품 주문 데이터 확인");
-        console.log(response);
-        const {
-          price, quantity, tid, tax_free
-        } = response.data[0];
-
+        const { price, quantity, tid, tax_free } = response.data[0];
         setMemberData({
-          cid : "TC0ONETIME",
-          tid : "T1234567890123456789",
-          quantity : 1,
-          cancel_amount : 1222,
-          cancel_tax_free_amount : 1
+          data : {
+            cid : "TC0ONETIME",
+            memberId : 1,
+            productId : 1,
+            tid : tid,
+            price : price,
+            quantity : quantity,
+            cancel_amount : price,
+            cancel_tax_free_amount : tax_free
+          }
         });
-      setIsCancel(true);
-      console.log(isCancel);
+        setIsCancel(true);
       } else {
         console.log("해당 상품 주문 데이터 없음");
       }
@@ -222,26 +225,33 @@ const PayCancel = ({memberId, productId}) => {
     getData();
   }, []);
 
+  const [data, setData] = useState({
+    params: {
+      cid: "TC0ONETIME",
+      tid : "T1234567890123456789",
+      cancel_amount	: 2200,
+      cancel_tax_free_amount : 0,
+    }
+  });
+
   useEffect(() => {
-    const { data } = memberData;
-    setIsCancel && axios({
-      url: "https://kapi.kakao.com/v1/payment/cancel",
-      method: "POST",
-      headers: {
-        Authorization: `KakaoAK 632fb98346e85fd6ea660b71beaf9b70`,
-        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+    const { params } = data;
+    isCancel && 
+      axios({
+        url: "https://kapi.kakao.com/v1/payment/cancel",
+        method: "POST",
+        headers: {
+          Authorization: `KakaoAK 632fb98346e85fd6ea660b71beaf9b70`,
+          "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
         },
-      data
-    }).then(response => {
-      console.log(response);
-      const {
-        data: { next_redirect_pc_url, tid }, // next_redirect_pc_url : 결제 준비 API 응답으로 받으며, PC 환경에서 사용. 
-      } = response;
-    }).catch(error => {
-      console.log(error);
-    });
-  },[])
-  
+        params
+      }).then((response) => {
+        console.log("통신완료");
+        console.log("카카오페이 결제 취소 통신 완료"+response);
+      }).catch(error => {
+        console.log(error);
+      });
+    },[isCancel])
   }
 
 
