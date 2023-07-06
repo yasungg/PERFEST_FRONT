@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import BoardAPI from "../api/BoardAPI";
 import { useParams } from "react-router";
 import {formatDate} from "../components/DateStyle";
+import {GoHeart} from 'react-icons/go'
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -15,28 +16,45 @@ margin-top: 50px;
 const BoardInfo = styled.div`
 `;
 const BoardTitle = styled.div`
-display: flex;
-justify-content: flex-start;
-align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+`;
 
-`;
 const UserInfo = styled.div`
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-top: 20px;
-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
 `;
+
 const BoardNickname = styled.div`
+  font-weight: bold;
+  color: #333;
+  font-size: 18px;
 `;
+
 const BoardDate = styled.div`
+  color: #666;
+  font-size: 14px;
 `;
 const BoardDesc = styled.div`
-display: flex;
-margin-top: 20px;
-height: 200px;
-width: 100%;
+  display: flex;
+  margin-top: 20px;
+  height: 300px;
+  width: 97%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 16px;
+  font-size: 16px;
+  color: #333;
+  overflow: auto;
 `;
+
 const CommentInfo = styled.div`
 display: flex;
 justify-content: space-between;
@@ -44,16 +62,39 @@ align-items: center;
 width: 100%;
 `;
 const CommentCount = styled.div`
+  font-size: 16px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 `;
+
 const CommentWrite = styled.div`
-display: flex;
-justify-content: space-between;
-align-items: center;
-width: 100%;
-.commentwrite{
-    width: 90%;
-}
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+.commentwrite {
+    width: 85%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: none;
+  }
 `;
+const CommentWriteButton = styled.button`
+  width: 10%;
+  padding: 8px;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+`;
+
 const CommentDesc = styled.div`
 display: flex;
 flex-direction: column;
@@ -63,37 +104,133 @@ margin-top: 5px;
 margin-bottom: 5px;
 `;
 const CommentHead = styled.div`
-display: flex;
-justify-content: flex-start;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 `;
+
 const CommentNickName = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
 `;
+
 const CommentWrittenTime = styled.div`
-font-size: 13px;
+  font-size: 14px;
+  color: #666;
+  margin-left: 10px;
 `;
+
 const CommentReWrite = styled.div`
-`;
-const CommentLike = styled.div`
-`;
-const CommentBody = styled.div`
-`;
-const CommentLikeCount = styled.div`
-`;
-const CommentWriteButton = styled.button`
-width:7%;
-&:hover{
+  .replycomment {
+    border: none;
+    background-color: white;
+    border-radius: 4px;
+    color: #333;
+    font-weight: bold;
     cursor: pointer;
-}
+    transition: background-color 0.3s ease;
+    &:hover {
+      background-color: #f1f1f1;
+    }
+  }
+`;
+
+const CommentLike = styled.div`
+  .like {
+    border: none;
+    background-color: white;
+    border-radius: 4px;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #f1f1f1;
+    }
+  }
+`;
+const CommentArr = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const CommentBody = styled.div`
+  font-size: 17px;
+  color: #333;
+`;
+
+const CommentLikeCount = styled.div`
+  font-size: 14px;
+  color: #666;
+`;
+const CommentReplyWrite = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+.commentreply{
+    width: 85%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: none;
+  }
+`;
+const CommentReplyWriteButton = styled.button`
+  width: 10%;
+  padding: 8px;
+  background-color: #f1f1f1;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  &:hover {
+    background-color: #e0e0e0;
+  }
 `;
 const BoardLike = styled.div`
-display: flex;
-width: 100%;
-justify-content: center;
-align-items: center;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+  .like-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    background-color: #f1f1f1;
+    border: none;
+    border-radius: 999px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
 `;
+
+const Heart = styled(GoHeart)`
+    color: red;
+`;
+
+
+
+
 const BoardArticle = () => {
     const {communityId} = useParams(); // 게시판 번호 전달 하기 위해서 useparams 사용
     const [inputComment, setInputComment] = useState("");
+    const [showReplyComment, setShowReplyComment] = useState({});
+    const [inputReplyComment, setInputReplyComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
     const [commentData, setCommentData] = useState([]);
@@ -104,17 +241,15 @@ const BoardArticle = () => {
     }
     // 게시판 댓글 작성
     const onClickWriteComment = async() => {
+        if (inputComment.trim() === "") {
+            // textarea 내용이 비어 있는 경우
+            return;
+          }
         const memberId = 1;
-        const response = await CommentAPI.CommentWrite(inputComment, communityId, memberId);
+        const response = await CommentAPI.CommentWrite(inputComment,communityId,memberId);
         console.log(response.data);
         setCommentUpdateTrigger(prev => !prev);
         setInputComment(""); // 댓글 작성 후 inputComment 상태를 초기화하여 textarea의 내용을 지움
-    }
-    // 게시판 대댓글 작성
-    const onClickWriteReplyComment = async(commentId) => {
-        const memberId = 1;
-        const response = await CommentAPI.ReplyCommentWrite(inputComment, memberId, commentId);
-        console.log(response.data);
     }
     // 게시판에 있는 댓글 갯수 가져오기
     useEffect(() => {
@@ -165,13 +300,27 @@ const BoardArticle = () => {
             return '';
         }
       };
+      // 게시판 대댓글 작성
+      const onClickWriteReplyComment = async(commentId) => {
+        const memberId = 2;
+        setShowReplyComment((prev) => ({
+          ...prev,
+          [commentId]: true,
+        }));
+        const response = await CommentAPI.ReplyCommentWrite(inputReplyComment,memberId,commentId);
+          console.log(response.data);
+        setInputReplyComment(""); // 대댓글 작성 후 inputReplyComment 상태를 초기화하여 textarea의 내용을 지움
+      };
+      const onChangeReplyComment = (e) => {
+        setInputReplyComment(e.target.value);
+      };
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
             {boardArticle&&boardArticle.map((community) => (
-                <BoardInfo key={community.communityTitle}>
+                <BoardInfo key={community.communityId}>
                 <Title><h1>{getCategoryText(community.communityCategory)}</h1></Title> 
-                <BoardTitle><h2>{community.communityTitle}</h2></BoardTitle>
+                <BoardTitle>{community.communityTitle}</BoardTitle>
                 <UserInfo>
                     <BoardNickname>{community.nickname}</BoardNickname>
                     <BoardDate>{formatDate(community.writtenTime)}</BoardDate>
@@ -188,21 +337,32 @@ const BoardArticle = () => {
                     <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
                 </CommentWrite>
                 {commentData&&commentData.map((comment) => (
-                <CommentDesc key={comment.commentBody}>
+                <CommentDesc key={comment.commentId}>
                     <Comment>
                     <CommentHead>
                         <CommentNickName>{comment.nickname}</CommentNickName>
                         <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
-                        <CommentReWrite><button onClick={() => onClickWriteReplyComment(comment.commentId)}>대댓글</button></CommentReWrite>
-                        <CommentLike><button onClick={() => onClickCommentLike(comment.commentId)}>좋아요</button></CommentLike>
-                        <CommentLikeCount>{comment.commentLikeCount}</CommentLikeCount>
+                        <CommentReWrite><button className="replycomment" onClick={() => onClickWriteReplyComment(comment.commentId)}>대댓글</button></CommentReWrite>
+                        <CommentLike><button className="like" onClick={() => onClickCommentLike(comment.commentId)}>좋아요</button></CommentLike>
                     </CommentHead>
+                    <CommentArr>
                     <CommentBody>{comment.commentBody}</CommentBody>
+                    <CommentLikeCount><Heart/>{comment.commentLikeCount}</CommentLikeCount>
+                    </CommentArr>
+                {showReplyComment[comment.commentId] && (
+                    <CommentReplyWrite>
+                    <textarea className="commentreply" cols="160" rows="3" value={inputReplyComment} onChange={onChangeReplyComment}></textarea>
+                    <CommentReplyWriteButton>댓댓글 작성하기</CommentReplyWriteButton>
+                     </CommentReplyWrite>
+                     )}
                     <hr></hr>
                     </Comment>
                 </CommentDesc>
                 ))}
-                <BoardLike><button onClick={onClickBoardLike}>공감하기</button></BoardLike>
+                <BoardLike>
+                    <button className="like-button" onClick={onClickBoardLike}>
+                    이 글이 도움!
+                    </button></BoardLike>
             </BodyContainer>
         </Container>
     );

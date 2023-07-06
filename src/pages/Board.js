@@ -6,53 +6,151 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { formatDate } from "../components/DateStyle";
 const Title = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: bold;
 `;
 const Category = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-evenly;
-background-color:  #D9D9D9;
-width: 100%;
-align-items: center;
-height: 70px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+  align-items: center;
+  height: 70px;
 `;
-const CatButton = styled.button`
-border: none;
-font-size: 24px;
-height: 100%;
-background-color: ${({ isActive }) => (isActive ? "purple" : "#D9D9D9")};
-&:hover{
-    cursor: pointer;
-}
 
+const CatButton = styled.button`
+  font-size: 24px;
+  height: 40px;
+  min-width: 120px;
+  background-color: ${({ isActive }) => (isActive ? "#FF6B6B" : "#F2F2F2")};
+  color: ${({ isActive }) => (isActive ? "white" : "#333")};
+  padding: 0 16px;
+  transition: background-color 0.3s ease-in-out;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  outline: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ isActive }) => (isActive ? "#FF4545" : "#D8D8D8")};
+    color: white;
+    transform: scale(1.05);
+  }
 `;
+
+
 const Arrange = styled.div` // 정렬 방법 선택 div(최신순, 인기순)
 display: flex;
 justify-content: flex-end;
 align-items: center;
+margin-top: 10px;
+margin-bottom: 10px;
 `;
 const ArrButton = styled.div`
-margin-left: 5px;
-margin-right: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+`;
+
+const RadioButton = styled.input`
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+  cursor: pointer;
+
+  &:checked {
+    border-color: black;
+    background-color: black;
+  }
+  &:checked::after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 6px;
+    height: 6px;
+    background-color: white;
+    border-radius: 50%;
+    display: block;
+  }
+`;
+const Label = styled.label`
+  font-size: 16px;
+  color: #333333;
 `;
 const BoardText = styled.div`
-margin-top: 5px;
-margin-bottom: 5px;
-width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
 `;
+
 const BoardContents = styled.div`
-display: flex;
-height: 50px;
-width: 100%;
-margin-top: 7px;
-margin-bottom: 7px;
-background-color:  #D9D9D9;
-border: 1px solid  #D9D9D9;
-`
+  display: flex;
+  height: 50px;
+  width: 100%;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+
+const BCategory = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333333;
+`;
+
+const BTitle = styled.div`
+  flex: 2;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 16px;
+  color: #666666;
+`;
+
+const BNickName = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #888888;
+`;
+
+const BTime = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #888888;
+`;
 const WriteButton = styled.div`
 display: flex;
 justify-content: flex-end;
@@ -60,37 +158,16 @@ height: 100%;
 margin-top: 20px;
 .write{
   border-style: none;
+  border-radius: 5px;
   background-color: white;
   font-size: 22px;
-}
-.write:hover {
+  transition: background-color 0.3s ease-in-out;
   cursor: pointer;
 }
-`;
-const BCategory = styled.div`
-display:flex;
-justify-content: center;
-align-items: center;
-width: 10%;
-`;
-const BTitle = styled.div`
-display: flex;
-justify-content: flex-start;
-align-items: center;
-width: 40%;
-`;
-const BNickName = styled.div`
-display: flex;
-justify-content: flex-start;
-align-items: center;
-width: 20%;
-`;
-const BTime = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-width: 30%;
-`;
+.write:hover {
+    background-color: #f2f2f2;
+}
+  `;
 const Board = () => {
     const navigate = useNavigate();
     const [selectedBoardInfo, setSelectedBoardInfo] = useState([]);
@@ -149,7 +226,7 @@ const Board = () => {
     return (
       <Container justifyContent="center" alignItems="center">
         <BodyContainer>
-          <Title><h1>커뮤니티</h1></Title>
+          <Title>커뮤니티</Title>
           <Category>
         <CatButton
           isActive={activeButton === ""}
@@ -180,14 +257,14 @@ const Board = () => {
         </CatButton>
       </Category>
           <Arrange>
-                <ArrButton >
-                <input type="radio" name="arrange" id="newest" onClick={onClickNewestBoard}/>
-                <label htmlFor="newest">최신순</label>
-                </ArrButton>
-                <ArrButton>
-                <input type="radio" name="arrange" id="likest" />
-                <label htmlFor="likest">인기순</label>
-                </ArrButton>
+          <ArrButton>
+            <RadioButton type="radio" name="arrange" id="newest" onClick={onClickNewestBoard} />
+            <Label htmlFor="newest">최신순</Label>
+          </ArrButton>
+          <ArrButton>
+            <RadioButton type="radio" name="arrange" id="likest" />
+            <Label htmlFor="likest">인기순</Label>
+          </ArrButton>
             </Arrange>
           {selectedBoardInfo.map((community) => (
             <BoardText key={community.communityTitle}>
