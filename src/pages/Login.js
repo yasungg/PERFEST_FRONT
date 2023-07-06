@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import kakaoButton from "../images/kakaoButton.png";
@@ -276,41 +276,37 @@ const Login = () => {
     changeLoginForm();
   };
 
-  const onClickLogin = (loginevent) => {
+  const onClickLogin = () => {
     // 로그인 함수
-    loginevent.preventDefault();
 
-    const loginResponse = LoginAPI.Login(email, password).then((result) => {
-      
-      setTimeout(() => {
-        localStorage.setItem("grantType", result.accessToken);
+    const loginResponse = LoginAPI.Login(loginEmail, loginPassword)
+      .then((result) => {
+        console.log(result);
         localStorage.setItem("accessToken", result.accessToken);
-        localStorage.setItem("refreshToken", result.refreshToken);
         localStorage.setItem("tokenExpiresIn", result.tokenExpiresIn);
-        localStorage.setItem(
-          "refreshTokenExpiresIn",
-          result.refreshTokenExpiresIn
-        );
-      }, 1000)
-      
-      console.log(result.accessToken);
-    });
-    console.log(localStorage.getItem("accessToken"));
 
-    loginResponse.catch((error) => {
-      if (error) {
-        setOpen(true);
-        setChildren("로그인에 실패하였습니다!");
-        setHeader("로그인 에러");
-      }
-    });
+        console.log(result.accessToken);
+        console.log(result.tokenExpiresIn);
+        console.log(localStorage.getItem("accessToken"));
+      })
+      .catch((error) => {
+        if (error) {
+          console.error(error);
+          setOpen(true);
+          setChildren("로그인에 실패하였습니다!");
+          setHeader("로그인 에러");
+        }
+      });
+  };
+  const onClickLogout = () => {
+    const Logout = LoginAPI.Logout();
   };
 
   const closeModal = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  useMemo(() => {
     // 전달받은 값에 따라 Login 페이지를 띄워줄지, Signup 페이지를 띄워줄지 결정함.
     needSignup ? changeSignUpForm() : changeLoginForm();
     setOpen(false);
