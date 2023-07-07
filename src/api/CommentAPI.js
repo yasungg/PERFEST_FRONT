@@ -12,11 +12,11 @@ const CommentAPI = {
         return await axios.post(localHost + `/auth/comment/writecomment`, writeComment);
     },
     // 대댓글 작성하기
-    ReplyCommentWrite : async(commentBody, memberId, parentId) => {
+    ReplyCommentWrite : async(parentId,memberId,commentBody) => {
         const writeReplyComment = {
-            commentBody: commentBody,
+            parentId: parentId,
             memberId: memberId,
-            parentId: parentId
+            commentBody: commentBody           
         };
         return await axios.post(localHost + `/auth/comment/writereplycomment`, writeReplyComment)
     },

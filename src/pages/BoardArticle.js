@@ -229,7 +229,6 @@ const Heart = styled(GoHeart)`
 const BoardArticle = () => {
     const {communityId} = useParams(); // 게시판 번호 전달 하기 위해서 useparams 사용
     const [inputComment, setInputComment] = useState("");
-    const [showReplyComment, setShowReplyComment] = useState({});
     const [inputReplyComment, setInputReplyComment] = useState("");
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
@@ -303,13 +302,9 @@ const BoardArticle = () => {
       // 게시판 대댓글 작성
       const onClickWriteReplyComment = async(commentId) => {
         const memberId = 2;
-        setShowReplyComment((prev) => ({
-          ...prev,
-          [commentId]: true,
-        }));
-        const response = await CommentAPI.ReplyCommentWrite(inputReplyComment,memberId,commentId);
+        const response = await CommentAPI.ReplyCommentWrite(commentId,memberId,inputReplyComment);
           console.log(response.data);
-        setInputReplyComment(""); // 대댓글 작성 후 inputReplyComment 상태를 초기화하여 textarea의 내용을 지움
+          setInputReplyComment(""); // 대댓글 작성 후 inputReplyComment 상태를 초기화하여 textarea의 내용을 지움
       };
       const onChangeReplyComment = (e) => {
         setInputReplyComment(e.target.value);
@@ -349,12 +344,10 @@ const BoardArticle = () => {
                     <CommentBody>{comment.commentBody}</CommentBody>
                     <CommentLikeCount><Heart/>{comment.commentLikeCount}</CommentLikeCount>
                     </CommentArr>
-                {showReplyComment[comment.commentId] && (
                     <CommentReplyWrite>
                     <textarea className="commentreply" cols="160" rows="3" value={inputReplyComment} onChange={onChangeReplyComment}></textarea>
                     <CommentReplyWriteButton>댓댓글 작성하기</CommentReplyWriteButton>
                      </CommentReplyWrite>
-                     )}
                     <hr></hr>
                     </Comment>
                 </CommentDesc>
