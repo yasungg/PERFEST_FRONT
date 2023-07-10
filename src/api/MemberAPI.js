@@ -87,7 +87,7 @@ const MemberAPI = {
 
     // 내 뱃지랭킹 조회
     myBadgeRanking: async(memberId) => {
-        return await axios.get(KH_DOMAIN + `/auth/member/ranking/${memberId}`);
+        return await axios.get(KH_DOMAIN + `/auth/member/ranking/badges/${memberId}`);
     },
 
     // 내 리뷰 조회
