@@ -102,7 +102,7 @@ const MemberAPI = {
 
     // 내 예약목록 조회
     getReservation: async(memberId) => {
-        return await axios.get(KH_DOMAIN + `/auth/member/activites?memberId=${memberId}`);
+        return await axios.get(KH_DOMAIN + `/auth/member/activities?memberId=${memberId}`);
     },
 
     // 내 예약목록 삭제

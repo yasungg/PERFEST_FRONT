@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserContext } from "../context/UserStore";
 import MemberAPI from "../api/MemberAPI";
-import axios from "axios";
+import Modal from "../utils/Modal";
 
 const BodyContainer = styled.div`
   width: 100vw;
@@ -128,7 +128,7 @@ const MyWrite = () => {
   return (
     <BodyContainer>
       <Container>
-        {currentPosts.map((post) => (
+        {currentPosts && currentPosts.map((post) => (
           <PostContainer key={post.communityId}>
             <Title>{post.communityTitle}</Title>
             <Category>{post.communityCategory}</Category>
