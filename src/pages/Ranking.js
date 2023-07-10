@@ -6,26 +6,81 @@ import { useState } from "react";
 const RankingCategory = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 50px;
 `;
 
-const RankButton = styled.div``;
+const RankButton = styled.div`
+  margin: 0 10px;
+  cursor: pointer;
 
+  input[type="radio"] {
+    display: none;
+  }
+
+  label {
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  input[type="radio"]:checked + label {
+    background-color: #333;
+    color: #fff;
+  }
+`;
+// const RichRankingTitle = styled.div`
+// `;
+// const BadgeRankingTitle = styled.div`
+// `;
 const RankingDesc = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-self: center;
+  width: 50%;
+  margin-top: 30px;
 `;
 
 const BadgeRankInfo = styled.div`
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
-const RankingRank = styled.div``;
+const RankingRank = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: #222;
+  margin-right: 10px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+`;
 
-const RankingNickName = styled.div``;
+const RankingNickName = styled.div`
+  font-size: 18px;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+`;
 
-const RankingNum = styled.div``;
+const RankingNum = styled.div`
+  font-size: 18px;
+  color: #555;
+  background-color: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
 
 const Ranking = () => {
   const [richRanking, setRichRanking] = useState([]);
