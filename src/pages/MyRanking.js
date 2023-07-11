@@ -53,15 +53,15 @@ const MyRanking = () => {
     <BodyContainer>
       <Container>
         <RankingTitle>내 뱃지 랭킹</RankingTitle>
-        {memberBadgeRanking && memberBadgeRanking.rank ? (
-          <RankingInfo>뱃지 랭킹: {memberBadgeRanking.rank}등</RankingInfo>
+        {memberBadgeRanking && memberBadgeRanking ? (
+          <RankingInfo>뱃지 랭킹: {memberBadgeRanking}등</RankingInfo>
         ) : (
           <RankingInfo>뱃지 랭킹 정보 없음</RankingInfo>
         )}
 
         <RankingTitle>내 리치 랭킹</RankingTitle>
-        {memberRichRanking && memberRichRanking.rank ? (
-          <RankingInfo>큰손 랭킹: {memberRichRanking.rank}등</RankingInfo>
+        {memberRichRanking && memberRichRanking ? (
+          <RankingInfo>큰손 랭킹: {memberRichRanking}등</RankingInfo>
         ) : (
           <RankingInfo>큰손 랭킹 정보 없음</RankingInfo>
         )}
