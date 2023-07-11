@@ -9,43 +9,47 @@ const BodyContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f1f1f1;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 300px;
+  padding: 40px;
   margin-top: 50px;
   background-image: url(${BackgroundImg});
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #ebebeb;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const RankingTitle = styled.div`
-  font-size: 18px;
-  margin-bottom: 10px;
+const RankingTitle = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
   color: #333;
 `;
 
 const RankingInfo = styled.div`
-  font-size: 14px;
-  margin-bottom: 5px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 `;
 
 const TrophyIcon = styled.div`
-  display: inline-block;
   width: 24px;
   height: 24px;
   background-color: gold;
   border-radius: 50%;
-  margin-right: 5px;
+  margin-right: 10px;
 `;
 
 const MyRanking = () => {
   const [memberRichRanking, setMemberRichRanking] = useState(null);
   const [memberBadgeRanking, setMemberBadgeRanking] = useState(null);
 
+  // context 로 가져올 예정 
   let memberId = 1;
 
   useEffect(() => {
@@ -70,7 +74,8 @@ const MyRanking = () => {
         <RankingTitle>내 뱃지 랭킹</RankingTitle>
         {memberBadgeRanking ? (
           <RankingInfo>
-            <TrophyIcon /> 뱃지 랭킹: {memberBadgeRanking}등
+            <TrophyIcon />
+            뱃지 랭킹: {memberBadgeRanking}등
           </RankingInfo>
         ) : (
           <RankingInfo>뱃지 랭킹 정보 없음</RankingInfo>
@@ -79,7 +84,8 @@ const MyRanking = () => {
         <RankingTitle>내 리치 랭킹</RankingTitle>
         {memberRichRanking ? (
           <RankingInfo>
-            <TrophyIcon /> 큰손 랭킹: {memberRichRanking}등
+            <TrophyIcon />
+            큰손 랭킹: {memberRichRanking}등
           </RankingInfo>
         ) : (
           <RankingInfo>큰손 랭킹 정보 없음</RankingInfo>

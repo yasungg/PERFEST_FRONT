@@ -7,14 +7,13 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     background-image: url(${BackgroundImg});
-    background-size: cover; /* 이미지를 컨테이너에 맞게 조정 */
-    background-repeat: no-repeat; /* 이미지 반복 없음 */
+    /* 추가적인 스타일 설정 */
 `;
 
 const MyComment = () => {
     return (
         <Container>
-            {/* 내용 추가 */}
+            {/* 내용 추가 */}<p>왜안되냐고</p>
         </Container>
     );
 }
