@@ -22,6 +22,7 @@ import Festival from "./pages/Festival";
 import FestivalDetail from "./pages/FestivalDetail";
 import SideBar from "./pages/Sidebar";
 import MyCalendar from "./pages/MyCalender";
+import MyComment from "./pages/MyComment";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/ReserveList" element={<MyReserveList />} />
         <Route path="/PayList" element={<MyPayList />} />
         <Route path="/MyWrite" element={<MyWrite />} />
+        <Route path="/MyComment" element={<MyComment />} />
         <Route path="/payready" element={<PayReady />} />
         <Route path="/payresult" element={<PayResult />} />
         <Route path="/paycancel" element={<PayCancel />} />

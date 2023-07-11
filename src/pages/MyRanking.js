@@ -22,18 +22,18 @@ const Container = styled.div`
   border-radius: 8px;
 `;
 
-const RankingTitle = styled.h3`
+const RankingTitle = styled.div`
   font-size: 18px;
   margin-bottom: 10px;
   color: #333;
 `;
 
-const RankingInfo = styled.p`
+const RankingInfo = styled.div`
   font-size: 14px;
   margin-bottom: 5px;
 `;
 
-const TrophyIcon = styled.span`
+const TrophyIcon = styled.div`
   display: inline-block;
   width: 24px;
   height: 24px;
