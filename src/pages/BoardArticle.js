@@ -6,8 +6,6 @@ import { useEffect } from "react";
 import BoardAPI from "../api/BoardAPI";
 import { useParams } from "react-router";
 import {formatDate} from "../components/DateStyle";
-// import {GoHeart} from 'react-icons/go';
-// import {MdSubdirectoryArrowRight} from 'react-icons/md';
 import WriteComment from '../components/WriteComment';
 const Title = styled.div`
 display: flex;
@@ -122,12 +120,6 @@ const BoardLike = styled.div`
     }
   }
 `;
-
-// const Heart = styled(GoHeart)`
-//     color: red;
-// `;
-// const Arrow = styled(MdSubdirectoryArrowRight)`
-// `;
 
 
 
