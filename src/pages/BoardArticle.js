@@ -6,7 +6,9 @@ import { useEffect } from "react";
 import BoardAPI from "../api/BoardAPI";
 import { useParams } from "react-router";
 import {formatDate} from "../components/DateStyle";
-import {GoHeart} from 'react-icons/go'
+// import {GoHeart} from 'react-icons/go';
+// import {MdSubdirectoryArrowRight} from 'react-icons/md';
+import WriteComment from '../components/WriteComment';
 const Title = styled.div`
 display: flex;
 justify-content: center;
@@ -94,111 +96,6 @@ const CommentWriteButton = styled.button`
     background-color: #e0e0e0;
   }
 `;
-
-const CommentDesc = styled.div`
-display: flex;
-flex-direction: column;
-`;
-const Comment = styled.div`
-margin-top: 5px;
-margin-bottom: 5px;
-`;
-const CommentHead = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const CommentNickName = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-`;
-
-const CommentWrittenTime = styled.div`
-  font-size: 14px;
-  color: #666;
-  margin-left: 10px;
-`;
-
-const CommentReWrite = styled.div`
-  .replycomment {
-    border: none;
-    background-color: white;
-    border-radius: 4px;
-    color: #333;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    &:hover {
-      background-color: #f1f1f1;
-    }
-  }
-`;
-
-const CommentLike = styled.div`
-  .like {
-    border: none;
-    background-color: white;
-    border-radius: 4px;
-    color: #333;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #f1f1f1;
-    }
-  }
-`;
-const CommentArr = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const CommentBody = styled.div`
-  font-size: 17px;
-  color: #333;
-`;
-
-const CommentLikeCount = styled.div`
-  font-size: 14px;
-  color: #666;
-`;
-const CommentReplyWrite = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-top: 10px;
-
-  .commentreply {
-    width: 85%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    resize: none;
-    outline: none;
-  }
-`;
-
-const CommentReplyWriteButton = styled.button`
-  width: 10%;
-  padding: 8px;
-  background-color: #f5f5f5;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #333;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-`;
 const BoardLike = styled.div`
   display: flex;
   width: 100%;
@@ -226,9 +123,11 @@ const BoardLike = styled.div`
   }
 `;
 
-const Heart = styled(GoHeart)`
-    color: red;
-`;
+// const Heart = styled(GoHeart)`
+//     color: red;
+// `;
+// const Arrow = styled(MdSubdirectoryArrowRight)`
+// `;
 
 
 
@@ -236,8 +135,9 @@ const Heart = styled(GoHeart)`
 const BoardArticle = () => {
     const {communityId} = useParams(); // 게시판 번호 전달 하기 위해서 useparams 사용
     const [inputComment, setInputComment] = useState("");
-    const [replyCommentInput, setReplyCommentInput] = useState(new Map());
+    const [replyCommentInput, setReplyCommentInput] = useState(new Map()); // 각 댓글에 맞는 대댓글 작성하는 상태 변수
     const [showReplyInput, setShowReplyInput] = useState(new Map()); // 대댓글 입력창 보여줄지 여부를 관리하는 상태 변수
+    const [replyCommentData, setReplyCommentData] = useState([]);
     const [commentCount, setCommentCount] = useState("");
     const [boardArticle, setBoardArticle] = useState([]);
     const [commentData, setCommentData] = useState([]);
@@ -327,6 +227,7 @@ const BoardArticle = () => {
           return newMap;
         });
       };
+      // 게시판 대댓글 작성
       const onChangeReplyComment = (e, commentId) => {
         const value = e.target.value;
         setReplyCommentInput((prevMap) => {
@@ -335,6 +236,20 @@ const BoardArticle = () => {
           return newMap;
         });
       };
+      // 해당 댓글의 대댓글 가져오기
+      useEffect(() => {
+      const getReplyCommentData = async (commentId) => {
+        const response = await CommentAPI.GetReplyComment(commentId);
+        console.log(response.data);
+        setReplyCommentData((prevData) => ({
+          ...prevData,
+          [commentId]: response.data,
+        }));
+      };
+      commentData.forEach((comment) => {
+        getReplyCommentData(comment.commentId);
+      });
+    }, [commentData]);
     return(
         <Container justifyContent="center" alignItems="center">
             <BodyContainer>
@@ -362,37 +277,16 @@ const BoardArticle = () => {
                     <textarea className="commentwrite"  cols="160" rows="3" value={inputComment} onChange={onChangeComment}></textarea>
                     <CommentWriteButton onClick={onClickWriteComment}>댓글 작성하기</CommentWriteButton>
                 </CommentWrite>
-                {commentData&&commentData.map((comment) => (
-                <CommentDesc key={comment.commentId}>
-                    <Comment>
-                    <CommentHead>
-                        <CommentNickName>{comment.nickname}</CommentNickName>
-                        <CommentWrittenTime>{formatDate(comment.commentWrittenTime)}</CommentWrittenTime>
-                        <CommentReWrite><button className="replycomment" onClick={() => onClickShowReplyWrite(comment.commentId)}>대댓글</button></CommentReWrite>
-                        <CommentLike><button className="like" onClick={() => onClickCommentLike(comment.commentId)}>좋아요</button></CommentLike>
-                    </CommentHead>
-                    <CommentArr>
-                    <CommentBody>{comment.commentBody}</CommentBody>
-                    <CommentLikeCount><Heart/>{comment.commentLikeCount}</CommentLikeCount>
-                    </CommentArr>
-                    {showReplyInput.get(comment.commentId) && (
-                  <CommentReplyWrite>
-                    <textarea
-                      className="commentreply"
-                      cols="160"
-                      rows="3"
-                      value={replyCommentInput.get(comment.commentId) || ""}
-                      onChange={(e) => onChangeReplyComment(e, comment.commentId)}
-                    ></textarea>
-                    <CommentReplyWriteButton onClick={() => onClickWriteReplyComment(comment.commentId)}>
-                      댓댓글 작성하기
-                    </CommentReplyWriteButton>
-                  </CommentReplyWrite>
-                )}
-                    <hr></hr>
-                    </Comment>
-                </CommentDesc>
-                ))}
+                <WriteComment
+                commentData={commentData}
+                replyCommentData={replyCommentData}
+                showReplyInput={showReplyInput}
+                replyCommentInput={replyCommentInput}
+                onClickShowReplyWrite={onClickShowReplyWrite}
+                onClickCommentLike={onClickCommentLike}
+                onClickWriteReplyComment={onClickWriteReplyComment}
+                onChangeReplyComment={onChangeReplyComment}
+                />
             </BodyContainer>
         </Container>
     );
