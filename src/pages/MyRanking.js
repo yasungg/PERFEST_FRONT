@@ -6,6 +6,7 @@ import BackgroundImg from "../images/—Pngtree—honor medal_6703325.png";
 
 const BodyContainer = styled.div`
   width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +18,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  margin-top: 50px;
   background-image: url(${BackgroundImg});
   background-color: #ebebeb;
   border-radius: 8px;
@@ -28,6 +28,7 @@ const RankingTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 20px;
   color: #333;
+  text-align: center;
 `;
 
 const RankingInfo = styled.div`
@@ -49,7 +50,7 @@ const MyRanking = () => {
   const [memberRichRanking, setMemberRichRanking] = useState(null);
   const [memberBadgeRanking, setMemberBadgeRanking] = useState(null);
 
-  // context 로 가져올 예정 
+  // context 로 가져올 예정
   let memberId = 1;
 
   useEffect(() => {
