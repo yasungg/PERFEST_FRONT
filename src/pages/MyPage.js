@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import Profile from "../images/47802_35328_56.jpg";
+import Profile from "../images/—Pngtree—honor medal_6703325.png";
 import MySetting from "./MySetting";
 import MyReview from "./MyReview";
 import MyReserveList from "./MyReserveList";
