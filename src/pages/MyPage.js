@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import Profile from "../images/rank.png";
+import Profile from "../images/47802_35328_56.jpg";
 import MySetting from "./MySetting";
 import MyReview from "./MyReview";
 import MyReserveList from "./MyReserveList";
