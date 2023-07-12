@@ -103,6 +103,13 @@ const ModalStyle = styled.div`
   }
 `;
 
+const Tm = styled.div`
+  display: flex;
+  justify-content: center;
+  font-size: 1.8em;
+
+`;
+
 const MySetting = () => {
 
   const navigate = useNavigate();
@@ -209,7 +216,7 @@ const MySetting = () => {
   return (
     <>
       <BodyContainer>
-        <p>내 정보 관리</p>
+        <Tm>내 정보 관리</Tm>
         <Container>
           <Header />
           {memberInfo && memberInfo.map(member => (

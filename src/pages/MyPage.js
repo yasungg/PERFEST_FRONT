@@ -15,61 +15,29 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-// 사이드바 펼치기 애니메이션
-const expandSidebarAnimation = keyframes`
-  from {
-    width: 100%;
-  }
-
-  to {
-    width: 300px;
-  }
-`;
-
-// 사이드바 접기 애니메이션
-const collapseSidebarAnimation = keyframes`
-  from {
-    width: 300px;
-  }
-
-  to {
-    width: 100%;
-  }
-`;
-
-// 사이드바 메뉴 이동
-const slideMenuAnimation = keyframes`
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-`;
-
-
 // 사이드바 영역
 const SideBarWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: 100%;
+  width: 300px;
   background-color: #2f4050;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow-y: auto;
-  transition: transform 0.3s;
-  transform: translateX(${(props) => (props.collapsed ? "20%" : "0")});
+  opacity: 1;
 
-  @media (min-width: 768px) {
-    width: 300px;
-    transform: translateX(0);
+  @media (max-width: 1024px) {
+    width: ${(props) => (props.collapsed ? "0" : "300px")};
+    opacity: ${(props) => (props.collapsed ? "0" : "1")};
+    transition: width 0.3s, opacity 0.3s;
+
   }
 `;
+
 
 
 // 프로필 이미지
@@ -104,11 +72,11 @@ const MenuItem = styled.div`
   color: white;
   justify-content: center;
   align-items: center;
-  font-family: Arial, Helvetica, sans-serif;
   cursor: pointer;
 
   &:hover {
     background-color: #293846;
+    
   }
 
   &.active {
@@ -119,12 +87,8 @@ const MenuItem = styled.div`
 // 메뉴 링크
 const MenuLink = styled.div`
   color: white;
-  transition: transform 0.3s;
-  transform: ${(props) => (props.collapsed ? "translateX(-100%)" : "translateX(0)")};
-
-  &:hover {
-    transform: ${(props) => (props.collapsed ? "translateX(-100%)" : "translateX(-10px)")};
-  }
+  
+  
 `;
 
 
