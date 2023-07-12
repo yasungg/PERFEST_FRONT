@@ -8,17 +8,33 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+`;
+
+const Ti = styled.div`
+  display: flex;
+  justify-content: center;
+  font-size: 1.5em;
 `;
 
 const Background = styled.div`
-  height: 500px;
-  width: 500px;
-  border: none;
+  border: 1px black solid;
   background-image: url(${BackgroundImg});
   background-size: cover;
   background-position: center;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
+
+
+
 
 
 
@@ -47,9 +63,14 @@ const MyRanking = () => {
 
   return (
     <>
+    <Ti>내 랭킹</Ti>
     <Container>
-      <p>내 랭킹</p>
-      <Background>왜</Background>
+      <Background>
+        <ul>
+          <li>내 큰손 랭킹</li>
+          <li>내 뱃지 랭킹</li>
+        </ul>
+      </Background>
 
     </Container>
     </>
