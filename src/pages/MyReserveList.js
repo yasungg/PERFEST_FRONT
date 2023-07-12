@@ -3,35 +3,80 @@ import styled from "styled-components";
 import MemberAPI from "../api/MemberAPI";
 import { UserContext } from "../context/UserStore";
 
-const BodyContainer = styled.div`
-  width: 100vw;
-`;
-
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  width: 100%;
+  
+
+  p {
+    font-size: 1.3em;
+    font-weight: bold;
+  }
+
+  hr {
+    background-color: lightgray;
+    border: .3px solid lightgray;
+    margin-bottom: 20px;
+  }
+
+  li {
+    font-size: 0.7em;
+    color: darkgray;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+
+  button{
+    font-size: 0.8em;
+    font-weight: bold;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: white;
+    color: darkgray;
+    padding: 5px 10px;
+    margin-right: 10px;
+
+    &:hover {
+      background-color: lightgray;
+      color: white;
+    }
+  }
+
+  th, td {
+    padding: 20px;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    font-size: .9em;
+    &:nth-child(1) {
+      width: 40%;
+    }
+    &:nth-child(2) {
+      width: 20%;
+    }
+    &:nth-child(3) {
+      width: 20%;
+    }
+    
+  }
+
+  tbody tr{
+    
+    &:hover{
+    background-color: #F1F0F0;
+   }
+  }
+
+  td {
+    text-align: center;
+    font-size: .75em;
+    color: #636363;
+  }
 `;
 
-const ReservationContainer = styled.div`
-  margin-bottom: 20px;
-`;
-
-const ActivityName = styled.h3`
-  font-size: 18px;
-  margin-bottom: 5px;
-`;
-
-const ActivityDescription = styled.p`
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 10px;
-`;
-
-const ActivityDate = styled.p`
-  font-size: 14px;
-`;
 
 const MyReserveList = () => {
   // const context = UserContext(UserContext);
@@ -48,22 +93,46 @@ const MyReserveList = () => {
     fetchMemberReservation();
   }, [memberId]);
 
-  return (
-    <BodyContainer>
-      <Container>
-        {memberReserve && memberReserve.map((reservation) => (
-          <ReservationContainer key={reservation.activityName}>
-            <ActivityName>{reservation.activityName}</ActivityName>
-            <ActivityDescription>{reservation.activityDesc}</ActivityDescription>
-            <ActivityDate>
-              {new Date(reservation.startDate).toLocaleDateString()} - {"  "}
-              {new Date(reservation.endDate).toLocaleDateString()}
-            </ActivityDate>
-          </ReservationContainer>
-        ))}
-      </Container>
-    </BodyContainer>
-  );
+  const formatTime = (timeString) => {
+    const date = new Date(timeString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  
+
+  return(
+    <>
+    <Container>
+      <p>예매 내역</p>
+      <hr/>
+      <li>체험활동 관련 문의는 해당 축제 관리자에게 연락바랍니다</li>
+      <table>
+        <thead>
+          <tr>
+            <th>체험 활동</th>
+            <th>상세정보</th>
+            <th>시작일</th>
+            <th>종료일</th>
+          </tr>
+        </thead>
+        <tbody>
+          {memberReserve.map((reservation) => (
+            <tr key={reservation.id}>
+              <td>{reservation.activityName}</td>
+              <td>{reservation.activityDesc}</td>
+              <td>{formatTime(reservation.startDate)}</td>
+              <td>{formatTime(reservation.endDate)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      
+    </Container>
+    </>
+  )
 };
 
 export default MyReserveList;

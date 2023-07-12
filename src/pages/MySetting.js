@@ -8,7 +8,7 @@ import Modal from "../utils/Modal";
 
 
 const BodyContainer = styled.div`
-  width: 100vw;
+  width: 100%;
 `;
 
 const Container = styled.div`
@@ -290,7 +290,6 @@ const MySetting = () => {
           </div>
         </ModalStyle>
       </Modal>
-
     </>
   );
   

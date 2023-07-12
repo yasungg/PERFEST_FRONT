@@ -8,20 +8,22 @@ import MyPayList from "./MyPayList";
 import MyWrite from "./MyWrite";
 import MyRanking from "./MyRanking";
 
+
 // 전체 컨테이너
 const Container = styled.div`
   display: flex;
-  width: 100vw;
+  position: relative;
+  width: 100%;
   height: 100vh;
 `;
 
 // 사이드바 영역
 const SideBarWrapper = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  height: 100vh;
-  width: 300px;
+  height: 100%;
+  width: 20%;
   background-color: #2f4050;
   display: flex;
   flex-direction: column;
@@ -29,7 +31,6 @@ const SideBarWrapper = styled.div`
   align-items: center;
   overflow-y: auto;
   opacity: 1;
-
   @media (max-width: 1024px) {
     width: ${(props) => (props.collapsed ? "0" : "300px")};
     opacity: ${(props) => (props.collapsed ? "0" : "1")};
@@ -91,35 +92,37 @@ const MenuLink = styled.div`
   
 `;
 
-
 // 컨텐츠 영역
 const ContentWrapper = styled.div`
-  flex: 1;
+  width: calc(100% - 300px);
+  transform: translateX(300px);
   padding: 20px;
+  @media screen and (max-width: 1025px) {
+    width: 100%;
+    transform: translateX(0);
+  }
 `;
 
 const MyPage = () => {
   const memberNickname = "잼뮈"; // 회원닉 가져올 예정
-
   const menus = [
-    { name: "내 정보", path: "/MySetting" },
-    { name: "내 리뷰", path: "/MyReview" },
-    { name: "예약 목록", path: "/MyReserveList" },
-    { name: "주문 내역", path: "/MyPayList" },
-    { name: "내 게시글", path: "/MyWrite" },
-    { name: "내 랭킹", path: "/MyRanking" }
-  ];
-    
-    const [selectedMenu, setSelectedMenu] = useState("");
-    
-    const handleMenuClick = (path) => {
-      if (selectedMenu !== path) {
-        setSelectedMenu(path);
-      } else {
-        setSelectedMenu("");
-      }
-    };
-    
+      { name: "내 정보", path: "/MySetting" },
+      { name: "내 리뷰", path: "/MyReview" },
+      { name: "예약 목록", path: "/MyReserveList" },
+      { name: "주문 내역", path: "/MyPayList" },
+      { name: "내 게시글", path: "/MyWrite" },
+      { name: "내 랭킹", path: "/MyRanking" }
+    ];
+      
+      const [selectedMenu, setSelectedMenu] = useState("");
+      
+      const handleMenuClick = (path) => {
+        if (selectedMenu !== path) {
+          setSelectedMenu(path);
+        } else {
+          setSelectedMenu("");
+        }
+      };
     return (
       <Container>
         <SideBarWrapper collapsed={selectedMenu !== ""} className={selectedMenu !== "" ? "menuSlide" : ""}>
@@ -132,21 +135,21 @@ const MyPage = () => {
                     className={selectedMenu === menu.path ? "active" : ""}
                     onClick={() => handleMenuClick(menu.path)}
                   >
-                  {menu.name}
-              </MenuLink>
-            </MenuItem>
-    ))}
-    </Menu>
-     </SideBarWrapper>
-       <ContentWrapper>
+                    {menu.name}
+                  </MenuLink>
+                </MenuItem>
+              ))}
+            </Menu>
+        </SideBarWrapper>
+        <ContentWrapper>
           {selectedMenu === "/MySetting" && <MySetting />}
           {selectedMenu === "/MyReview" && <MyReview />}
           {selectedMenu === "/MyReserveList" && <MyReserveList />}
           {selectedMenu === "/MyPayList" && <MyPayList />}
           {selectedMenu === "/MyWrite" && <MyWrite />}
           {selectedMenu === "/MyRanking" && <MyRanking />}
-      </ContentWrapper>
-    </Container>
+        </ContentWrapper>
+      </Container>
     );
   };
     
