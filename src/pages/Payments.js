@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {UserContext} from "../context/UserStore";
 import { useNavigate } from "react-router-dom";
 import PaymentAPI from "../api/PaymentAPI";
+import ResultSuccess from "./PaySuccess";
 
 const PayReady = () => {
   const context = useContext(UserContext);
@@ -194,9 +195,9 @@ const PayCancel = ({memberId, productId, paymentId}) => {
 
   // 사용자가 예약한 주문 내역이 있는지 확인하기 위한 로직
   const [memberData, setMemberData] = useState({
-    data : {
-      cid : "TC0ONETIME",
-      tid : "T1234567890123456789",
+    params : {
+      cid : "",
+      tid : "",
       quantity : 1,
       cancel_amount : 2000,
       cancel_tax_free_amount : 0
@@ -206,15 +207,16 @@ const PayCancel = ({memberId, productId, paymentId}) => {
   useEffect(() => {
     const getData = async() => {
       console.log("getData 실행");
-      const response = await PaymentAPI.CheckPaymentData(1, 1);
-      const cancelStatus = response.data[0].paymentStatus;
+      const response = await PaymentAPI.CheckPaymentData(1, 1, 1);
+      // const cancelStatus = response.data[0].paymentStatus;
       console.log(response);
       // 취소 완료 된 결제는 다음 로직을 실행하지 않도록 하기 위해
-      if(response.status === 200 && cancelStatus === 'PAID') {
+      if(response.status === 200 ) {
         console.log("해당 상품 주문 데이터 확인");
-        const { price, quantity, tid, tax_free } = response.data[0];
+        console.log(response);
+        const { price, quantity, tid, tax_free_amount } = response.data[0];
         setMemberData({
-          data : {
+          params : {
             cid : "TC0ONETIME",
             memberId : 1,
             productId : 1,
@@ -222,9 +224,10 @@ const PayCancel = ({memberId, productId, paymentId}) => {
             price : price,
             quantity : quantity,
             cancel_amount : price,
-            cancel_tax_free_amount : tax_free
+            cancel_tax_free_amount : tax_free_amount
           }
         });
+        // getData();
         setIsCancel(true);
       } else {
         console.log("해당 상품 주문 데이터 없음");
@@ -233,17 +236,8 @@ const PayCancel = ({memberId, productId, paymentId}) => {
     getData();
   }, []);
 
-  const [data, setData] = useState({
-    params: {
-      cid: "TC0ONETIME",
-      tid : "T1234567890123456789",
-      cancel_amount	: 2200,
-      cancel_tax_free_amount : 0,
-    }
-  });
-
   useEffect(() => {
-    const { params } = data;
+    const { params } = memberData;
     isCancel && 
       axios({
         url: "https://kapi.kakao.com/v1/payment/cancel",
@@ -265,15 +259,24 @@ const PayCancel = ({memberId, productId, paymentId}) => {
 
   useEffect(() => {
     const deleteData = async() => {
+      const memberId = 1;
+      const productId = 1;
+      const paymentId = 1;
       const response = await PaymentAPI.DeletePaymentData(memberId, productId, paymentId)
       if(response.status === 200) {
         console.log("deleteData 통신 완료");
+        
+        return(
+          <ResultSuccess num={2}/>
+        )
       } else {
         console.log("deleteData 통신 실패");
+        alert("결제 취소가 실패 했습니다.")
       }
     }
     isKakao && deleteData();
-  })
+  },[isKakao])
+
 }
 
 
