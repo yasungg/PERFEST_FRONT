@@ -14,8 +14,12 @@ const BoardAPI = {
     );
   },
   // 게시판 최신순 조회
-  BoardGetByNewest: async () => {
-    return await axios.get(localHost + `/auth/community/getnewestboard`);
+  BoardGetByNewest: async (selectCategory) => {
+    return await axios.get(localHost + `/auth/community/getnewestboard?communityCategory=${selectCategory}`);
+  },
+  // 게시판 인기순 조회
+  BoardGetByLikest: async (selectCategory) => {
+    return await axios.get(localHost + `/auth/community/getlikestboard?communityCategory=${selectCategory}`);
   },
   // 게시판 본문 내용 가져오기
   GetBoardArticle: async (communityId) => {

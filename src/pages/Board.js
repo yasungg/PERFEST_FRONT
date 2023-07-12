@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import { formatDate } from "../components/DateStyle";
+import { FaHeart } from 'react-icons/fa';
 const Title = styled.div`
   display: flex;
   justify-content: center;
@@ -126,7 +127,7 @@ const BCategory = styled.div`
 `;
 
 const BTitle = styled.div`
-  flex: 2;
+  flex: 4;
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -135,7 +136,6 @@ const BTitle = styled.div`
 `;
 
 const BNickName = styled.div`
-  flex: 1;
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -144,7 +144,13 @@ const BNickName = styled.div`
 `;
 
 const BTime = styled.div`
-  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #888888;
+`;
+const BLikeCount = styled.div`
   display: flex;
   align-items: center;
   padding: 0 10px;
@@ -168,6 +174,9 @@ margin-top: 20px;
     background-color: #f2f2f2;
 }
   `;
+  const Heart = styled(FaHeart)`
+  color: red;
+`;
 const Board = () => {
     const navigate = useNavigate();
     const [selectedBoardInfo, setSelectedBoardInfo] = useState([]);
@@ -191,13 +200,13 @@ const Board = () => {
       const onClickCategory = async() => {
         if (selectCategory) {
           const rsp = await BoardAPI.BoardGetByCategory(selectCategory);
+          console.log(selectCategory);
           if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
           console.log(rsp.data);
         }
       };
       onClickCategory();
     }, [selectCategory]);
-  
     const getCategoryText = (category) => {
       switch (category) {
         case 'FIND_PARTY':
@@ -210,16 +219,27 @@ const Board = () => {
           return '';
       }
     };
-  
     const handleCategoryClick = (category) => {
       setSelectCategory(category);
       setActiveButton(category); // 버튼이 클릭되면 해당 카테고리를 활성화 상태로 설정
     };
     // 게시판 최신순 정렬
     const onClickNewestBoard = async() => {
-        const rsp = await BoardAPI.BoardGetByNewest();
-        setSelectedBoardInfo(rsp.data);
+      if(selectCategory) {
+        const rsp = await BoardAPI.BoardGetByNewest(selectCategory);
+        if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
+        console.log(selectCategory);
+        console.log(rsp.data);
       }
+    }
+    // 게시판 인기순 정렬
+    const onClickLikestBoard = async() => {
+      if(selectCategory) {
+        const rsp = await BoardAPI.BoardGetByLikest(selectCategory);
+        if (rsp.status === 200) setSelectedBoardInfo(rsp.data);
+        console.log(rsp.data);
+      }
+    }
     const boardClick = (communityId) => {
       navigate(`/BoardArticle/${communityId}`);
     }
@@ -232,7 +252,7 @@ const Board = () => {
           isActive={activeButton === ""}
           onClick={() => {
             BoardGetAll();
-            handleCategoryClick("");
+            handleCategoryClick("ALL");
           }}
         >
           전체
@@ -262,17 +282,18 @@ const Board = () => {
             <Label htmlFor="newest">최신순</Label>
           </ArrButton>
           <ArrButton>
-            <RadioButton type="radio" name="arrange" id="likest" />
+            <RadioButton type="radio" name="arrange" id="likest" onClick={onClickLikestBoard}/>
             <Label htmlFor="likest">인기순</Label>
           </ArrButton>
             </Arrange>
           {selectedBoardInfo.map((community) => (
-            <BoardText key={community.communityTitle}>
+            <BoardText key={community.communityId}>
               <BoardContents onClick={() => boardClick(community.communityId)}>
                 <BCategory>{getCategoryText(community.communityCategory)}</BCategory>
                 <BTitle>{community.communityTitle}</BTitle>
                 <BNickName>{community.nickname}</BNickName>
                 <BTime>{formatDate(community.writtenTime)}</BTime>
+                <BLikeCount><Heart />{community.likeCount}</BLikeCount>
               </BoardContents>
             </BoardText>
           ))}

@@ -17,11 +17,10 @@ import BoardArticle from "./pages/BoardArticle";
 import { PayCancel, PayReady, PayResult } from "./pages/Payments";
 import ResultFalse from "./pages/PayResultFalse";
 import ResultSuccess from "./pages/PaySuccess";
-
 import Festival from "./pages/Festival";
 import FestivalDetail from "./pages/FestivalDetail";
 import SideBar from "./pages/Sidebar";
-import MyCalendar from "./pages/MyCalender";
+import Calendar from "./pages/Calendar";
 
 function App() {
   return (
@@ -50,7 +49,8 @@ function App() {
         <Route path="/BoardArticle/:communityId" element={<BoardArticle />} />
         <Route path="/Festival" element={<Festival />} />
         <Route path="/FestivalDetail" element={<FestivalDetail />} />
-        <Route path="/MyCalender" element={<MyCalendar />} />
+        <Route path="/Calendar" element={<Calendar />} />
+
 
       </Routes>
     </Router>
