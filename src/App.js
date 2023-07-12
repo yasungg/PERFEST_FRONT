@@ -20,7 +20,7 @@ import ResultSuccess from "./pages/PaySuccess";
 import Festival from "./pages/Festival";
 import FestivalDetail from "./pages/FestivalDetail";
 import SideBar from "./pages/Sidebar";
-import Calendar from "./pages/Calendar";
+import MyCalendar from "./pages/MyCalender";
 
 function App() {
   return (
@@ -37,6 +37,7 @@ function App() {
         <Route path="/ReserveList" element={<MyReserveList />} />
         <Route path="/PayList" element={<MyPayList />} />
         <Route path="/MyWrite" element={<MyWrite />} />
+        <Route path="/MyComment" element={<MyComment />} />
         <Route path="/payready" element={<PayReady />} />
         <Route path="/payresult" element={<PayResult />} />
         <Route path="/paycancel" element={<PayCancel />} />
