@@ -90,42 +90,22 @@ const ModalStyle = styled.div`
     }
 `;
 
-function ResultSuccess (num) {
-
-    switch(num) {
-        case 1 : return (
-            <ModalStyle>
-                <div className={'openModal modal'}>
-                    <section>
-                    <main>
-                    <div>
-                        <h2>결제 성공 하였습니다.</h2>
-                        <Link to='/'>메인으로 돌아가기</Link>
-                    </div>
-                    </main>
-                    </section>
-                </div>
-            </ModalStyle>
-        );
-
-        case 2: return (
-            <ModalStyle>
-                <div className={'openModal modal'}>
-                    <section>
-                    <main>
-                    <div>
-                        <h2>결제 취소를 성공 하였습니다.</h2>
-                        <Link to='/'>메인으로 돌아가기</Link>
-                    </div>
-                    </main>
-                    </section>
-                </div>
-            </ModalStyle>
-        );
-        default :
-    }
+function ResultSuccess () {
     
-    
+    return (
+        <ModalStyle>
+            <div className={'openModal modal'}>
+                <section>
+                <main>
+                <div>
+                    <h2>결제 성공 하였습니다.</h2>
+                    <Link to='/'>메인으로 돌아가기</Link>
+                </div>
+                </main>
+                </section>
+            </div>
+        </ModalStyle>
+    );
 }
 
 export default ResultSuccess;

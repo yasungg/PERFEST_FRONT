@@ -5,6 +5,8 @@ import {UserContext} from "../context/UserStore";
 import { useNavigate } from "react-router-dom";
 import PaymentAPI from "../api/PaymentAPI";
 import ResultSuccess from "./PaySuccess";
+import PayModal from "./PaycancelModal"
+import { Link } from "react-router-dom";
 
 const PayReady = () => {
   const context = useContext(UserContext);
@@ -172,6 +174,7 @@ const PayResult = () => {
     if(response.status === 200) {
       // 카카오페이와 DB전송까지 완료
       navigate("/resultSuccess");
+      window.localStorage.removeItem("tid");
     } else { 
       console.log("paymentResult 오류");
     }
@@ -231,6 +234,7 @@ const PayCancel = ({memberId, productId, paymentId}) => {
         setIsCancel(true);
       } else {
         console.log("해당 상품 주문 데이터 없음");
+        openModal();
       }
     }
     getData();
@@ -253,10 +257,20 @@ const PayCancel = ({memberId, productId, paymentId}) => {
         setIsKakao(true);
       }).catch(error => {
         console.log(error);
+        openModal();
       });
     },[isCancel]
   )
 
+  // 결제 취소 완료 후 모달창을 띄우기 위한 로직
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => {
+    setModalOpen(false);
+    navigate('/', {replace:true});
+  }
+
+  // DB에 있는 결제 내역의 상태를 CANCELED로 바꾸고 
   useEffect(() => {
     const deleteData = async() => {
       const memberId = 1;
@@ -265,17 +279,38 @@ const PayCancel = ({memberId, productId, paymentId}) => {
       const response = await PaymentAPI.DeletePaymentData(memberId, productId, paymentId)
       if(response.status === 200) {
         console.log("deleteData 통신 완료");
-        
-        return(
-          <ResultSuccess num={2}/>
-        )
+        setModalOpen(true);
       } else {
         console.log("deleteData 통신 실패");
-        alert("결제 취소가 실패 했습니다.")
+        setModalOpen(true);
       }
     }
     isKakao && deleteData();
   },[isKakao])
+
+  const success = () => {
+    return(
+      <div>
+        <h1>환불이 완료 됐습니다.</h1>
+      </div>
+    )
+  }
+
+  const fail = () => {
+    return(
+      <div>
+        <h1>환불요청이 취소 됐습니다.</h1>
+        <h1>확인을 누르면 홈화면으로 이동합니다.</h1>
+      </div>
+    )
+  }
+  return(
+    <div>
+      {isCancel && isKakao ? <PayModal open={modalOpen} close={closeModal} children={success()}/> :
+        <PayModal open={modalOpen} close={closeModal} children={fail()}/>
+      }
+    </div>
+  )
 
 }
 
