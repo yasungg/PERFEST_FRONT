@@ -252,7 +252,7 @@ const Board = () => {
           isActive={activeButton === ""}
           onClick={() => {
             BoardGetAll();
-            handleCategoryClick("ALL");
+            handleCategoryClick("");
           }}
         >
           전체
