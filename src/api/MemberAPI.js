@@ -60,9 +60,14 @@ const MemberAPI = {
         return await axios.get(KH_DOMAIN + `/auth/member/communities?memberId=${memberId}`);
     },
 
-    // 내 게시글 삭제
+    // 내 게시글 전체 삭제
     delMyWrite: async(memberId) => {
         return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyCommunities?memberId=${memberId}`);
+    },
+
+    // 내 게시글 선택 삭제
+    deleteCommunitySelection: async(communityId) => {
+        return await axios.delete(KH_DOMAIN + `/auth/member/delCommunity?communityId=${communityId}`);
     },
 
     // 내 댓글 조회
@@ -70,9 +75,14 @@ const MemberAPI = {
         return await axios.get(KH_DOMAIN + `/auth/member/comments?memberId=${memberId}`);
     },
 
-    // 내 댓글 삭제
+    // 내 댓글 전체 삭제
     delComment: async(memberId) => {
         return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyComments?memberId=${memberId}`);
+    },
+
+    // 내 댓글 선택 삭제
+    deleteCommentSelection: async(commentId) => {
+        return await axios.delete(KH_DOMAIN + `/auth/member/delComment?commentId=${commentId}`);
     },
 
     // 내 결제목록 조회(특산품)
@@ -95,9 +105,14 @@ const MemberAPI = {
         return await axios.get(KH_DOMAIN + `/auth/member/reviews?memberId=${memberId}`);
     },
 
-    // 내 리뷰 삭제
+    // 내 리뷰 전체 삭제
     delReview: async(memberId) => {
         return await axios.delete(KH_DOMAIN + `/auth/member/deleteMyReview?memberId=${memberId}`);
+    },
+
+    // 내 리뷰 선택 삭제
+    deleteReviewSelection: async(reviewId) => {
+        return await axios.delete(KH_DOMAIN + `/auth/member/delReview?reviewId=${reviewId}`);
     },
 
     // 내 예약목록 조회
