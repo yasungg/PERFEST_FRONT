@@ -20,7 +20,7 @@ import ResultSuccess from "./pages/PaySuccess";
 import Festival from "./pages/Festival";
 import FestivalDetail from "./pages/FestivalDetail";
 import SideBar from "./pages/Sidebar";
-import Calendar from "./pages/Calender";
+import Calendar from "./pages/Calendar"
 
 function App() {
   return (
