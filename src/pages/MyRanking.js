@@ -2,49 +2,41 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MemberAPI from "../api/MemberAPI";
 import { UserContext } from "../context/UserStore";
-import BackgroundImg from "../images/—Pngtree—honor medal_6703325.png";
+import BackgroundImg from "../images/rank.png";
 
-const BodyContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
+const Container = styled.div`
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f1f1f1;
+  width: 100%;
+  height: 100vh;
 `;
 
-const Container = styled.div`
+const Ti = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px;
+  justify-content: center;
+  font-size: 1.5em;
+`;
+
+const Background = styled.div`
+  border: 1px black solid;
   background-image: url(${BackgroundImg});
-  background-color: #ebebeb;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
-const RankingTitle = styled.h2`
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  text-align: center;
-`;
-
-const RankingInfo = styled.div`
-  font-size: 18px;
-  margin-bottom: 10px;
+  background-size: cover;
+  background-position: center;
+  flex: 1;
+  width: 100%;
+  height: 100%;
   display: flex;
+  justify-content: center;
   align-items: center;
+  height: 100%;
 `;
 
-const TrophyIcon = styled.div`
-  width: 24px;
-  height: 24px;
-  background-color: gold;
-  border-radius: 50%;
-  margin-right: 10px;
-`;
+
+
+
+
 
 const MyRanking = () => {
   const [memberRichRanking, setMemberRichRanking] = useState(null);
@@ -70,29 +62,18 @@ const MyRanking = () => {
   }, [memberId]);
 
   return (
-    <BodyContainer>
-      <Container>
-        <RankingTitle>내 뱃지 랭킹</RankingTitle>
-        {memberBadgeRanking ? (
-          <RankingInfo>
-            <TrophyIcon />
-            뱃지 랭킹: {memberBadgeRanking}등
-          </RankingInfo>
-        ) : (
-          <RankingInfo>뱃지 랭킹 정보 없음</RankingInfo>
-        )}
+    <>
+    <Ti>내 랭킹</Ti>
+    <Container>
+      <Background>
+        <ul>
+          <li>내 큰손 랭킹</li>
+          <li>내 뱃지 랭킹</li>
+        </ul>
+      </Background>
 
-        <RankingTitle>내 리치 랭킹</RankingTitle>
-        {memberRichRanking ? (
-          <RankingInfo>
-            <TrophyIcon />
-            큰손 랭킹: {memberRichRanking}등
-          </RankingInfo>
-        ) : (
-          <RankingInfo>큰손 랭킹 정보 없음</RankingInfo>
-        )}
-      </Container>
-    </BodyContainer>
+    </Container>
+    </>
   );
 };
 

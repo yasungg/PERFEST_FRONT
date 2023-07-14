@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import {UserContext} from "../context/UserStore";
 import { useNavigate } from "react-router-dom";
 import PaymentAPI from "../api/PaymentAPI";
+import ResultSuccess from "./PaySuccess";
+import PayModal from "./PaycancelModal"
+import { Link } from "react-router-dom";
 
 const PayReady = () => {
   const context = useContext(UserContext);
@@ -171,6 +174,7 @@ const PayResult = () => {
     if(response.status === 200) {
       // 카카오페이와 DB전송까지 완료
       navigate("/resultSuccess");
+      window.localStorage.removeItem("tid");
     } else { 
       console.log("paymentResult 오류");
     }
@@ -194,9 +198,9 @@ const PayCancel = ({memberId, productId, paymentId}) => {
 
   // 사용자가 예약한 주문 내역이 있는지 확인하기 위한 로직
   const [memberData, setMemberData] = useState({
-    data : {
-      cid : "TC0ONETIME",
-      tid : "T1234567890123456789",
+    params : {
+      cid : "",
+      tid : "",
       quantity : 1,
       cancel_amount : 2000,
       cancel_tax_free_amount : 0
@@ -206,15 +210,16 @@ const PayCancel = ({memberId, productId, paymentId}) => {
   useEffect(() => {
     const getData = async() => {
       console.log("getData 실행");
-      const response = await PaymentAPI.CheckPaymentData(1, 1);
-      const cancelStatus = response.data[0].paymentStatus;
+      const response = await PaymentAPI.CheckPaymentData(1, 1, 1);
+      // const cancelStatus = response.data[0].paymentStatus;
       console.log(response);
       // 취소 완료 된 결제는 다음 로직을 실행하지 않도록 하기 위해
-      if(response.status === 200 && cancelStatus === 'PAID') {
+      if(response.status === 200 ) {
         console.log("해당 상품 주문 데이터 확인");
-        const { price, quantity, tid, tax_free } = response.data[0];
+        console.log(response);
+        const { price, quantity, tid, tax_free_amount } = response.data[0];
         setMemberData({
-          data : {
+          params : {
             cid : "TC0ONETIME",
             memberId : 1,
             productId : 1,
@@ -222,28 +227,21 @@ const PayCancel = ({memberId, productId, paymentId}) => {
             price : price,
             quantity : quantity,
             cancel_amount : price,
-            cancel_tax_free_amount : tax_free
+            cancel_tax_free_amount : tax_free_amount
           }
         });
+        // getData();
         setIsCancel(true);
       } else {
         console.log("해당 상품 주문 데이터 없음");
+        openModal();
       }
     }
     getData();
   }, []);
 
-  const [data, setData] = useState({
-    params: {
-      cid: "TC0ONETIME",
-      tid : "T1234567890123456789",
-      cancel_amount	: 2200,
-      cancel_tax_free_amount : 0,
-    }
-  });
-
   useEffect(() => {
-    const { params } = data;
+    const { params } = memberData;
     isCancel && 
       axios({
         url: "https://kapi.kakao.com/v1/payment/cancel",
@@ -259,21 +257,61 @@ const PayCancel = ({memberId, productId, paymentId}) => {
         setIsKakao(true);
       }).catch(error => {
         console.log(error);
+        openModal();
       });
     },[isCancel]
   )
 
+  // 결제 취소 완료 후 모달창을 띄우기 위한 로직
+  const [modalOpen, setModalOpen] = useState(false);
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => {
+    setModalOpen(false);
+    navigate('/', {replace:true});
+  }
+
+  // DB에 있는 결제 내역의 상태를 CANCELED로 바꾸고 
   useEffect(() => {
     const deleteData = async() => {
+      const memberId = 1;
+      const productId = 1;
+      const paymentId = 1;
       const response = await PaymentAPI.DeletePaymentData(memberId, productId, paymentId)
       if(response.status === 200) {
         console.log("deleteData 통신 완료");
+        setModalOpen(true);
       } else {
         console.log("deleteData 통신 실패");
+        setModalOpen(true);
       }
     }
     isKakao && deleteData();
-  })
+  },[isKakao])
+
+  const success = () => {
+    return(
+      <div>
+        <h1>환불이 완료 됐습니다.</h1>
+      </div>
+    )
+  }
+
+  const fail = () => {
+    return(
+      <div>
+        <h1>환불요청이 취소 됐습니다.</h1>
+        <h1>확인을 누르면 홈화면으로 이동합니다.</h1>
+      </div>
+    )
+  }
+  return(
+    <div>
+      {isCancel && isKakao ? <PayModal open={modalOpen} close={closeModal} children={success()}/> :
+        <PayModal open={modalOpen} close={closeModal} children={fail()}/>
+      }
+    </div>
+  )
+
 }
 
 

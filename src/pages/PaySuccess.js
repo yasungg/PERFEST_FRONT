@@ -91,7 +91,6 @@ const ModalStyle = styled.div`
 `;
 
 function ResultSuccess () {
-
     
     return (
         <ModalStyle>
