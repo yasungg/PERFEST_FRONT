@@ -4,60 +4,90 @@ import MemberAPI from "../api/MemberAPI";
 import { UserContext } from "../context/UserStore";
 import Modal from "../utils/Modal";
 
-const BodyContainer = styled.div`
-  width: 100vw;
-`;
-
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-`;
+  width: 100%;
 
-const ReviewContainer = styled.div`
-  margin-bottom: 20px;
-`;
-
-const ReviewTitle = styled.h3`
-  font-size: 18px;
-  margin-bottom: 5px;
-`;
-
-const ReviewWrittenTime = styled.p`
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 10px;
-`;
-
-const ReviewContent = styled.p`
-  font-size: 14px;
-`;
-
-const DeleteReview = styled.div`
-  width: 80%;
-  margin: 30px auto;
-
-  button {
-    width: 100%;
-    height: 35px;
-    font-size: 0.8em;
+  p {
+    font-size: 1.3em;
     font-weight: bold;
-    background-color: #2f4050;
-    color: white;
-    border: none;
-    border-radius: 2px;
-    cursor: pointer;
-    margin-bottom: 20px;
-
-    &:hover {
-      background-color: skyblue;
-    }
   }
 
   hr {
     background-color: lightgray;
     border: 0.3px solid lightgray;
+    margin-bottom: 20px;
+  }
+
+  li {
+    font-size: 0.7em;
+    color: darkgray;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+
+  button {
+    font-size: 0.8em;
+    font-weight: bold;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #ff4136;
+    color: white;
+    padding: 8px 16px;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      background-color: #dc352d;
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  th,
+  td {
+    padding: 20px;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    font-size: 0.9em;
+    &:nth-child(1) {
+      width: 40%;
+    }
+    &:nth-child(2) {
+      width: 20%;
+    }
+    &:nth-child(3) {
+      width: 20%;
+    }
+  }
+
+  tbody tr {
+    &:hover {
+      background-color: #f1f0f0;
+    }
+  }
+
+  td {
+    text-align: center;
+    font-size: 0.75em;
+    color: #636363;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 0;
+    transition: max-width 0.3s ease;
+
+    &.expanded {
+      max-width: 100%;
+    }
   }
 `;
 
@@ -88,18 +118,18 @@ const MyReview = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
   };
 
-  const deleteMyReview = (reviewId) => {
+  const deleteMyReview = async (reviewId) => {
     setDeleteModalOpen(true);
     setReviewToDelete(reviewId);
   };
 
   const confirm = async (modalType) => {
     if (modalType === "deleteReview") {
-      const response = await MemberAPI.delReview(memberId);
+      const response = await MemberAPI.deleteReviewSelection(reviewToDelete);
       console.log(response.data);
 
       const updatedReviewList = memberReview.filter(
-        (review) => review.id !== reviewToDelete
+        (review) => review.reviewId !== reviewToDelete
       );
       setMemberReview(updatedReviewList);
     }
@@ -113,21 +143,40 @@ const MyReview = () => {
     setReviewToDelete(null);
   };
 
+  const toggleExpanded = (event) => {
+    event.currentTarget.classList.toggle("expanded");
+  };
+
   return (
-    <BodyContainer>
+    <Container>
       <p>내 리뷰</p>
-      <Container>
-        {memberReview && memberReview.map((review) => (
-          <ReviewContainer key={review.reviewId}>
-            <ReviewTitle>{review.reviewTitle}</ReviewTitle>
-            <ReviewWrittenTime>{formatTime(review.reviewWrittenTime)}</ReviewWrittenTime>
-            <ReviewContent>{review.reviewContent}</ReviewContent>
-            <DeleteReview>
-              <button onClick={() => deleteMyReview(review.id)}>리뷰 삭제</button>
-            </DeleteReview>
-          </ReviewContainer>
-        ))}
-      </Container>
+      <hr />
+      <li>최신순으로 보여집니다</li>
+      <table>
+        <thead>
+          <tr>
+            <th>사진</th>
+            {/* <th>제목</th> */}
+            <th>내용</th>
+            <th>작성일</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {memberReview.map((review) => (
+            <tr key={review.id}>
+              <td>
+                <img src={review.reviewImg} alt="Review" />
+              </td>
+              <td onClick={toggleExpanded}>{review.reviewContent}</td>
+              <td>{formatTime(review.reviewWrittenTime)}</td>
+              <td>
+                <button onClick={() => deleteMyReview(review.reviewId)}>삭제</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <Modal
         open={deleteModalOpen}
@@ -138,7 +187,7 @@ const MyReview = () => {
       >
         정말 삭제하시겠습니까?
       </Modal>
-    </BodyContainer>
+    </Container>
   );
 };
 
