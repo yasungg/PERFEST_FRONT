@@ -20,7 +20,8 @@ import ResultSuccess from "./pages/PaySuccess";
 import Festival from "./pages/Festival";
 import FestivalDetail from "./pages/FestivalDetail";
 import SideBar from "./pages/Sidebar";
-import Calendar from "./pages/Calender";
+import Calendar from "./pages/Calendar"
+import Review from "./pages/Review";
 
 function App() {
   return (
@@ -51,7 +52,8 @@ function App() {
         <Route path="/Festival" element={<Festival />} />
         <Route path="/FestivalDetail" element={<FestivalDetail />} />
         <Route path="/Calendar" element={<Calendar />} />
-        
+        <Route path="/Review" element={<Review/>} />
+
       </Routes>
     </Router>
   );

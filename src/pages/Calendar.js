@@ -4,21 +4,20 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import '../CalendarStyle.css';
 import styled from 'styled-components';
 
-const CalendarContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100vw;
-  height: 100vh;
-  background-color: red;
-`;
-const CalendarStyle = styled.div`
-display: flex;
-background-color: blue;
-justify-content: center;
-width: 1000px;
-height: 600px;
-`;
+// const CalendarContainer = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   background-color: red;
+//   height: 100vh;
+// `;
+// const CalendarStyle = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   background-color: blue;
+//   height: 700px;
+//   width: 1500px;
+// `;
 
 const StyledFullCalendar = styled(FullCalendar)`
   .fc-dayGridMonth-view {
@@ -38,18 +37,14 @@ const StyledFullCalendar = styled(FullCalendar)`
     margin-bottom: 5px;
   }
   .calendar {
-    width: 600px;
-  }
-  .fc-day {
-    width: 100px;
-    height: 50px;
+    width: 1200px;
   }
 `;
 
 const Calendar = () => {
   return (
-    <CalendarContainer>
-      <CalendarStyle>
+    // <CalendarContainer>
+      // <CalendarStyle>
       <StyledFullCalendar
         defaultView="dayGridMonth" 
         plugins={[dayGridPlugin]}
@@ -58,8 +53,8 @@ const Calendar = () => {
           { title: 'event 2', date: '2022-09-02' }
         ]}
       />
-      </CalendarStyle>
-    </CalendarContainer>
+      // </CalendarStyle>
+    /* </CalendarContainer> */
   );
 }
 
