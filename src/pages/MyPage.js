@@ -7,6 +7,7 @@ import MyReserveList from "./MyReserveList";
 import MyPayList from "./MyPayList";
 import MyWrite from "./MyWrite";
 import MyRanking from "./MyRanking";
+import Timeline from "./Timeline";
 
 
 // 전체 컨테이너
@@ -111,6 +112,7 @@ const MyPage = () => {
       { name: "예약 목록", path: "/MyReserveList" },
       { name: "주문 내역", path: "/MyPayList" },
       { name: "내 게시글", path: "/MyWrite" },
+      { name: "타임라인", path: "/Timeline"},
       { name: "내 랭킹", path: "/MyRanking" }
     ];
       
@@ -147,6 +149,7 @@ const MyPage = () => {
           {selectedMenu === "/MyReserveList" && <MyReserveList />}
           {selectedMenu === "/MyPayList" && <MyPayList />}
           {selectedMenu === "/MyWrite" && <MyWrite />}
+          {selectedMenu === "/Timeline" && <Timeline />}
           {selectedMenu === "/MyRanking" && <MyRanking />}
         </ContentWrapper>
       </Container>

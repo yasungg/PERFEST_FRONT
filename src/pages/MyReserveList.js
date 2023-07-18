@@ -29,20 +29,26 @@ const Container = styled.div`
     border-collapse: collapse;
   }
 
-  button{
+  button {
     font-size: 0.8em;
     font-weight: bold;
-    border: 1px solid lightgray;
+    border: none;
     border-radius: 3px;
     cursor: pointer;
-    background-color: white;
-    color: darkgray;
-    padding: 5px 10px;
+    background-color: #ff4136;
+    color: white;
+    padding: 8px 16px;
     margin-right: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background-color: lightgray;
-      color: white;
+      background-color: #dc352d;
+    }
+
+    &:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
   }
 
@@ -100,7 +106,7 @@ const MyReserveList = () => {
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  
+
 
   return(
     <>
@@ -108,6 +114,7 @@ const MyReserveList = () => {
       <p>예매 내역</p>
       <hr/>
       <li>체험활동 관련 문의는 해당 축제 관리자에게 연락바랍니다</li>
+      <li>예매 취소는 해당 체험활동일 전까지만 가능합니다</li>
       <table>
         <thead>
           <tr>
@@ -115,6 +122,7 @@ const MyReserveList = () => {
             <th>상세정보</th>
             <th>시작일</th>
             <th>종료일</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -124,6 +132,7 @@ const MyReserveList = () => {
               <td>{reservation.activityDesc}</td>
               <td>{formatTime(reservation.startDate)}</td>
               <td>{formatTime(reservation.endDate)}</td>
+              <td><button>취소</button></td>
             </tr>
           ))}
         </tbody>
