@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MemberAPI from "../api/MemberAPI";
+import { PayReady } from "./Payments";
+import { Link, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
-  
+
 
   p {
     font-size: 1.3em;
@@ -65,11 +67,11 @@ const Container = styled.div`
     &:nth-child(3) {
       width: 20%;
     }
-    
+
   }
 
   tbody tr{
-    
+
     &:hover{
     background-color: #F1F0F0;
    }
@@ -83,13 +85,12 @@ const Container = styled.div`
 `;
 
 const MyPayList = () => {
-
     // const context = UserContext(UserContext);
     // const { memberId } = context; // 로그인후 컨텍스트담아올예정
     let memberId = 1;
 
     const [memberPayInfo, setMemberPayInfo] = useState([]);
-    
+
     useEffect(() => {
         const fetchPayment = async () => {
           try {
@@ -105,17 +106,20 @@ const MyPayList = () => {
           }
         };
         fetchPayment();
-      }, []);
+    }, []);
 
-      
-
-      const formatTime = (timeString) => {
-        const date = new Date(timeString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        return `${year}-${month}-${day}`;
-      };
+    const navigate = useNavigate();
+    const payBack = (payment) => {
+        const {paymentId, memberId, productId} = payment;
+        navigate("/paycancel", {state : {paymentId, memberId, productId}});
+    }
+    const formatTime = (timeString) => {
+    const date = new Date(timeString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+    };
 
     return(
         <>
@@ -141,7 +145,7 @@ const MyPayList = () => {
                         <td>{payment.quantity}</td>
                         <td>{formatTime(payment.create_date)}</td>
                          <td>
-                            <button>환불</button>
+                            <button to="/pages/payready" onClick={()=>payBack(payment)}>환불</button>
                          </td>
                      </tr>
                     ))}

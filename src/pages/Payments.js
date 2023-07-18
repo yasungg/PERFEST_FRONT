@@ -2,7 +2,7 @@ import { useContext } from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {UserContext} from "../context/UserStore";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PaymentAPI from "../api/PaymentAPI";
 import ResultSuccess from "./PaySuccess";
 import PayModal from "./PaycancelModal"
@@ -39,9 +39,6 @@ const PayReady = () => {
         cancel_url: "http://localhost:3000/resultfail"
     }
   });
-
-  const navigate = useNavigate();
-
   // 결제 준비 API를 통해 상세 정보를 카카오페이 서버에 전달하고 결제 고유 번호(TID)를 받는 단계. 
   // 어드민 키를 헤더에 담아 파라미터 값들과 함께 POST로 요청.
   useEffect(() => {
@@ -185,8 +182,10 @@ const PayResult = () => {
 
 
 // 카카오페이 결제 취소 함수
-const PayCancel = ({memberId, productId, paymentId}) => {
+const PayCancel = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const {memberId, productId, paymentId} = location.state;
 
   // DB에 상품 결제 내역이 있는 지 먼저 통신 한 뒤, 결제 내역이 있는 경우에
   // 카카오페이 결제 취소 api를 실행하기 위한 useState
@@ -196,13 +195,16 @@ const PayCancel = ({memberId, productId, paymentId}) => {
   // DB에 있는 상품 결제 내역을 삭제하기 위한 useState
   const [isKakao, setIsKakao] = useState(false);
 
+  // DB에 상품 결제 내역 상태를 변경한 뒤 확인을 위한 useState
+  const [isChangeDB, setIsChangeDB] = useState(false);
+
   // 사용자가 예약한 주문 내역이 있는지 확인하기 위한 로직
   const [memberData, setMemberData] = useState({
     params : {
       cid : "",
       tid : "",
-      quantity : 1,
-      cancel_amount : 2000,
+      quantity : 0,
+      cancel_amount : 0,
       cancel_tax_free_amount : 0
     }
   });
@@ -210,19 +212,17 @@ const PayCancel = ({memberId, productId, paymentId}) => {
   useEffect(() => {
     const getData = async() => {
       console.log("getData 실행");
-      const response = await PaymentAPI.CheckPaymentData(1, 1, 1);
+      const response = await PaymentAPI.CheckPaymentData(memberId, productId, paymentId);
       // const cancelStatus = response.data[0].paymentStatus;
-      console.log(response);
       // 취소 완료 된 결제는 다음 로직을 실행하지 않도록 하기 위해
       if(response.status === 200 ) {
         console.log("해당 상품 주문 데이터 확인");
-        console.log(response);
         const { price, quantity, tid, tax_free_amount } = response.data[0];
         setMemberData({
           params : {
             cid : "TC0ONETIME",
-            memberId : 1,
-            productId : 1,
+            memberId : memberId,
+            productId : productId,
             tid : tid,
             price : price,
             quantity : quantity,
@@ -273,12 +273,10 @@ const PayCancel = ({memberId, productId, paymentId}) => {
   // DB에 있는 결제 내역의 상태를 CANCELED로 바꾸고 
   useEffect(() => {
     const deleteData = async() => {
-      const memberId = 1;
-      const productId = 1;
-      const paymentId = 1;
       const response = await PaymentAPI.DeletePaymentData(memberId, productId, paymentId)
       if(response.status === 200) {
         console.log("deleteData 통신 완료");
+        setIsChangeDB(true);
         setModalOpen(true);
       } else {
         console.log("deleteData 통신 실패");
@@ -292,6 +290,7 @@ const PayCancel = ({memberId, productId, paymentId}) => {
     return(
       <div>
         <h1>환불이 완료 됐습니다.</h1>
+        <h1 onClick={()=>{navigate("/")}}>확인을 누르면 홈화면으로 이동합니다.</h1>
       </div>
     )
   }
@@ -300,13 +299,13 @@ const PayCancel = ({memberId, productId, paymentId}) => {
     return(
       <div>
         <h1>환불요청이 취소 됐습니다.</h1>
-        <h1>확인을 누르면 홈화면으로 이동합니다.</h1>
+        <h1 onClick={()=>{navigate("/")}}>확인을 누르면 홈화면으로 이동합니다.</h1>
       </div>
     )
   }
   return(
     <div>
-      {isCancel && isKakao ? <PayModal open={modalOpen} close={closeModal} children={success()}/> :
+      {isCancel && isKakao && isChangeDB ? <PayModal open={modalOpen} close={closeModal} children={success()}/> :
         <PayModal open={modalOpen} close={closeModal} children={fail()}/>
       }
     </div>
