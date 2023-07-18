@@ -3,6 +3,13 @@ import { BodyContainer, Container } from "../components/StandardStyles";
 import RankingAPI from "../api/RankingAPI";
 import { useState } from "react";
 
+const RankContainer = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+height: 800px;
+align-items: center;
+`;
 const RankingCategory = styled.div`
   display: flex;
   justify-content: center;
@@ -33,10 +40,6 @@ const RankButton = styled.div`
     color: #fff;
   }
 `;
-// const RichRankingTitle = styled.div`
-// `;
-// const BadgeRankingTitle = styled.div`
-// `;
 const RankingDesc = styled.div`
   display: flex;
   flex-direction: column;
@@ -104,6 +107,7 @@ const Ranking = () => {
   return (
     <Container justifyContent="center" alignItems="center">
       <BodyContainer>
+        <RankContainer>
         <RankingCategory>
           <RankButton onClick={getBadgeRanking}>
             <input type="radio" name="rankingCategory" id="badge" />
@@ -131,6 +135,7 @@ const Ranking = () => {
                 </BadgeRankInfo>
               ))}
         </RankingDesc>
+        </RankContainer>
       </BodyContainer>
     </Container>
   );
