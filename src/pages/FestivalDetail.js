@@ -4,8 +4,6 @@ import { Container } from "../components/StandardStyles";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import SearchSideBar from "../components/SearchSideBar";
-import FestivalAPI from "../api/FestivalAPI";
-
 
 const BodyContainer = styled.div`
 `
@@ -18,7 +16,6 @@ const FestivalDetail = () => {
       <BodyContainer>
         <SearchSideBar />
       </BodyContainer>
-
       <Footer />
     </Container>
   );

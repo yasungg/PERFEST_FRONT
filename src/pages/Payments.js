@@ -14,7 +14,7 @@ const PayReady = () => {
   // 카카오페이로 보내려는 데이터 작성
   let [data, setData] = useState({
     next_redirect_pc_url: "",
-    // 결제 한 건에 대한 고유번호, 결제 준비 API가 성공적으로 호출되면 발급,
+    // 결제 한 건에 대한 고유번호, 결제 준비 API가 성공적으로 호출되면 발급
     tid: "",
     params: {
         // 가맹점 코드
