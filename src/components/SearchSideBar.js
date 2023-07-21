@@ -240,17 +240,6 @@ const SearchSideBar = () => {
 
   const [festival, setFestival] = useState([]);
 
-  useEffect(() => {
-    const FestivalInfo = async() => {
-      try {
-        const rsp = await FestivalAPI.getFestivalInfo();
-        if(rsp.status === 200) setFestival(rsp.data);
-      } catch (error) {
-        console.error("Error while fetching festival information:", error);
-      }
-    }
-    FestivalInfo();
-  },[]);
 
   return(
       <SearchContainer>

@@ -19,13 +19,33 @@ const MapContainer = styled.div`
 `
 
 const Festival = () => {
+	const [isData, setIsData] = useState(false);
+	const [festivalData, setFestivalData] = useState("");
 	useEffect(() => {
-		const LoadFestivalData = async() => {
-			const response = await FestivalAPI.getFestivalInfo();
-			console.log(response);
+		// 페이지 렌더링 될 때 백엔드에서 공공api를 DB에 저장하도록 하는 로직
+		const saveFestivalInfoToDB = async() => {
+			// response 가 true 면 DB에 저장 성공한 것!
+			const response = await FestivalAPI.saveFestivalInfo();
+			if(response.status === 200) {
+				setIsData(true);
+				console.log("DB에 저장완료");
+
+			}
 		}
-		LoadFestivalData();
+		const getFestivalData = async() => {
+			console.log("getFestival 실행");
+			const response = await FestivalAPI.getFestivalInfo();
+			if(response.status === 200) {
+				console.log(response);
+				setFestivalData(response.data);
+				console.log("페스티벌 데이터");
+				console.log(festivalData);
+			}
+		} 
+		saveFestivalInfoToDB();
+		getFestivalData();
 	},[])
+
 	
 
 	return(
@@ -34,7 +54,7 @@ const Festival = () => {
         <BodyContainer>
           <SearchSideBar/>
 					<MapContainer>
-						<NaverMap />
+						<NaverMap data={festivalData}/>
 						<FestivalSearchCategory/>
 					</MapContainer>
         </BodyContainer>
