@@ -20,7 +20,7 @@ const MapContainer = styled.div`
 
 const Festival = () => {
 	const [isData, setIsData] = useState(false);
-	const [festivalData, setFestivalData] = useState("");
+	const [festivalData, setFestivalData] = useState();
 	useEffect(() => {
 		// 페이지 렌더링 될 때 백엔드에서 공공api를 DB에 저장하도록 하는 로직
 		const saveFestivalInfoToDB = async() => {
@@ -54,7 +54,7 @@ const Festival = () => {
         <BodyContainer>
           <SearchSideBar/>
 					<MapContainer>
-						<NaverMap data={festivalData}/>
+						<NaverMap festivalData={festivalData}/>
 						<FestivalSearchCategory/>
 					</MapContainer>
         </BodyContainer>

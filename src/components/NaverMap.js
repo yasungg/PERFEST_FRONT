@@ -14,7 +14,10 @@ const NaverMap = ({data}) => {
   },[])
 
   useEffect(() => {
+    console.log(data);
+    console.log(map);
     if (map && data && data.length > 0) {
+      
       // 이전에 있던 마커들을 모두 삭제
       naver.maps.Event.removeListener(map, 'click');
       map.marks.forEach(marker => marker.setMap(null));
@@ -40,7 +43,7 @@ const NaverMap = ({data}) => {
       // 생성된 마커들을 map 객체에 저장하여 추후에 제거 가능하도록
       map.marks = markers;
     }
-  },[data, map]);
+  },[data, map])
   // const marker = new naver.maps.Marker({
   //   position: new naver.maps.LatLng(37.497914, 127.027646),
   //   map: map
