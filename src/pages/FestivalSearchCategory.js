@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useEffect, useState, useRef } from "react";
+import { useState } from "react";
+import FestivalAPI from "../api/FestivalAPI";
 
 
 const BodyContainer = styled.div`
@@ -15,55 +16,18 @@ const BodyContainer = styled.div`
     left : 10px;
 	}
 
-	/* 버블필터 ul */
-	.bubble_filter_list {
-		position: relative;
-		display: inline-block;
-		width: 100%;
-		align-items: center;
-		justify-content: center;
-		padding: 5px;
-		margin: 7px 0;
-	}
-
-	/* 버블필터 li */
-	.bubble_filter_item {
-		display: list-item;
-		list-style: none;
-		float: left;
-	}
-
-	.bubble_filter_button_location, .bubble_filter_button_period, .bubble_filter_button_theme {
-		width: 120px;
-		height: 50px;
-		font-size: 15px;
-		font-weight: 600;
-		color: #242424;
-		border: none;
-		border-radius: 5px;
-		background-color: #fff;
-		margin-right: 20px;
-		cursor: pointer;
-		box-shadow: 1px 1px 4px 0px #555555;
-	}
-
   /* 지역별 검색 */
-	.location_search_area {
+	.location_checkbox_area {
+		display: flex;
+		flex-wrap: wrap;
 		width: 550px;
-		height: 220px;
+		height: 150px;
+		justify-content: center;
+		align-items: center;
 		background-color: #FFF;
 		margin: -10px 0 0 5px;
 		border-radius: 5px;
 		box-shadow: 1px 1px 5px -1px #555555;
-	}
-
-	.location_checkbox_area {
-		display: flex;
-		flex-wrap: wrap;
-		width: 100%;
-		height: 180px;
-		justify-content: center;
-		align-items: center;
 	}
 
 	.location_checkbox {
@@ -75,6 +39,7 @@ const BodyContainer = styled.div`
 		margin: 5px;
 		align-items: center;
 		box-shadow: 1px 1px 5px 0px #E2E2E2;
+		cursor: pointer;
 	}
 
 	.location_checkbox:hover {
@@ -88,7 +53,7 @@ const BodyContainer = styled.div`
 		cursor: pointer;
 	}
 	
-	.location_checkbox label {
+	.location_checkbox span {
 		font-size: 15px;
 		font-weight: 1000	;
 		cursor: pointer;
@@ -96,18 +61,6 @@ const BodyContainer = styled.div`
 	
 	.location_checkbox label:hover {
 		color: #0475F4;
-	}
-
-	.location_search_button {
-		width: 50px;
-		height: 30px;
-		background-color: #FFF;
-		border: 0.5px solid lightgray;
-		border-radius: 5px;
-		float: right;
-		margin: 0 10px;
-		cursor: pointer;
-		box-shadow: 1px 1px 5px 0px #E2E2E2;
 	}
 
   /* 기간별 검색 */
@@ -155,25 +108,17 @@ const BodyContainer = styled.div`
   }
 
   /* 계절별 검색 */
-  .season_search_area {
-    display: flex;
-		flex-direction: column;
-    width: 340px;
-		height: 110px;
-    margin: -10px 0 0 285px;
-    background-color: #FFF;
-    border-radius: 5px;
-    z-index: 2;
-		box-shadow: 1px 1px 5px -1px #555555;
-  }
-
 	.season_checkbox_area {
 		display: flex;
-		width: 100%;
-		height: 40px;
-		margin-top: 15px;
+		width: 340px;
+		height: 90px;
 		justify-content: center;
 		align-items: center;
+		margin: -10px 0 0 285px;
+		background-color: #FFF;
+		border-radius: 5px;
+    z-index: 2;
+		box-shadow: 1px 1px 5px -1px #555555;
 	}
 
 	.season_checkbox {
@@ -207,228 +152,221 @@ const BodyContainer = styled.div`
 	.season_checkbox label:hover {
 		color: #0475F4;
 	}
-
-	.season_search_button {
-		width: 50px;
-		height: 30px;
-		background-color: #FFF;
-		margin: 10px 15px;
-		border: 0.5px solid lightgray;
+`;
+// 검색 카테고리 스타일
+const CategoryList = styled.ul`
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	padding: 5px;
+	margin: 7px 0;
+`
+const CategoryItem = styled.li`
+	display: list-item;
+	list-style: none;
+	float: left;
+`
+const SearchItem = styled.button`
+			width: 120px;
+		height: 50px;
+		font-size: 15px;
+		font-weight: 600;
+		color: #242424;
+		border: none;
 		border-radius: 5px;
-		align-self: flex-end;
+		background-color: #fff;
+		margin-right: 20px;
 		cursor: pointer;
-		box-shadow: 1px 1px 5px 0px #E2E2E2;
+		box-shadow: 1px 1px 4px 0px #555555;
+`
+
+const FestivalSearchCategory = (props) => {
+	// 지역별 검색 체크박스를 클릭할 때 체크된 지역만 나오게
+	const [selectedLocations, setSelectedLocations] = useState([]);
+  const checkboxChange = (e) => {
+    const { id, checked } = e.target;
+    if (checked) {
+      setSelectedLocations((prevSelected) => [...prevSelected, id]);
+    } else {
+      setSelectedLocations((prevSelected) =>
+        prevSelected.filter((location) => location !== id)
+      );
+    }
 	}
 
-`;
-
-
-const FestivalSearchCategory = () => {
-
-  // 지역별 검색
-	useEffect(() => {
-		const handleClickOutside = (event) => {
-			if(formRef.current && !formRef.current.contains(event.target)) {
-				setIsOpenLocation(false);
-			}
-		};
-
-		const hanldeEscapeKey = (event) => {
-			if(event.key === 'Escape') {
-				setIsOpenLocation(false);
-			}
-		};
-
-		document.addEventListener('click', handleClickOutside);
-		document.addEventListener('keydown', hanldeEscapeKey);
-
-		return () => {
-			document.removeEventListener('click', handleClickOutside);
-			document.removeEventListener('keydown', hanldeEscapeKey);
-		};
-	}, []);
-
-  // 기간별 검색
-  useEffect(() => {
-		const handleClickOutside = (event) => {
-			if(formRef.current && !formRef.current.contains(event.target)) {
-				setIsOpenPeriod(false);
-			}
-		};
-
-		const hanldeEscapeKey = (event) => {
-			if(event.key === 'Escape') {
-				setIsOpenPeriod(false);
-			}
-		};
-
-		document.addEventListener('click', handleClickOutside);
-		document.addEventListener('keydown', hanldeEscapeKey);
-
-		return () => {
-			document.removeEventListener('click', handleClickOutside);
-			document.removeEventListener('keydown', hanldeEscapeKey);
-		};
-
-	}, []);
-
-  // 계절별 검색
-  useEffect(() => {
-		const handleClickOutside = (event) => {
-			if(formRef.current && !formRef.current.contains(event.target)) {
-				setIsOpenSeason(false);
-			}
-		};
-
-		const hanldeEscapeKey = (event) => {
-			if(event.key === 'Escape') {
-				setIsOpenSeason(false);
-			}
-		};
-
-		document.addEventListener('click', handleClickOutside);
-		document.addEventListener('keydown', hanldeEscapeKey);
-
-		return () => {
-			document.removeEventListener('click', handleClickOutside);
-			document.removeEventListener('keydown', hanldeEscapeKey);
-		};
-
-	}, []);
-
-  // bubble filrer 버튼 hover 기능
+  // 검색 메뉴 Hover 이벤트
 	const [isLocationHovered, setLocationIsHovered] = useState(false);
 	const [isPeriodHovered, setIsPeriodHovered] = useState(false);
 	const [isThemeHovered, setIsThemeHovered] = useState(false);
 
-	const handleLocationButtonHover = () => {
+	const LocationButtonHover = () => {
 		setLocationIsHovered(true);
 	};
-	const handleLocationButtonLeave = () => {
+	const LocationButtonLeave = () => {
 		setLocationIsHovered(false);
 	}
 
-	const handlePeriodButtonHover = () => {
+	const PeriodButtonHover = () => {
 		setIsPeriodHovered(true);
 	}
-	const handlePeriodButtonLeave = () => {
+	const PeriodButtonLeave = () => {
 		setIsPeriodHovered(false);
 	}
 
-	const handleThemeButtonHover = () => {
+	const ThemeButtonHover = () => {
 		setIsThemeHovered(true);
 	}
-	const handleThemeButtonLeave = () => {
+	const ThemeButtonLeave = () => {
 		setIsThemeHovered(false);
 	}
 
-  // bubble filter 버튼 펼치기 / 닫기 기능
+  // 검색 카테고리 메뉴 클릭 이벤트
 	const [isOpenLocation, setIsOpenLocation] = useState(false);
 	const [isOpenPeriod, setIsOpenPeriod] = useState(false);
 	const [isOpenSeason, setIsOpenSeason] = useState(false);
-	const formRef = useRef(null);
 
-    // 다른 필터 닫기
-    const handleFilterButtonClick = (filterName, isOpenState, setIsOpenState) => {
-      setIsOpenState(!isOpenState);
-  
-      if(filterName !== 'location') {
-        setIsOpenLocation(false);
-      }
-  
-      if(filterName !== 'period') {
-        setIsOpenPeriod(false);
-      }
-  
-      if(filterName !== 'season') {
-        setIsOpenSeason(false);
-      }
-    }
+	// 다른 필터 닫기
+	const filterButtonClick = (filterName, isOpenState, setIsOpenState) => {
+		setIsOpenState(!isOpenState);
+		
+		if(filterName !== 'location') {
+			setIsOpenLocation(false);
+		}
 
+		if(filterName !== 'period') {
+			setIsOpenPeriod(false);
+		}
 
+		if(filterName !== 'season') {
+			setIsOpenSeason(false);
+		}
+	}
+	const [data , setData] = useState("");
+	useEffect(() => {
+		const getFestivalInfo = async() => {
+			const response = await FestivalAPI.getFestivalInfo();
 
+		}
+
+	})
   return (
     <BodyContainer>
     <div className="category_container">
-      <ul className="bubble_filter_list">
-        <li className="bubble_filter_item">
-          <button
-            className="bubble_filter_button_location"
-            onClick={() => handleFilterButtonClick('location', isOpenLocation, setIsOpenLocation)}
-            onMouseEnter={handleLocationButtonHover}
-            onMouseLeave={handleLocationButtonLeave}
+      <CategoryList >
+        <CategoryItem>
+          <SearchItem
+            onClick={() => filterButtonClick('location', isOpenLocation, setIsOpenLocation)}
+            onMouseEnter={LocationButtonHover}
+            onMouseLeave={LocationButtonLeave}
             style={{color: isOpenLocation || isLocationHovered ? '#0475F4' : 'black'}}
-            >@ 지역별 검색</button>
-        </li>
+            >@ 지역별 검색</SearchItem>
+        </CategoryItem>
 
-        <li className="bubble_filter_item">
-          <button
-            className="bubble_filter_button_period"
-            onClick={() => handleFilterButtonClick('period', isOpenPeriod, setIsOpenPeriod)}
-            onMouseEnter={handlePeriodButtonHover}
-            onMouseLeave={handlePeriodButtonLeave}
+        <CategoryItem>
+          <SearchItem
+            onClick={() => filterButtonClick('period', isOpenPeriod, setIsOpenPeriod)}
+            onMouseEnter={PeriodButtonHover}
+            onMouseLeave={PeriodButtonLeave}
             style={{color: isOpenPeriod || isPeriodHovered ? '#0475F4' : 'black'}}
-          >@ 기간별 검색</button>
-        </li>
+          >@ 기간별 검색</SearchItem>
+        </CategoryItem>
 
-        <li className="bubble_filter_item">
-          <button
-            className="bubble_filter_button_theme"
-            onClick={() => handleFilterButtonClick('season', isOpenSeason, setIsOpenSeason)}
-            onMouseEnter={handleThemeButtonHover}
-            onMouseLeave={handleThemeButtonLeave}
+        <CategoryItem>
+          <SearchItem
+            onClick={() => filterButtonClick('season', isOpenSeason, setIsOpenSeason)}
+            onMouseEnter={ThemeButtonHover}
+            onMouseLeave={ThemeButtonLeave}
             style={{color: isOpenSeason || isThemeHovered ? '#0475F4' : 'black'}}
-            >@ 계절별 검색</button>
-        </li>
-      </ul>
+            >@ 계절별 검색</SearchItem>
+        </CategoryItem>
+      </CategoryList>
 
       {/* 지역별 검색 */}
       {isOpenLocation && (
-      <form className="location_search_area">
         <div className="location_checkbox_area">
-          <div className="location_checkbox">
-            <input type="checkbox" id="서울" />
-            <label htmlFor="서울">서울</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="경기도" />
-            <label htmlFor="경기도">경기도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="강원도" />
-            <label htmlFor="강원도">강원도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="충청북도" />
-            <label htmlFor="충청북도">충청북도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="충청남도" />
-            <label htmlFor="충청남도">충청남도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="경상북도" />
-            <label htmlFor="경상북도">경상북도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="경상남도" />
-            <label htmlFor="경상남도">경상남도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="전라북도" />
-            <label htmlFor="전라북도">전라북도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="전라남도" />
-            <label htmlFor="전라남도">전라남도</label>
-          </div>
-          <div className="location_checkbox">
-            <input type="checkbox" id="제주도" />
-            <label htmlFor="제주도">제주도</label>
-          </div>
+					<label htmlFor="서울">
+						<div className="location_checkbox">
+							<input type="checkbox" id="서울" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("서울")}/>
+							<span>서울</span>
+						</div>
+					</label>
+          <label htmlFor="경기도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="경기도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("경기도")}/>
+							<span>경기도</span>
+						</div>
+					</label>
+          <label htmlFor="강원도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="강원도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("강원도")}/>
+							<span>강원도</span>
+						</div>
+					</label>
+          <label htmlFor="충청북도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="충청북도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("충청북도")}/>
+							<span>충청북도</span>
+						</div>
+					</label>
+          <label htmlFor="충청남도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="충청남도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("충청남도")}/>
+							<span>충청남도</span>
+						</div>
+					</label>
+          <label htmlFor="경상북도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="경상북도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("경상북도")}/>
+							<span>경상북도</span>
+						</div>
+					</label>
+          <label htmlFor="경상남도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="경상남도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("경상남도")}/>
+							<span>경상남도</span>
+						</div>
+					</label>
+          <label htmlFor="전라북도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="전라북도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("전라북도")}/>
+							<span>전라북도</span>
+						</div>
+					</label>
+          <label htmlFor="전라남도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="전라남도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("전라남도")}/>
+							<span>전라남도</span>
+						</div>
+					</label>
+          <label htmlFor="제주도">
+						<div className="location_checkbox">
+							<input type="checkbox" id="제주도" 
+							onChange={checkboxChange}
+              checked={selectedLocations.includes("제주도")}/>
+							<span>제주도</span>
+						</div>
+					</label>
         </div>
-        <button className="location_search_button">검색</button>
-      </form>
       )}
 
       {/* 기간별 검색 */}
@@ -445,7 +383,6 @@ const FestivalSearchCategory = () => {
       
       {/* 계절별 검색 */}
       {isOpenSeason && (
-      <form className="season_search_area">
         <div className="season_checkbox_area">
           <div className="season_checkbox">
             <input type="checkbox" id="spring"/>
@@ -464,8 +401,6 @@ const FestivalSearchCategory = () => {
             <label htmlFor="winter">겨울</label>
           </div>
         </div>
-        <button className="season_search_button">검색</button>
-      </form>
       )}
     </div>
     </BodyContainer>
