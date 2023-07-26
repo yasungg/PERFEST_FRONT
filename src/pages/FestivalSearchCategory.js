@@ -68,7 +68,7 @@ const BodyContainer = styled.div`
 		display: flex;
 		flex-direction: column;
 		width: 300px;
-		height: 110px;
+		height: 200px;
 		margin: -10px 0 0 145px;
 		background-color: #FFF;
 		border-radius: 5px;
@@ -93,6 +93,7 @@ const BodyContainer = styled.div`
 	.period_search_area input {
 		margin: 10px;
 		cursor: pointer;
+		
 	}
 
   .period_search_button {
@@ -152,6 +153,7 @@ const BodyContainer = styled.div`
 	.season_checkbox label:hover {
 		color: #0475F4;
 	}
+
 `;
 // 검색 카테고리 스타일
 const CategoryList = styled.ul`
@@ -185,12 +187,31 @@ const SearchItem = styled.button`
 const FestivalSearchCategory = (props) => {
 	// 지역별 검색 체크박스를 클릭할 때 체크된 지역만 나오게
 	const [selectedLocations, setSelectedLocations] = useState([]);
-  const checkboxChange = (e) => {
+	// 날짜별 검색 기간을 정했을 경우
+	const [selectedStartDate, setSelectedStartDate] = useState(null);
+	const [selectedEndDate, setselectedEndDate] = useState(null);
+	// 계절별 검색 체크박스를 클릭했을 경우
+  const [selectedSeasons, setSelectedSeasons] = useState([]);
+
+	// 지역별 체크박스 담는 이벤트
+  const locationCheckboxChange = (e) => {
     const { id, checked } = e.target;
     if (checked) {
       setSelectedLocations((prevSelected) => [...prevSelected, id]);
     } else {
       setSelectedLocations((prevSelected) =>
+        prevSelected.filter((location) => location !== id)
+      );
+    }
+	}
+
+	// 계절별 체크박스 담는 이벤트
+	const seasonCheckboxChange = (e) => {
+    const { id, checked } = e.target;
+    if (checked) {
+      setSelectedSeasons((prevSelected) => [...prevSelected, id]);
+    } else {
+      setSelectedSeasons((prevSelected) =>
         prevSelected.filter((location) => location !== id)
       );
     }
@@ -243,14 +264,30 @@ const FestivalSearchCategory = (props) => {
 			setIsOpenSeason(false);
 		}
 	}
-	const [data , setData] = useState("");
+
 	useEffect(() => {
 		const getFestivalInfo = async() => {
 			const response = await FestivalAPI.getFestivalInfo();
 
 		}
-
 	})
+
+	useEffect(() => {
+		const getLocationInfo = async() => {
+			const info = {
+				location: selectedLocations,
+				period: {
+					startDate : selectedStartDate,
+					endDate : selectedEndDate
+				},
+				seasons: selectedSeasons}
+			const response = await FestivalAPI.searchLocationFestival(info);
+			if(response.status === 200) {
+
+			}
+		}
+	},[selectedLocations, selectedStartDate, selectedEndDate, selectedSeasons])
+
   return (
     <BodyContainer>
     <div className="category_container">
@@ -289,7 +326,7 @@ const FestivalSearchCategory = (props) => {
 					<label htmlFor="서울">
 						<div className="location_checkbox">
 							<input type="checkbox" id="서울" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("서울")}/>
 							<span>서울</span>
 						</div>
@@ -297,7 +334,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="경기도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="경기도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("경기도")}/>
 							<span>경기도</span>
 						</div>
@@ -305,7 +342,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="강원도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="강원도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("강원도")}/>
 							<span>강원도</span>
 						</div>
@@ -313,7 +350,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="충청북도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="충청북도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("충청북도")}/>
 							<span>충청북도</span>
 						</div>
@@ -321,7 +358,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="충청남도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="충청남도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("충청남도")}/>
 							<span>충청남도</span>
 						</div>
@@ -329,7 +366,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="경상북도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="경상북도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("경상북도")}/>
 							<span>경상북도</span>
 						</div>
@@ -337,7 +374,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="경상남도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="경상남도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("경상남도")}/>
 							<span>경상남도</span>
 						</div>
@@ -345,7 +382,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="전라북도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="전라북도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("전라북도")}/>
 							<span>전라북도</span>
 						</div>
@@ -353,7 +390,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="전라남도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="전라남도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("전라남도")}/>
 							<span>전라남도</span>
 						</div>
@@ -361,7 +398,7 @@ const FestivalSearchCategory = (props) => {
           <label htmlFor="제주도">
 						<div className="location_checkbox">
 							<input type="checkbox" id="제주도" 
-							onChange={checkboxChange}
+							onChange={locationCheckboxChange}
               checked={selectedLocations.includes("제주도")}/>
 							<span>제주도</span>
 						</div>
@@ -373,9 +410,17 @@ const FestivalSearchCategory = (props) => {
       {isOpenPeriod && (
       <form className="period_search_area">
         <div>
-          <input type="date"></input>
-          <p>~</p>
-          <input type="date"></input>
+					<label>축제 시작일</label>
+          <input type="date"
+					value={selectedStartDate}
+					onChange={(e)=>setSelectedStartDate(e.target.value)}
+					></input>
+				</div>
+				<div>
+					<label>축제 종료일</label>
+          <input type="date"
+					value={selectedEndDate}
+					onChange={(e)=>setselectedEndDate(e.target.value)}></input>
         </div>
         <button className="period_search_button">검색</button>
       </form>
@@ -384,22 +429,38 @@ const FestivalSearchCategory = (props) => {
       {/* 계절별 검색 */}
       {isOpenSeason && (
         <div className="season_checkbox_area">
-          <div className="season_checkbox">
-            <input type="checkbox" id="spring"/>
-            <label htmlFor="spring">봄</label>
-          </div>
-          <div className="season_checkbox">
-            <input type="checkbox" id="summer"/>
-            <label htmlFor="summer">여름</label>
-          </div>
-          <div className="season_checkbox">
-            <input type="checkbox" id="autumn"/>
-            <label htmlFor="autumn">가을</label>
-          </div>
-          <div className="season_checkbox">
-            <input type="checkbox" id="winter"/>
-            <label htmlFor="winter">겨울</label>
-          </div>
+					<label htmlFor="봄">
+						<div className="season_checkbox">
+							<input type="checkbox" id="봄" 
+							onChange={seasonCheckboxChange}
+              checked={selectedSeasons.includes("봄")}/>
+							<span>여름</span>
+						</div>
+					</label>
+					<label htmlFor="여름">
+						<div className="season_checkbox">
+							<input type="checkbox" id="여름" 
+							onChange={seasonCheckboxChange}
+              checked={selectedSeasons.includes("여름")}/>
+							<span>여름</span>
+						</div>
+					</label>
+					<label htmlFor="가을">
+						<div className="season_checkbox">
+							<input type="checkbox" id="가을" 
+							onChange={seasonCheckboxChange}
+              checked={selectedSeasons.includes("가을")}/>
+							<span>여름</span>
+						</div>
+					</label>
+					<label htmlFor="겨울">
+						<div className="season_checkbox">
+							<input type="checkbox" id="겨울" 
+							onChange={seasonCheckboxChange}
+              checked={selectedSeasons.includes("겨울")}/>
+							<span>여름</span>
+						</div>
+					</label>
         </div>
       )}
     </div>

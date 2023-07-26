@@ -12,6 +12,11 @@ const FestivalAPI = {
   // 전체 축제 조회
   getFestivalInfo: async() => {
     return await axios.get(KH_DOMAIN + '/auth/festival/getAllFestivals')
+  },
+
+  // 카테고리 검색 
+  searchLocationFestival: async(info) => {
+    return await axios.post(KH_DOMAIN + `/auth/festival/getSearchFestivalInfo `, info)
   }
 }
 export default FestivalAPI;
