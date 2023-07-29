@@ -57,7 +57,7 @@ const Festival = () => {
           <SearchSideBar/>
 					<MapContainer>
 						<NaverMap festivalData={festivalData}/>
-						<FestivalSearchCategory setPropsData={festivalData} />
+						<FestivalSearchCategory setPropsData={setPropsData} />
 					</MapContainer>
         </BodyContainer>
 		</div>

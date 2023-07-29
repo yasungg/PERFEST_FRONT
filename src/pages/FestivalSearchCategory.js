@@ -187,7 +187,7 @@ const SearchItem = styled.button`
 		}
 `
 
-const FestivalSearchCategory = (props) => {
+const FestivalSearchCategory = ({setPropsData}) => {
 	// 지역별 검색 체크박스를 클릭할 때 체크된 지역만 나오게
 	const [selectedLocations, setSelectedLocations] = useState("");
 	// 날짜별 검색 기간을 정했을 경우
@@ -250,7 +250,7 @@ const FestivalSearchCategory = (props) => {
 		const response = await FestivalAPI.searchFestival(selectedLocations,selectedStartDate,selectedEndDate);
 		if(response.status === 200) {
 			console.log(response);
-			props.setPropsData={response.data};
+			setPropsData("필터에서 받아온 값 : " + response);
 		}
 	}
 	
@@ -269,12 +269,6 @@ const test = () => {
           <SearchItem
             onClick={() => filterButtonClick('location', isOpenLocation, setIsOpenLocation)}
             >@ 필터</SearchItem>
-        </CategoryItem>
-
-        <CategoryItem>
-          <SearchItem
-            onClick={() => filterButtonClick('period', isOpenPeriod, setIsOpenPeriod)}
-          >@ 기간별 검색</SearchItem>
         </CategoryItem>
       </CategoryList>
 
@@ -362,23 +356,24 @@ const test = () => {
 							<span>제주도</span>
 						</div>
 					</label>
+					<div>
+					<br/>
+					<div>
+						<label>축제 시작일</label>
+						<input type="date"
+						onChange={(e)=>{setStartDateEvent(e)}}
+						></input>
+					</div>
+					<div>
+						<label>축제 종료일</label>
+						<input type="date"
+						onChange={(e)=>{setEndDateEvent(e)}}></input>
+					</div>
+					<button className="period_search_button"
+					onClick={()=>clickEvent()}
+					>검색</button>
+					</div>
         </div>
-				<div className="period_search_area">
-        <div>
-					<label>축제 시작일</label>
-          <input type="date"
-					onChange={(e)=>{setStartDateEvent(e)}}
-					></input>
-				</div>
-				<div>
-					<label>축제 종료일</label>
-          <input type="date"
-					onChange={(e)=>{setEndDateEvent(e)}}></input>
-        </div>
-        <button className="period_search_button"
-				onClick={()=>clickEvent()}
-				>검색</button>
-      	</div>
 				</div>
       )}
     </div>
