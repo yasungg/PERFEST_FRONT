@@ -11,11 +11,18 @@ const FestivalAPI = {
 
   // 전체 축제 조회
   getFestivalInfo: async() => {
-    return await axios.get(KH_DOMAIN + '/auth/festival/getAllFestivals')
+    return await axios.get(KH_DOMAIN + '/auth/festival/get-festival-info')
   },
 
   // 카테고리 검색 
-  searchLocationFestival: async(info) => {
+  searchFestival: async(selectedLocations,selectedStartDate,selectedEndDate) => {
+		const info = {
+			location: selectedLocations,
+			period : {
+				startDate : selectedStartDate,
+				endDate : selectedEndDate
+			}
+    }
     return await axios.post(KH_DOMAIN + `/auth/festival/getSearchFestivalInfo `, info)
   }
 }

@@ -182,16 +182,17 @@ const SearchItem = styled.button`
 		margin-right: 20px;
 		cursor: pointer;
 		box-shadow: 1px 1px 4px 0px #555555;
+		:hover {
+			color: #0475F4;
+		}
 `
 
 const FestivalSearchCategory = (props) => {
 	// 지역별 검색 체크박스를 클릭할 때 체크된 지역만 나오게
-	const [selectedLocations, setSelectedLocations] = useState([]);
+	const [selectedLocations, setSelectedLocations] = useState("");
 	// 날짜별 검색 기간을 정했을 경우
-	const [selectedStartDate, setSelectedStartDate] = useState(null);
-	const [selectedEndDate, setselectedEndDate] = useState(null);
-	// 계절별 검색 체크박스를 클릭했을 경우
-  const [selectedSeasons, setSelectedSeasons] = useState([]);
+	const [selectedStartDate, setSelectedStartDate] = useState();
+	const [selectedEndDate, setselectedEndDate] = useState();
 
 	// 지역별 체크박스 담는 이벤트
   const locationCheckboxChange = (e) => {
@@ -205,48 +206,18 @@ const FestivalSearchCategory = (props) => {
     }
 	}
 
-	// 계절별 체크박스 담는 이벤트
-	const seasonCheckboxChange = (e) => {
-    const { id, checked } = e.target;
-    if (checked) {
-      setSelectedSeasons((prevSelected) => [...prevSelected, id]);
-    } else {
-      setSelectedSeasons((prevSelected) =>
-        prevSelected.filter((location) => location !== id)
-      );
-    }
+	const setStartDateEvent = (e) => {
+		setSelectedStartDate(e.target.value);
+		console.log("축제 시작 기간" + e.target.value);
 	}
-
-  // 검색 메뉴 Hover 이벤트
-	const [isLocationHovered, setLocationIsHovered] = useState(false);
-	const [isPeriodHovered, setIsPeriodHovered] = useState(false);
-	const [isThemeHovered, setIsThemeHovered] = useState(false);
-
-	const LocationButtonHover = () => {
-		setLocationIsHovered(true);
-	};
-	const LocationButtonLeave = () => {
-		setLocationIsHovered(false);
-	}
-
-	const PeriodButtonHover = () => {
-		setIsPeriodHovered(true);
-	}
-	const PeriodButtonLeave = () => {
-		setIsPeriodHovered(false);
-	}
-
-	const ThemeButtonHover = () => {
-		setIsThemeHovered(true);
-	}
-	const ThemeButtonLeave = () => {
-		setIsThemeHovered(false);
+	const setEndDateEvent = (e) => {
+		setselectedEndDate(e.target.value);
+		console.log("끝나는 기간" + e.target.value);
 	}
 
   // 검색 카테고리 메뉴 클릭 이벤트
 	const [isOpenLocation, setIsOpenLocation] = useState(false);
 	const [isOpenPeriod, setIsOpenPeriod] = useState(false);
-	const [isOpenSeason, setIsOpenSeason] = useState(false);
 
 	// 다른 필터 닫기
 	const filterButtonClick = (filterName, isOpenState, setIsOpenState) => {
@@ -260,33 +231,35 @@ const FestivalSearchCategory = (props) => {
 			setIsOpenPeriod(false);
 		}
 
-		if(filterName !== 'season') {
-			setIsOpenSeason(false);
-		}
 	}
 
-	useEffect(() => {
-		const getFestivalInfo = async() => {
-			const response = await FestivalAPI.getFestivalInfo();
-
-		}
-	})
-
-	useEffect(() => {
-		const getLocationInfo = async() => {
-			const info = {
-				location: selectedLocations,
-				period: {
-					startDate : selectedStartDate,
-					endDate : selectedEndDate
-				},
-				seasons: selectedSeasons}
-			const response = await FestivalAPI.searchLocationFestival(info);
-			if(response.status === 200) {
-
+	// 검색 버튼 클릭 시 필터에 들어온 정보를 토대로 축제 정보를 가져오는 이벤트
+	const [isClick, setIsClick] = useState(false);
+	const clickEvent = () => {
+		setIsClick(true);
+		const info = {
+			location: selectedLocations,
+			period : {			
+				startDate : selectedStartDate,
+				endDate : selectedEndDate
 			}
+	}	
+	}
+
+	const getLocationInfo = async() => {
+		const response = await FestivalAPI.searchFestival(selectedLocations,selectedStartDate,selectedEndDate);
+		if(response.status === 200) {
+			console.log(response);
+			props.setPropsData={response.data};
 		}
-	},[selectedLocations, selectedStartDate, selectedEndDate, selectedSeasons])
+	}
+	
+const test = () => {
+	console.log(selectedLocations,selectedStartDate,selectedEndDate);
+	getLocationInfo();
+}
+	
+	
 
   return (
     <BodyContainer>
@@ -295,33 +268,19 @@ const FestivalSearchCategory = (props) => {
         <CategoryItem>
           <SearchItem
             onClick={() => filterButtonClick('location', isOpenLocation, setIsOpenLocation)}
-            onMouseEnter={LocationButtonHover}
-            onMouseLeave={LocationButtonLeave}
-            style={{color: isOpenLocation || isLocationHovered ? '#0475F4' : 'black'}}
-            >@ 지역별 검색</SearchItem>
+            >@ 필터</SearchItem>
         </CategoryItem>
 
         <CategoryItem>
           <SearchItem
             onClick={() => filterButtonClick('period', isOpenPeriod, setIsOpenPeriod)}
-            onMouseEnter={PeriodButtonHover}
-            onMouseLeave={PeriodButtonLeave}
-            style={{color: isOpenPeriod || isPeriodHovered ? '#0475F4' : 'black'}}
           >@ 기간별 검색</SearchItem>
-        </CategoryItem>
-
-        <CategoryItem>
-          <SearchItem
-            onClick={() => filterButtonClick('season', isOpenSeason, setIsOpenSeason)}
-            onMouseEnter={ThemeButtonHover}
-            onMouseLeave={ThemeButtonLeave}
-            style={{color: isOpenSeason || isThemeHovered ? '#0475F4' : 'black'}}
-            >@ 계절별 검색</SearchItem>
         </CategoryItem>
       </CategoryList>
 
       {/* 지역별 검색 */}
       {isOpenLocation && (
+				<div>
         <div className="location_checkbox_area">
 					<label htmlFor="서울">
 						<div className="location_checkbox">
@@ -404,66 +363,26 @@ const FestivalSearchCategory = (props) => {
 						</div>
 					</label>
         </div>
-      )}
-
-      {/* 기간별 검색 */}
-      {isOpenPeriod && (
-      <form className="period_search_area">
+				<div className="period_search_area">
         <div>
 					<label>축제 시작일</label>
           <input type="date"
-					value={selectedStartDate}
-					onChange={(e)=>setSelectedStartDate(e.target.value)}
+					onChange={(e)=>{setStartDateEvent(e)}}
 					></input>
 				</div>
 				<div>
 					<label>축제 종료일</label>
           <input type="date"
-					value={selectedEndDate}
-					onChange={(e)=>setselectedEndDate(e.target.value)}></input>
+					onChange={(e)=>{setEndDateEvent(e)}}></input>
         </div>
-        <button className="period_search_button">검색</button>
-      </form>
-      )}
-      
-      {/* 계절별 검색 */}
-      {isOpenSeason && (
-        <div className="season_checkbox_area">
-					<label htmlFor="봄">
-						<div className="season_checkbox">
-							<input type="checkbox" id="봄" 
-							onChange={seasonCheckboxChange}
-              checked={selectedSeasons.includes("봄")}/>
-							<span>여름</span>
-						</div>
-					</label>
-					<label htmlFor="여름">
-						<div className="season_checkbox">
-							<input type="checkbox" id="여름" 
-							onChange={seasonCheckboxChange}
-              checked={selectedSeasons.includes("여름")}/>
-							<span>여름</span>
-						</div>
-					</label>
-					<label htmlFor="가을">
-						<div className="season_checkbox">
-							<input type="checkbox" id="가을" 
-							onChange={seasonCheckboxChange}
-              checked={selectedSeasons.includes("가을")}/>
-							<span>여름</span>
-						</div>
-					</label>
-					<label htmlFor="겨울">
-						<div className="season_checkbox">
-							<input type="checkbox" id="겨울" 
-							onChange={seasonCheckboxChange}
-              checked={selectedSeasons.includes("겨울")}/>
-							<span>여름</span>
-						</div>
-					</label>
-        </div>
+        <button className="period_search_button"
+				onClick={()=>clickEvent()}
+				>검색</button>
+      	</div>
+				</div>
       )}
     </div>
+		<button onClick={test}>테스트</button>
     </BodyContainer>
   )
 }

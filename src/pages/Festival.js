@@ -19,6 +19,7 @@ const MapContainer = styled.div`
 `
 
 const Festival = () => {
+	const [propsData, setPropsData] = useState("");
 	const [isData, setIsData] = useState(false);
 	const [festivalData, setFestivalData] = useState();
 	const ClickEvent = () => {
@@ -42,14 +43,11 @@ const Festival = () => {
 			console.log("getFestival 실행");
 			const response = await FestivalAPI.getFestivalInfo();
 			if(response.status === 200) {
-				console.log(response);
 				setFestivalData(response.data);
-				console.log("페스티벌 데이터");
-				console.log(festivalData);
 			}
 		}
-		getFestivalData();
-	},[])	
+		isData && getFestivalData();
+	},[isData])	
 
 	return(
 		<div>
@@ -59,7 +57,7 @@ const Festival = () => {
           <SearchSideBar/>
 					<MapContainer>
 						<NaverMap festivalData={festivalData}/>
-						<FestivalSearchCategory  />
+						<FestivalSearchCategory setPropsData={festivalData} />
 					</MapContainer>
         </BodyContainer>
 		</div>
