@@ -217,33 +217,19 @@ const FestivalSearchCategory = ({setPropsData}) => {
 
   // 검색 카테고리 메뉴 클릭 이벤트
 	const [isOpenLocation, setIsOpenLocation] = useState(false);
-	const [isOpenPeriod, setIsOpenPeriod] = useState(false);
 
 	// 다른 필터 닫기
 	const filterButtonClick = (filterName, isOpenState, setIsOpenState) => {
 		setIsOpenState(!isOpenState);
-		
 		if(filterName !== 'location') {
 			setIsOpenLocation(false);
 		}
-
-		if(filterName !== 'period') {
-			setIsOpenPeriod(false);
-		}
-
 	}
 
 	// 검색 버튼 클릭 시 필터에 들어온 정보를 토대로 축제 정보를 가져오는 이벤트
 	const [isClick, setIsClick] = useState(false);
 	const clickEvent = () => {
 		setIsClick(true);
-		const info = {
-			location: selectedLocations,
-			period : {			
-				startDate : selectedStartDate,
-				endDate : selectedEndDate
-			}
-	}	
 	}
 
 	const getLocationInfo = async() => {
@@ -253,13 +239,7 @@ const FestivalSearchCategory = ({setPropsData}) => {
 			setPropsData("필터에서 받아온 값 : " + response);
 		}
 	}
-	
-const test = () => {
-	console.log(selectedLocations,selectedStartDate,selectedEndDate);
-	getLocationInfo();
-}
-	
-	
+	isClick && getLocationInfo();
 
   return (
     <BodyContainer>
@@ -356,28 +336,27 @@ const test = () => {
 							<span>제주도</span>
 						</div>
 					</label>
+					
 					<div>
-					<br/>
-					<div>
-						<label>축제 시작일</label>
-						<input type="date"
-						onChange={(e)=>{setStartDateEvent(e)}}
-						></input>
+						<div>
+							<label>축제 시작일</label>
+							<input type="date"
+							onChange={(e)=>{setStartDateEvent(e)}}
+							></input>
+						</div>
+						<div>
+							<label>축제 종료일</label>
+							<input type="date"
+							onChange={(e)=>{setEndDateEvent(e)}}></input>
+						</div>
+						<button className="period_search_button"
+						onClick={()=>clickEvent()}
+						>검색</button>
+						</div>
 					</div>
-					<div>
-						<label>축제 종료일</label>
-						<input type="date"
-						onChange={(e)=>{setEndDateEvent(e)}}></input>
-					</div>
-					<button className="period_search_button"
-					onClick={()=>clickEvent()}
-					>검색</button>
-					</div>
-        </div>
 				</div>
       )}
     </div>
-		<button onClick={test}>테스트</button>
     </BodyContainer>
   )
 }

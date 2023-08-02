@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import {UserContext} from "../context/UserStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import PaymentAPI from "../api/PaymentAPI";
-import ResultSuccess from "./PaySuccess";
 import PayModal from "./PaycancelModal"
-import { Link } from "react-router-dom";
+import check from '../images/check.png'
+import cancel from '../images/cancel.png'
 
 const PayReady = () => {
   const context = useContext(UserContext);
-
+  const navigate = useNavigate();
   // 카카오페이로 보내려는 데이터 작성
   let [data, setData] = useState({
     next_redirect_pc_url: "",
@@ -61,20 +61,17 @@ const PayReady = () => {
       window.localStorage.setItem("tid", response.data.tid);
       // 결제 페이지를 위한 url
       window.localStorage.setItem('url', next_redirect_pc_url);
-      console.log("통신 : " + JSON.stringify(response) );
       // useContext 에 reponse 값을 저장.
       setData({next_redirect_pc_url : next_redirect_pc_url, 
               tid : tid});
-      console.log("PayReady 메소드 실행 성공");
       // 실행 성공하면 pg토큰 발급을 위해 해당 주소로 리다이렉트
       window.location.href = response.data.next_redirect_pc_url;
 
     }).catch(error => {
-      console.log(error);
       window.localStorage.removeItem("tid");
       window.localStorage.removeItem("url");
       // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
-      // navigate("/resultFail");
+      navigate("/resultFail");
     });
   }, []);
 }
@@ -84,8 +81,6 @@ const PayReady = () => {
 // 결제 대기 화면은 결제 준비 API 요청 시 전달 받은 approval_url에 pg_token 파라미터를 붙여 리다이렉트.
 // pg_token은 결제 승인 API 호출 시 사용
 const PayResult = () => {
-  console.log("PayResult 메소드 실행");
-
   // 초기값 셋팅, 결제준비에서 받아온 tid 셋팅
   const [payment, setPayment] = useState({
     // 가격
@@ -132,7 +127,6 @@ const PayResult = () => {
       },
       params
     }).then(response => {
-      console.log("결제 승인 완료 : " + JSON.stringify(response));
       const responseData = response.data;
 
       // 여기까지 통신이 성공했으면 카카오 결제 API 는 완료
@@ -149,34 +143,30 @@ const PayResult = () => {
       });
       // url을 이용하여 해당 결제로 돌아올 수 없도록 삭제
       window.localStorage.removeItem('url')
-
       // 성공할 경우 
       setIsTrue(true);
     }).catch(error => {
       // 실패하면 결제 고유번호와 url을 지워줌
       window.localStorage.removeItem("tid");
-      console.log(error);
     });
   },[]);
 
   // 결제 승인 완료 후 정보를 백엔드에 보내는 로직
   // 결제 로직이 전부 성공한 뒤에 DB로 값을 넣게 하기 위해
-  const PaymentResult = async() => {
-    console.log("paymentResult 실행");
-    // const tid = window.localStorage.getItem("tid");
-    const memberId = 1;
-    const productId = 1;
-    const response = await PaymentAPI.PaymentSubmit(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
-    console.log(response);
-    if(response.status === 200) {
-      // 카카오페이와 DB전송까지 완료
-      navigate("/resultSuccess");
-      window.localStorage.removeItem("tid");
-    } else { 
-      console.log("paymentResult 오류");
-    }
-  };
-  isTrue && PaymentResult();
+  useEffect(() => {
+    const PaymentResult = async() => {
+      const memberId = 1;
+      const productId = 1;
+      const response = await PaymentAPI.PaymentSubmit(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
+      if(response.status === 200) {
+        // 카카오페이와 DB전송까지 완료
+        navigate("/resultSuccess", {state: response.data});
+        window.localStorage.removeItem("tid");
+      }
+    };
+    isTrue && PaymentResult();
+  },[isTrue])
+  
 };
 
 
@@ -211,12 +201,10 @@ const PayCancel = () => {
 
   useEffect(() => {
     const getData = async() => {
-      console.log("getData 실행");
       const response = await PaymentAPI.CheckPaymentData(memberId, productId, paymentId);
       // const cancelStatus = response.data[0].paymentStatus;
       // 취소 완료 된 결제는 다음 로직을 실행하지 않도록 하기 위해
       if(response.status === 200 ) {
-        console.log("해당 상품 주문 데이터 확인");
         const { price, quantity, tid, tax_free_amount } = response.data[0];
         setMemberData({
           params : {
@@ -230,10 +218,8 @@ const PayCancel = () => {
             cancel_tax_free_amount : tax_free_amount
           }
         });
-        // getData();
         setIsCancel(true);
       } else {
-        console.log("해당 상품 주문 데이터 없음");
         openModal();
       }
     }
@@ -251,12 +237,9 @@ const PayCancel = () => {
           "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
         },
         params
-      }).then((response) => {
-        console.log("통신완료");
-        console.log("카카오페이 결제 취소 통신 완료"+response);
+      }).then(() => {
         setIsKakao(true);
-      }).catch(error => {
-        console.log(error);
+      }).catch(() => {
         openModal();
       });
     },[isCancel]
@@ -275,11 +258,9 @@ const PayCancel = () => {
     const deleteData = async() => {
       const response = await PaymentAPI.DeletePaymentData(memberId, productId, paymentId)
       if(response.status === 200) {
-        console.log("deleteData 통신 완료");
         setIsChangeDB(true);
         setModalOpen(true);
       } else {
-        console.log("deleteData 통신 실패");
         setModalOpen(true);
       }
     }
@@ -289,6 +270,7 @@ const PayCancel = () => {
   const success = () => {
     return(
       <div>
+        <img src={check} alt="check" width={"10%"} />
         <h1>환불이 완료 됐습니다.</h1>
         <h1 onClick={()=>{navigate("/")}}>확인을 누르면 홈화면으로 이동합니다.</h1>
       </div>
@@ -298,6 +280,7 @@ const PayCancel = () => {
   const fail = () => {
     return(
       <div>
+        <img src={cancel} alt="cancel" width={"10%"} />
         <h1>환불요청이 취소 됐습니다.</h1>
         <h1 onClick={()=>{navigate("/")}}>확인을 누르면 홈화면으로 이동합니다.</h1>
       </div>
@@ -305,8 +288,8 @@ const PayCancel = () => {
   }
   return(
     <div>
-      {isCancel && isKakao && isChangeDB ? <PayModal open={modalOpen} close={closeModal} children={success()}/> :
-        <PayModal open={modalOpen} close={closeModal} children={fail()}/>
+      {isCancel && isKakao && isChangeDB ? <PayModal open={modalOpen} close={closeModal} children={success()} /> :
+        <PayModal open={modalOpen} close={closeModal} children={fail()} />
       }
     </div>
   )

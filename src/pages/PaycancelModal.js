@@ -89,16 +89,17 @@ const ModalStyle = styled.div`
 `;
 
 const PayModal = (props) => {
-    const {open, confirm, close, type, header, children} = props;
+    const {open, close, children} = props;
 
     return (
         <ModalStyle>
             <div className={open ? "openModal modal" : "modal"}>
                 {open && 
                     <section>
-                      <main>{children}</main>
+                      <main>
+                        {children}
+                        </main>
                       <footer>
-                          {/* {type && <button onClick={confirm}>확인</button>} */}
                           <button onClick={close}>확인</button>
                       </footer>
                     </section>

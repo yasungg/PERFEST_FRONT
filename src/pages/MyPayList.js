@@ -145,7 +145,7 @@ const MyPayList = () => {
                         <td>{payment.quantity}</td>
                         <td>{formatTime(payment.create_date)}</td>
                          <td>
-                            <button to="/pages/payready" onClick={()=>payBack(payment)}>환불</button>
+                            <button to="/pages/paycancel" onClick={()=>payBack(payment)}>환불</button>
                          </td>
                      </tr>
                     ))}
