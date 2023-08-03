@@ -12,7 +12,7 @@ const FestivalAPI = {
   // 전체 축제 조회
   getFestivalInfo: async() => {
     return await axios.get(KH_DOMAIN + '/auth/festival/get-festival-info')
-  },
+  }, 
 
   // 카테고리 검색 
   searchFestival: async(selectedLocations,selectedStartDate,selectedEndDate) => {
