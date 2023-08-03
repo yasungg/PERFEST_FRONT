@@ -1,12 +1,12 @@
 import axios from "axios";
-
+const localhost = "http://localhost:8111"
 const MemberAPI = {
   // 이메일로 특정회원 조회
   getMemberInfo: async () => {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/email`, {
+      .get(localhost + `/member/email`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -30,7 +30,7 @@ const MemberAPI = {
       nickname: nickname,
     };
     return await axios
-      .post("/member/nickname", updateData, {
+      .post(localhost + "/member/nickname", updateData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -51,7 +51,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/nicknameCheck?nickname=${nicknameCheck}`, {
+      .get(localhost + `/member/nicknameCheck?nickname=${nicknameCheck}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -75,7 +75,7 @@ const MemberAPI = {
       // username: username;
     };
     return await axios
-      .post("/member/del", {
+      .post(localhost + "/member/del", {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -101,7 +101,7 @@ const MemberAPI = {
       address: address,
     };
     return await axios
-      .post("/member/updateAdd", updateData, {
+      .post(localhost + "/member/updateAdd", updateData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -122,7 +122,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/addressCheck?address=${address}`, {
+      .get(localhost + `/member/addressCheck?address=${address}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -145,7 +145,7 @@ const MemberAPI = {
     };
     const Authorization =
     "Bearer " + window.localStorage.getItem("accessToken");
-    return await axios.post("/member/updateImg", updateData,{
+    return await axios.post(localhost + "/member/updateImg", updateData,{
       headers: {
         "Content-Type": "application/json",
         Authorization: Authorization,
@@ -165,7 +165,7 @@ const MemberAPI = {
     const Authorization =
     "Bearer " + window.localStorage.getItem("accessToken");
   return await axios
-    .get(`/member/getprofileimage`, {
+    .get(localhost + `/member/getprofileimage`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: Authorization,
@@ -185,7 +185,7 @@ const MemberAPI = {
     const Authorization =
     "Bearer " + window.localStorage.getItem("accessToken");
   return await axios
-  .get(`/member/getnickname`, {
+  .get(localhost + `/member/getnickname`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: Authorization,
@@ -205,7 +205,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/communities`, {
+      .get(localhost + `/member/communities`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -226,7 +226,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete(`/member/deleteMyCommunities`, {
+      .delete(localhost + `/member/deleteMyCommunities`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -247,7 +247,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete(`/member/delCommunity?communityId=${communityId}`, {
+      .delete(localhost + `/member/delCommunity?communityId=${communityId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -268,7 +268,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/comments`, {
+      .get(localhost + `/member/comments`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -289,7 +289,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete(`/member/deleteMyComments`, {
+      .delete(localhost + `/member/deleteMyComments`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -310,7 +310,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete(`/member/delComment?commentId=${commentId}`, {
+      .delete(localhost + `/member/delComment?commentId=${commentId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -331,7 +331,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/payments`, {
+      .get(localhost + `/member/payments`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -352,7 +352,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/ranking`, {
+      .get(localhost + `/member/ranking`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -372,7 +372,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/ranking/badges`, {
+      .get(localhost + `/member/ranking/badges`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -393,7 +393,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/reviews`, {
+      .get(localhost + `/member/reviews`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -414,7 +414,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete(`/member/deleteMyReview`, {
+      .delete(localhost + `/member/deleteMyReview`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -435,7 +435,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete(`/member/delReview?reviewId=${reviewId}`, {
+      .delete(localhost + `/member/delReview?reviewId=${reviewId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -456,7 +456,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/activities`, {
+      .get(localhost + `/member/activities`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -479,7 +479,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/notice/noticeList`, {
+      .get(localhost + `/notice/noticeList`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -499,7 +499,7 @@ const MemberAPI = {
       "Bearer " + window.localStorage.getItem("accessToken");
 
     return await axios
-      .get(`/member/get-name`, {
+      .get(localhost + `/member/get-name`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -520,7 +520,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/member/calender`, {
+      .get(localhost + `/member/calender`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -541,7 +541,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete(`/member/delCalender?calenderId=${calenderId}`, {
+      .delete(localhost + `/member/delCalender?calenderId=${calenderId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -562,7 +562,7 @@ const MemberAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .delete("/member/delAllCalender", {
+      .delete(localhost + "/member/delAllCalender", {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -586,7 +586,7 @@ const MemberAPI = {
       festivalId: festivalId,
     };
     return await axios
-    .post(`/member/addCal`, updateData, {
+    .post(localhost + `/member/addCal`, updateData, {
       headers: {
         "Content-Type": "application/json",
         Authorization: Authorization,

@@ -1,5 +1,5 @@
 import axios from "axios";
-
+const localhost = "http://localhost:8111"
 const ReviewAPI = {
     // 리뷰 작성하기
     ReviewWrite: async(festivalId, reviewContent) => {
@@ -9,7 +9,7 @@ const ReviewAPI = {
         };
         const Authorization =
         "Bearer " + window.localStorage.getItem("accessToken");
-        return await axios.post(`/review/writereview`,reviewInsert, {
+        return await axios.post(localhost + `/review/writereview`,reviewInsert, {
             headers: {
               "Content-Type": "application/json",
               Authorization: Authorization,
@@ -25,11 +25,11 @@ const ReviewAPI = {
     },
     // 해당 축제 리뷰 가져오기
     GetReview: async(festivalId, pageNumber) => {
-        return await axios.get(`/auth/review/getreview?festivalId=${festivalId}&pageSize=5&pageNumber=${pageNumber}`);
+        return await axios.get(localhost + `/auth/review/getreview?festivalId=${festivalId}&pageSize=5&pageNumber=${pageNumber}`);
     },
     // 해당 축제 리뷰 개수 가져오기
     GetReviewCount: async(festivalId) => {
-        return await axios.get(`/auth/review/getreviewcount?festivalId=${festivalId}`);
+        return await axios.get(localhost + `/auth/review/getreviewcount?festivalId=${festivalId}`);
     }
 
 

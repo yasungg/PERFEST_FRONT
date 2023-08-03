@@ -1,5 +1,5 @@
 import axios from "axios";
-
+const localhost = "http://localhost:8111"
 const LoginAPI = {
   Login: async (email, password) => {
     // 로그인
@@ -16,7 +16,7 @@ const LoginAPI = {
     console.log(requestBody);
 
     return await axios
-      .post(`/auth/member/login`, stringified, {
+      .post(localhost + `/auth/member/login`, stringified, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -32,7 +32,7 @@ const LoginAPI = {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
     return await axios
-      .get(`/logout/bye`, {
+      .get(localhost + `/logout/bye`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,

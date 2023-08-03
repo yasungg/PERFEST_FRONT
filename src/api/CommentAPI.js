@@ -1,5 +1,5 @@
 import axios from "axios";
-
+const localhost = "http://localhost:8111"
 const CommentAPI = {
     // 댓글 작성하기
     CommentWrite : async(commentBody, communityId) => {
@@ -10,7 +10,7 @@ const CommentAPI = {
         const Authorization =
             "Bearer " + window.localStorage.getItem("accessToken");
         console.log(Authorization);
-        return await axios.post(`/comment/writecomment`, writeComment, {
+        return await axios.post(localhost + `/comment/writecomment`, writeComment, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: Authorization,
@@ -34,7 +34,7 @@ const CommentAPI = {
         const Authorization =
             "Bearer " + window.localStorage.getItem("accessToken");
         console.log(Authorization);
-        return await axios.post( `/comment/writereplycomment`, writeReplyComment, {
+        return await axios.post(localhost + `/comment/writereplycomment`, writeReplyComment, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: Authorization,
@@ -51,22 +51,22 @@ const CommentAPI = {
     },
     // 대댓글 조회
     GetReplyComment : async(parentId) => {
-        return await axios.get(`/auth/comment/getreplycomment?parentId=${parentId}`)
+        return await axios.get(localhost + `/auth/comment/getreplycomment?parentId=${parentId}`)
     },
     // 댓글 갯수 가져오기
     CommentGetCount : async(communityId) => {
-        return await axios.get( `/auth/comment/commentcount?communityId=${communityId}`)
+        return await axios.get(localhost + `/auth/comment/commentcount?communityId=${communityId}`)
     },
     // 댓글 가져 오기
     GetComment : async(communityId) => {
-        return await axios.get( `/auth/comment/getcomment?communityId=${communityId}`)
+        return await axios.get(localhost + `/auth/comment/getcomment?communityId=${communityId}`)
     },
     // 댓글 좋아요 추가
     AddCommentLike: async(commentId) => {
         const addLike = {
             commentId : commentId
         };
-        return await axios.post( `/auth/comment/addcommentlike`, addLike)
+        return await axios.post(localhost + `/auth/comment/addcommentlike`, addLike)
     },
     // 댓글 좋아요 한번만 누르기
     checkCommentLike: async(commentId) => {
@@ -76,7 +76,7 @@ const CommentAPI = {
         const Authorization =
         "Bearer " + window.localStorage.getItem("accessToken");
     console.log(Authorization);
-    return await axios.post( `/memberlike/likecomment`, checkLike, {
+    return await axios.post(localhost + `/memberlike/likecomment`, checkLike, {
       headers: {
         "Content-Type": "application/json",
         Authorization: Authorization,

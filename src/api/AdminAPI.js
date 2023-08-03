@@ -1,5 +1,5 @@
 import axios from "axios";
-
+const localhost = "http://localhost:8111"
 const AdminAPI = {
   GetMemberList: async (pageNumber) => {
     const Authorization =
@@ -7,7 +7,7 @@ const AdminAPI = {
     console.log(Authorization);
 
     return await axios.get(
-      `/admin-member/get-member-all?pageNumber=${pageNumber}&pageSize=25`,
+      localhost + `/admin-member/get-member-all?pageNumber=${pageNumber}&pageSize=25`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -22,7 +22,7 @@ const AdminAPI = {
     console.log(Authorization);
 
     return await axios.get(
-      `/admin-member/get-member-searchresult?keyword=${keyword}`,
+      localhost + `/admin-member/get-member-searchresult?keyword=${keyword}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const AdminAPI = {
       isEnabled: isEnabled,
     };
 
-    return await axios.put(`/admin-member/update-member-status`, changeSet, {
+    return await axios.put(localhost + `/admin-member/update-member-status`, changeSet, {
       headers: {
         // "Content-Type": "application/json",
         Authorization: Authorization,
@@ -58,7 +58,7 @@ const AdminAPI = {
       pageNumber: 0,
       pageSize: 25,
     };
-    return await axios.get(`/admin-member/get-result-list`, data, {
+    return await axios.get(localhost + `/admin-member/get-result-list`, data, {
       headers: {
         "Content-Type": "application/json",
         Authorization: Authorization,
