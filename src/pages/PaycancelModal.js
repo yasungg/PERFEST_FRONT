@@ -98,7 +98,7 @@ const PayModal = (props) => {
                     <section>
                       <main>
                         {children}
-                        </main>
+                      </main>
                       <footer>
                           <button onClick={close}>확인</button>
                       </footer>

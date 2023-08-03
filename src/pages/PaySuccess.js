@@ -168,7 +168,7 @@ function ResultSuccess () {
                   <PaymentData>
                   <h2>결제 정보</h2>
                     <ProductDesc>
-                      <ProductImg src={festivalIMG} width={"50%"} alt='IMG'/>
+                      <ProductImg src={data.productImg} width={"50%"} alt='IMG'/>
                       <ProductDetail>
                         <div className='productContainer'>
                           <div className='productName'>
