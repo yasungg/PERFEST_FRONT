@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import checkImg from '../images/check.png'
-import festivalIMG from '../images/2023안양충훈벚꽃축제.jpg'
 
 const ModalStyle = styled.div`
   .modal {
@@ -65,7 +64,7 @@ const ModalStyle = styled.div`
     border-radius: 5px;
     font-size: 13px;
   }
-  
+
   .modal.openModal {
     display: flex;
     align-items: center;
@@ -156,12 +155,13 @@ const ProductDetail = styled.div`
 function ResultSuccess () {
   const location = useLocation();
   const data = location.state;
+  console.log(data);
     return (
         <ModalStyle>
           <div className={'openModal modal'}>
             <section>
             <main>
-              <ModalBody >     
+              <ModalBody >
                 <img src={checkImg} alt="check" width={"10%"} />
                 <Title>결제가 완료되었습니다.</Title>
                 {data.map((data)=> (

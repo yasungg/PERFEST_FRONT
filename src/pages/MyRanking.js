@@ -1,77 +1,99 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MemberAPI from "../api/MemberAPI";
-import { UserContext } from "../context/UserStore";
-import BackgroundImg from "../images/rank.png";
+import Header from "../components/Header";
 
 const Container = styled.div`
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+`;
+
+const Title = styled.h2`
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+const RankingCard = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #f6f6f6;
+  padding: 20px;
   width: 100%;
-  height: 100vh;
+  max-width: 390px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+
+  @media (max-width: 390px) {
+    border-radius: 0;
+  }
 `;
 
-const Ti = styled.div`
+const RankingNumber = styled.span`
+  font-size: 2rem;
+  font-weight: bold;
+  margin-right: 20px;
+`;
+
+const RankingInfo = styled.div`
   display: flex;
-  justify-content: center;
-  font-size: 1.5em;
+  flex-direction: column;
 `;
 
-const Background = styled.div`
-  border: 1px black solid;
-  background-image: url(${BackgroundImg});
-  background-size: cover;
-  background-position: center;
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+const RankingTitle = styled.h3`
+  color: #666;
+  margin-bottom: 10px;
 `;
-
-
-
 
 
 
 const MyRanking = () => {
-  const [memberRichRanking, setMemberRichRanking] = useState(null);
-  const [memberBadgeRanking, setMemberBadgeRanking] = useState(null);
+  const [memberRichRanking, setMemberRichRanking] = useState("");
+  const [memberBadgeRanking, setMemberBadgeRanking] = useState("");
 
-  // context 로 가져올 예정
-  let memberId = 1;
-
+  // 리치랭킹
   useEffect(() => {
     const fetchMemberRichRanking = async () => {
-      const rsp = await MemberAPI.myRichRanking(memberId);
-      if (rsp.status === 200) setMemberRichRanking(rsp.data);
+      const rsp = await MemberAPI.myRichRanking();
+      if (rsp.status === 200) {
+        setMemberRichRanking(rsp.data);
+      }
     };
     fetchMemberRichRanking();
-  }, [memberId]);
+  }, []);
 
+  // 뱃지랭킹
   useEffect(() => {
     const fetchMemberBadgeRanking = async () => {
-      const rsp = await MemberAPI.myBadgeRanking(memberId);
-      if (rsp.status === 200) setMemberBadgeRanking(rsp.data);
+      const rsb = await MemberAPI.myBadgeRanking();
+      if (rsb.status === 200) setMemberBadgeRanking(rsb.data);
     };
     fetchMemberBadgeRanking();
-  }, [memberId]);
+  }, []);
 
   return (
-    <>
-    <Ti>내 랭킹</Ti>
+  <>
+  <Header />
     <Container>
-      <Background>
-        <ul>
-          <li>내 큰손 랭킹</li>
-          <li>내 뱃지 랭킹</li>
-        </ul>
-      </Background>
-
+      {console.log(memberRichRanking)}
+      <Title>내 랭킹</Title>
+      <RankingCard>
+        <RankingNumber>R</RankingNumber>
+        <RankingInfo>
+          <RankingTitle>큰손 랭킹</RankingTitle>
+          <p>현재 내 큰손랭킹은 {memberRichRanking}등 입니다.</p>
+        </RankingInfo>
+      </RankingCard>
+      <RankingCard>
+        <RankingNumber>B</RankingNumber>
+        <RankingInfo>
+          <RankingTitle>뱃지 랭킹</RankingTitle>
+          <p>현재 내 뱃지랭킹은 {memberBadgeRanking}등 입니다.</p>
+        </RankingInfo>
+      </RankingCard>
     </Container>
     </>
   );

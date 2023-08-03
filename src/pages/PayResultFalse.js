@@ -64,7 +64,7 @@ const ModalStyle = styled.div`
         border-radius: 5px;
         font-size: 13px;
     }
-    
+
     .modal.openModal {
         display: flex;
         align-items: center;

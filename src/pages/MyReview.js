@@ -3,9 +3,11 @@ import styled from "styled-components";
 import MemberAPI from "../api/MemberAPI";
 import { UserContext } from "../context/UserStore";
 import Modal from "../utils/Modal";
+import Header from "../components/Header";
 
 const Container = styled.div`
   width: 100%;
+
 
   p {
     font-size: 1.3em;
@@ -96,17 +98,14 @@ const MyReview = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState(null);
 
-  // const context = UserContext(UserContext);
-  // const { memberId } = context; // 로그인후 컨텍스트로 받아올예정
-  let memberId = 1;
 
   useEffect(() => {
     const fetchMemberReview = async () => {
-      const rsp = await MemberAPI.getReview(memberId);
+      const rsp = await MemberAPI.getReview();
       if (rsp.status === 200) setMemberReview(rsp.data);
     };
     fetchMemberReview();
-  }, [memberId]);
+  }, []);
 
   const formatTime = (timeString) => {
     const date = new Date(timeString);
@@ -126,7 +125,6 @@ const MyReview = () => {
   const confirm = async (modalType) => {
     if (modalType === "deleteReview") {
       const response = await MemberAPI.deleteReviewSelection(reviewToDelete);
-      console.log(response.data);
 
       const updatedReviewList = memberReview.filter(
         (review) => review.reviewId !== reviewToDelete
@@ -148,6 +146,8 @@ const MyReview = () => {
   };
 
   return (
+  <>
+  <Header />
     <Container>
       <p>내 리뷰</p>
       <hr />
@@ -163,7 +163,7 @@ const MyReview = () => {
           </tr>
         </thead>
         <tbody>
-          {memberReview.map((review) => (
+          {memberReview && memberReview.map((review) => (
             <tr key={review.id}>
               <td>
                 <img src={review.reviewImg} alt="Review" />
@@ -188,6 +188,7 @@ const MyReview = () => {
         정말 삭제하시겠습니까?
       </Modal>
     </Container>
+    </>
   );
 };
 

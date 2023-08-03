@@ -1,7 +1,5 @@
 import axios from "axios";
 
-const KH_DOMAIN = "http://localhost:8111";
-
 const LoginAPI = {
   Login: async (email, password) => {
     // 로그인
@@ -18,7 +16,7 @@ const LoginAPI = {
     console.log(requestBody);
 
     return await axios
-      .post(KH_DOMAIN + `/auth/member/login`, stringified, {
+      .post(`/auth/member/login`, stringified, {
         headers: {
           "Content-Type": "application/json",
           Authorization: Authorization,
@@ -33,14 +31,17 @@ const LoginAPI = {
   Logout: async () => {
     const Authorization =
       "Bearer " + window.localStorage.getItem("accessToken");
-    return await axios.get(KH_DOMAIN + `/logout/bye`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: Authorization,
-        "Cache-Control": "no-cache, no-store",
-        Pragma: "no-cache",
-      },
-    });
+    return await axios
+      .get(`/logout/bye`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: Authorization,
+        },
+      })
+      .then(() => {
+        localStorage.setItem("accessToken", "");
+        localStorage.setItem("tokenExpiresIn", "");
+      });
   },
 };
 export default LoginAPI;

@@ -1,6 +1,5 @@
 import axios from "axios";
 
-const KH_DOMAIN = "http://localhost:8111";
 
 const SignupAPI = {
   Signup: async (email, password, memberName, nickname) => {
@@ -12,7 +11,7 @@ const SignupAPI = {
     };
     const stringified = JSON.stringify(requestBody);
     return await axios
-      .post(KH_DOMAIN + "/auth/member/signup", stringified, {
+      .post( "/auth/member/signup", stringified, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -35,7 +34,7 @@ const SignupAPI = {
     };
     const stringified = JSON.stringify(requestBody);
     return await axios
-      .post(KH_DOMAIN + "/auth/member/kakaosignup", stringified, {
+      .post( "/auth/member/kakaosignup", stringified, {
         headers: {
           "Content-Type": "application/json",
         },

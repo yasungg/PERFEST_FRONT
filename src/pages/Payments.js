@@ -25,7 +25,12 @@ const PayReady = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location;
+  console.log(state);
   // 카카오페이로 보내려는 데이터 작성
+  setQuantity(state.state.productQuantity);
+  setPrice(state.state.productPrice);
+  setProductId(1);
+
   let [data, setData] = useState({
     next_redirect_pc_url: "",
     // 결제 한 건에 대한 고유번호, 결제 준비 API가 성공적으로 호출되면 발급
@@ -38,24 +43,22 @@ const PayReady = () => {
         // 가맹점 회원 id
         partner_user_id: "partner_user_id",
         // 상품 이름
-        item_name: state.productName,
+        item_name: state.state.productName,
         // 상품 수량
-        quantity: state.productQuantity,
+        quantity: state.state.productQuantity,
         // 총 가격
-        total_amount: (state.productPrice).toString(),
+        total_amount: state.state.productPrice,
         // 상품 비과세
         tax_free_amount: 0,
         // 결제 성공시 URL
-        approval_url: "http://localhost:3000/page/payresult",
+        approval_url: "http://localhost:8111/pages/payresult",
         // 결제 실패시 URL
-        fail_url: "http://localhost:3000/page/resultfail",
+        fail_url: "http://localhost:8111/pages/resultfail",
         // 결제 취소시 URL
-        cancel_url: "http://localhost:3000/page/resultfail"
+        cancel_url: "http://localhost:8111/pages/resultfail"
     }
   });
-  setQuantity(state.productQuantity);
-  setPrice(state.productPrice);
-  setProductId(state.Id);
+
   // 결제 준비 API를 통해 상세 정보를 카카오페이 서버에 전달하고 결제 고유 번호(TID)를 받는 단계.
   // 어드민 키를 헤더에 담아 파라미터 값들과 함께 POST로 요청.
   useEffect(() => {
@@ -88,7 +91,7 @@ const PayReady = () => {
       window.localStorage.removeItem("tid");
       window.localStorage.removeItem("url");
       // 결제 준비 통신 실패할 경우 이동할 페이지 정해줘야 함
-      navigate("/page/resultFail");
+      navigate("/pages/resultFail");
     });
   }, []);
 }
@@ -99,7 +102,7 @@ const PayReady = () => {
 // pg_token은 결제 승인 API 호출 시 사용
 const PayResult = () => {
   const context = useContext(UserContext);
-  const {price, quantity, productId } = context;
+  const {price, quantity } = context;
   // 초기값 셋팅, 결제준비에서 받아온 tid 셋팅
   const [payment, setPayment] = useState({
     // 가격
@@ -177,10 +180,12 @@ const PayResult = () => {
   useEffect(() => {
     const PaymentResult = async() => {
       const memberId = 1;
+      const productId = 1;
+      console.log(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount);
       const response = await PaymentAPI.PaymentSubmit(memberId, productId, payment.price, payment.quantity, payment.tid, payment.kakaoTaxFreeAmount)
       if(response.status === 200) {
         // 카카오페이와 DB전송까지 완료
-        navigate("/resultSuccess", {state: response.data});
+        navigate("/pages/resultSuccess", {state: response.data});
         window.localStorage.removeItem("tid");
       }
     };
@@ -222,7 +227,8 @@ const PayCancel = () => {
   useEffect(() => {
     openModal(true);
     const getData = async() => {
-      const response = await PaymentAPI.CheckPaymentData(memberId, productId, paymentId);
+    const productId = 1;
+      const response = await PaymentAPI.CheckPaymentData(1, 1, paymentId);
       // const cancelStatus = response.data[0].paymentStatus;
       // 취소 완료 된 결제는 다음 로직을 실행하지 않도록 하기 위해
       if(response.status === 200 ) {
@@ -277,7 +283,7 @@ const PayCancel = () => {
   // DB에 있는 결제 내역의 상태를 CANCELED로 바꾸고
   useEffect(() => {
     const deleteData = async() => {
-      const response = await PaymentAPI.DeletePaymentData(memberId, productId, paymentId)
+      const response = await PaymentAPI.DeletePaymentData(1, 1, paymentId)
       if(response.status === 200) {
         setIsChangeDB(true);
         setModalOpen(true);

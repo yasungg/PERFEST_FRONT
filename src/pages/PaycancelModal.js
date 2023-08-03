@@ -94,11 +94,11 @@ const PayModal = (props) => {
     return (
         <ModalStyle>
             <div className={open ? "openModal modal" : "modal"}>
-                {open && 
+                {open &&
                     <section>
                       <main>
                         {children}
-                      </main>
+                        </main>
                       <footer>
                           <button onClick={close}>확인</button>
                       </footer>

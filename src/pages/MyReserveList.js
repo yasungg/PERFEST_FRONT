@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MemberAPI from "../api/MemberAPI";
-import { UserContext } from "../context/UserStore";
+import Header from "../components/Header";
 
 const Container = styled.div`
   width: 100%;
-  
+  padding: 10px;
+  background-color: #FEFDFD;
 
   p {
     font-size: 1.3em;
     font-weight: bold;
+    margin-bottom: 10px;
   }
 
   hr {
@@ -19,17 +21,19 @@ const Container = styled.div`
   }
 
   li {
-    font-size: 0.7em;
+    font-size: 0.9em;
     color: darkgray;
+    margin-bottom: 5px;
   }
 
   table {
     width: 100%;
-    margin-top: 20px;
     border-collapse: collapse;
+    margin-top: 10px;
   }
 
   button {
+    white-space: nowrap;
     font-size: 0.8em;
     font-weight: bold;
     border: none;
@@ -53,51 +57,65 @@ const Container = styled.div`
   }
 
   th, td {
-    padding: 20px;
+    padding: 15px;
     border-top: 1px solid lightgray;
     border-bottom: 1px solid lightgray;
     font-size: .9em;
+    text-align: left;
     &:nth-child(1) {
-      width: 40%;
+      width: 30%;
     }
     &:nth-child(2) {
-      width: 20%;
+      width: 40%;
     }
     &:nth-child(3) {
-      width: 20%;
+      width: 30%;
     }
-    
   }
 
-  tbody tr{
-    
-    &:hover{
-    background-color: #F1F0F0;
-   }
+  tbody tr {
+    &:hover {
+      background-color: #F1F0F0;
+    }
   }
 
   td {
-    text-align: center;
-    font-size: .75em;
+    font-size: .8em;
     color: #636363;
+  }
+
+  /* 반응형 스타일링 */
+  @media (max-width: 600px) {
+    padding: 5px;
+
+    p {
+      font-size: 1.1em;
+    }
+
+    th, td {
+      padding: 10px;
+      font-size: 0.8em;
+    }
+    /* 확장된 설명 스타일 */
+    .expanded-description {
+      font-size: 0.8em;
+      color: #636363;
+      margin-top: 10px;
+    }
   }
 `;
 
-
 const MyReserveList = () => {
-  // const context = UserContext(UserContext);
-  // const { memberId } = context; // 로그인후 컨텍스트담아올예정
-  let memberId = 1;
-
   const [memberReserve, setMemberReserve] = useState([]);
+  const [expandedDescriptionId, setExpandedDescriptionId] = useState(null);
 
   useEffect(() => {
-    const fetchMemberReservation = async () => {
-      const rsp = await MemberAPI.getReservation(memberId);
+    const reservation = async () => {
+      const rsp = await MemberAPI.getReservation();
       if (rsp.status === 200) setMemberReserve(rsp.data);
     };
-    fetchMemberReservation();
-  }, [memberId]);
+    reservation();
+  }, []);
 
   const formatTime = (timeString) => {
     const date = new Date(timeString);
@@ -107,41 +125,46 @@ const MyReserveList = () => {
     return `${year}-${month}-${day}`;
   };
 
+  const handleExpandDescription = (reserveId) => {
+    setExpandedDescriptionId(reserveId === expandedDescriptionId ? null : reserveId);
+  };
 
-  return(
-    <>
+  return (
+  <>
+  <Header />
     <Container>
       <p>예매 내역</p>
-      <hr/>
-      <li>체험활동 관련 문의는 해당 축제 관리자에게 연락바랍니다</li>
-      <li>예매 취소는 해당 체험활동일 전까지만 가능합니다</li>
+      <hr />
+      <li>체험활동 문의는 관리자에게 문의 바랍니다.</li>
+      <li>예매 취소는 해당 체험활동일 전까지만 가능합니다.</li>
       <table>
         <thead>
           <tr>
             <th>체험 활동</th>
             <th>상세정보</th>
-            <th>시작일</th>
-            <th>종료일</th>
+            <th>기간</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {memberReserve.map((reservation) => (
-            <tr key={reservation.id}>
-              <td>{reservation.activityName}</td>
-              <td>{reservation.activityDesc}</td>
-              <td>{formatTime(reservation.startDate)}</td>
-              <td>{formatTime(reservation.endDate)}</td>
-              <td><button>취소</button></td>
+          {memberReserve && memberReserve.map(reserve => (
+            <tr key={reserve.reserveId}>
+              <td>{reserve.activityName}</td>
+              <td>{reserve.activityDesc}</td>
+              <td>
+                {formatTime(reserve.startDate)} ~{" "}
+                {formatTime(reserve.endDate)}
+              </td>
+              <td>
+                <button>취소</button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      
     </Container>
     </>
-  )
+  );
 };
 
 export default MyReserveList;

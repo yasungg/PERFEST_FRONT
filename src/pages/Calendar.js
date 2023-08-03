@@ -1,8 +1,13 @@
-import React from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import '../CalendarStyle.css';
-import styled from 'styled-components';
+import React, { useEffect, useState } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import "../CalendarStyle.css";
+import styled from "styled-components";
+import MemberAPI from "../api/MemberAPI";
+import Modal from "../utils/Modal";
+import { Container } from "../components/StandardStyles";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
 
 // const CalendarContainer = styled.div`
 //   display: flex;
@@ -42,20 +47,55 @@ const StyledFullCalendar = styled(FullCalendar)`
 `;
 
 const Calendar = () => {
+  const [memberCal, setMemberCal] = useState([]);
+  const [delModalOpen, setDelModalOpen] = useState(false);
+
+  useEffect(() => {
+    const likeFestival = async () => {
+      const rsp = await MemberAPI.getCalendar();
+      if (rsp.status === 200) setMemberCal(rsp.data);
+    };
+    likeFestival();
+  }, []);
+
+  const delCalender = () => {
+    setDelModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setDelModalOpen(false);
+  };
+
+
+  const predefinedColors = [
+    "#fa5252",
+    "#fd7e14",
+    "fcc419",
+    "#40c057",
+    "#339af0",
+    "#7950f2",
+  ];
+
+  const getPredefinedColor = (color) => {
+    return predefinedColors[color % predefinedColors.length];
+  };
+
   return (
-    // <CalendarContainer>
-      // <CalendarStyle>
+    <Container>
+      <Header />
       <StyledFullCalendar
-        defaultView="dayGridMonth" 
+        defaultView="dayGridMonth"
         plugins={[dayGridPlugin]}
-        events={[
-          { title: '정민이 바보', start: '2023-07-11', end: '2023-07-17', backgroundColor: 'red' },
-          { title: 'event 2', date: '2022-09-02' }
-        ]}
+        events={memberCal && memberCal.map((calEvent, index) => ({
+          title: calEvent.festivalName,
+          start: calEvent.startDate,
+          end: calEvent.endDate,
+          backgroundColor: getPredefinedColor(index),
+        }))}
       />
-      // </CalendarStyle>
-    /* </CalendarContainer> */
+      <Sidebar />
+    </Container>
   );
-}
+};
 
 export default Calendar;

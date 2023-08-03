@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useState, useEffect, useMemo, useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserStore";
 import styled from "styled-components";
 import kakaoButton from "../images/kakaoButton.png";
-import loginBackgroundImg from "../images/loginboxbackground.jpg";
+import loginBackgroundImg from "../images/loginBackground.jpg";
+import test from "../images/test.jpg";
 import LoginAPI from "../api/LoginAPI";
 import SignupAPI from "../api/SignupAPI";
 import LoginModal from "../utils/LoginModal";
@@ -12,11 +14,13 @@ const Container = styled.div`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  background-size: cover;
   justify-content: ${(props) => props.justifyContent};
   align-items: ${(props) => props.alignItems};
-  background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-  overflow: scroll;
+  background-image: url(${test});
+  overflow: hidden;
 `;
+// linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
 const Box = styled.div`
   display: flex;
   flex-flow: column;
@@ -24,11 +28,25 @@ const Box = styled.div`
   width: 464px;
   height: 600px;
   border-radius: 5px;
-  background-image: url(${loginBackgroundImg});
+  background: transparent;
   background-size: cover;
   border: none;
-  box-shadow: 5px 20px 50px black;
+  box-shadow: 3px 5px 10px black;
   overflow: hidden;
+  @media screen and (max-width: 769px) {
+    width: 80%;
+    height: 70vh;
+  }
+  @media screen and (max-width: 415px) {
+    height: 66vh;
+  }
+  @media screen and (max-width: 391px) {
+    height: 70vh;
+  }
+  @media screen and (max-width: 376px) {
+    width: 96%;
+    height: 90vh;
+  }
 `;
 const SignUpBox = styled.div`
   display: flex;
@@ -39,6 +57,11 @@ const SignUpBox = styled.div`
   height: 600px;
   border-radius: 5px;
   border: none;
+  backdrop-filter: blur(20px);
+  @media screen and (max-width: 769px) {
+    width: 100%;
+    height: 100%;
+  }
 `;
 const LoginBox = styled.div`
   display: flex;
@@ -52,6 +75,9 @@ const LoginBox = styled.div`
   z-index: 9;
   transform: translateY(${(props) => props.transForm});
   transition: 0.3s ease-in-out;
+  @media screen and (max-width: 769px) {
+    width: 100%;
+  }
 `;
 
 const LogoBox = styled.div`
@@ -60,6 +86,7 @@ const LogoBox = styled.div`
   justify-content: ${(props) => props.justifyContent};
   align-items: center;
   width: 100%;
+  border: none;
   height: ${(props) => props.height};
   border: none;
   border-radius: 5px;
@@ -87,7 +114,7 @@ const SignUpLogo = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 5px 10px 30px black;
+  /* box-shadow: 5px 10px 30px black; */
   width: 300px;
   height: 32px;
   margin-top: ${(props) => props.marginTop};
@@ -108,7 +135,7 @@ const InputBoxContainer = styled.form`
   flex-flow: column;
   width: 320px;
   height: ${(props) => props.height};
-  @media screen and (max-width: 320px) {
+  @media screen and (max-width: 769px) {
     width: 100%;
   }
 `;
@@ -125,19 +152,27 @@ const LoginInputBox = styled.input`
   &:focus {
     outline: none;
   }
+  @media screen and (max-width: 769px) {
+    width: 90%;
+    align-self: center;
+  }
 `;
 const SignUpInputBox = styled.input`
   box-sizing: border-box;
   width: 320px;
   height: ${(props) => props.height};
   background-color: white;
-  box-shadow: 5px 10px 20px black;
+  box-shadow: 2px 5px 10px black;
   border-radius: 5px;
   border: none;
   font-size: 16px;
   padding-left: 8px;
   &:focus {
     outline: none;
+  }
+  @media screen and (max-width: 769px) {
+    width: 90%;
+    align-self: center;
   }
 `;
 const RegexResult = styled.div`
@@ -184,6 +219,9 @@ const LoginBtn = styled.button`
   &:hover {
     cursor: pointer;
   }
+  @media screen and (max-width: 769px) {
+    width: 90%;
+  }
 `;
 const SignUpBtn = styled.button`
   display: flex;
@@ -204,22 +242,30 @@ const SignUpBtn = styled.button`
   }
   &:hover {
     cursor: pointer;
-    background: #302b63;
-    color: white;
+    background: transparent;
+    color: black;
+  }
+  @media screen and (max-width: 769px) {
+    width: 90%;
   }
 `;
 const KakaoBtn = styled.button`
   border: none;
   background: none;
+  align-self: center;
   &:hover {
     cursor: pointer;
+  }
+  @media screen and (max-width: 769px) {
+    width: 90%;
   }
 `;
 
 const Login = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-
+  const navigate = useNavigate();
+  const { setIsLogin } = useContext(UserContext);
   const REST_API_KEY = "86c9013e77a6aad5b8b2c49eddca45b7";
   const REDIRECT_URI = "http://localhost:8111/koauth/login/kakao";
   const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&prompt=login`;
@@ -228,7 +274,7 @@ const Login = () => {
   const isKakao = searchParams.get("isKakao");
   const needSignup = searchParams.get("needSignup");
   //로그인 페이지 상태 변경을 위해 사용하는 useState
-  const [loginBoxTransformY, setLoginBoxTransformY] = useState("-350px");
+  const [loginBoxTransformY, setLoginBoxTransformY] = useState("-340px");
   const [loginLogoSize, setLoginLogoSize] = useState("64px");
   const [logoYLocation, setLogoYLocation] = useState("64px");
   const [signUpLogoSize, setSignUpLogoSize] = useState("24px");
@@ -245,7 +291,7 @@ const Login = () => {
   const [loginPassword, setLoginPassword] = useState("");
 
   const changeLoginForm = () => {
-    setLoginBoxTransformY("-350px");
+    setLoginBoxTransformY("-340px");
     setLoginLogoSize("64px");
     setLogoYLocation("64px");
     setSignUpLogoYLocation("-48px");
@@ -288,6 +334,8 @@ const Login = () => {
         console.log(result.accessToken);
         console.log(result.tokenExpiresIn);
         console.log(localStorage.getItem("accessToken"));
+        setIsLogin(true);
+        navigate("/");
       })
       .catch((error) => {
         if (error) {
@@ -332,7 +380,7 @@ const Login = () => {
               name="signUpMail"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="이메일을 입력하세요."
+              placeholder="example@example.com"
               height="32px"
             />
             <RegexResult fontColor="red">
@@ -413,7 +461,11 @@ const Login = () => {
           </LoginBtn>
           <KakaoBtn>
             <a href={KAKAO_AUTH_URI}>
-              <img src={kakaoButton} alt="" />
+              <img
+                src={kakaoButton}
+                alt=""
+                style={{ width: "100%", height: "45px" }}
+              />
             </a>
           </KakaoBtn>
           <AdditionalBox />
