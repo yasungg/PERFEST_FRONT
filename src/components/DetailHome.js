@@ -1,5 +1,5 @@
 import { Container } from "./StandardStyles";
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/UserStore";
 import { formatDateForFestival } from "./DateStyle";

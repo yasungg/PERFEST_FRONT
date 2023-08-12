@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import MemberAPI from "../api/MemberAPI";
 import HistoryItem from "./HistoryItem";
-import TimelineLoader from "./TimeLineLoader";
+import TimelineLoader from "./TimelineLoader";
 
 const TimelineWrap = styled.div`
   width: 100%;

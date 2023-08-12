@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserStore";
-import styled from "@emotion/styled";
-import "../CustomInfoWindowCSS.css";
+import styled from "styled-components";
+import "../CustomInfoWindow.css";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const CustomInfoWindow = ({ title, likeCount }) => {
